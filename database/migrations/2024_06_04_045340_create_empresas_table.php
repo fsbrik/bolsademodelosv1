@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('empresas', function (Blueprint $table) {
             $table->id();
+            $table->string('nom_com', 100);
+            $table->string('domicilio', 255);
+            $table->string('rubro', 100);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

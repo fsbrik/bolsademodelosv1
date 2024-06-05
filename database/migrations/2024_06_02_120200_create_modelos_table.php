@@ -14,23 +14,24 @@ return new class extends Migration
         Schema::create('modelos', function (Blueprint $table) {
             $table->id();
             $table->string('mod_id')->unique();
-            $table->string('nom_ape');
+            //$table->string('nom_ape'); ya esta en la tabla users
             $table->date('fec_nac');
             $table->char('sexo', 1);
-            $table->float('estatura');
-            $table->string('medidas');
-            $table->string('calzado');
-            $table->string('zon_res');
-            $table->boolean('dis_via');
-            $table->boolean('tit_mod');
-            $table->enum('ingles', ['basico', 'intermedio', 'avanzado']);
-            $table->string('dis_tra');
-            $table->text('descripcion');
-            $table->float('tar_med');
-            $table->float('tar_com');
-            $table->string('dir_fot');
-            $table->boolean('activo');
-            $table->boolean('habilita');
+            $table->float('estatura')->nullable();
+            $table->string('medidas')->nullable();
+            $table->string('calzado')->nullable();
+            $table->string('zon_res', 100)->nullable();
+            $table->boolean('dis_via')->nullable();
+            $table->boolean('tit_mod')->nullable();
+            $table->enum('ingles', ['basico', 'intermedio', 'avanzado'])->nullable();
+            $table->string('dis_tra')->default('modelo');
+            $table->text('descripcion')->nullable();
+            $table->float('tar_med')->nullable();
+            $table->float('tar_com')->nullable();
+            //$table->string('dir_fot')->nullable(); ya esta en la tabla users
+            $table->boolean('activo')->default(1);
+            $table->boolean('habilita')->default(0);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
