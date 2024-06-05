@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\ModeloController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +24,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', function () { return view('dashboard');})->name('dashboard');
+    Route::resource('/empresas', EmpresaController::class)->names('empresas');
+    Route::resource('/modelos', ModeloController::class)->names('modelos');
 });
