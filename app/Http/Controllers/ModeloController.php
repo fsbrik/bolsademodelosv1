@@ -37,7 +37,8 @@ class ModeloController extends Controller
      */
     public function show(Modelo $modelo)
     {
-        //
+        $modelo = Modelo::findOrFail($modelo);
+        return view('modelos.show', compact('modelo'));
     }
 
     /**
