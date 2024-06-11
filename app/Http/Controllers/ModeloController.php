@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Modelo;
 use Illuminate\Http\Request;
+use App\Http\Requests\ModeloRequest;
 
 class ModeloController extends Controller
 {
@@ -21,47 +22,74 @@ class ModeloController extends Controller
      */
     public function create()
     {
-        return view('modelos.create');
+        $localidades = include(public_path('storage/localidades/localidades.php'));
+        return view('modelos.create', compact('localidades'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ModeloRequest $request)
     {
-        //
+        $modelo = new Modelo();
+
+        $ultimoModId = Modelo::max('id'); // Obtener el valor más alto de id
+        $nuevoModId = ++$ultimoModId; // Incrementar el valor en uno para obtener el siguiente
+        
+        $modelo->mod_id = 'mod'.$nuevoModId;
+        $modelo->fill(
+            $request->all()
+        );
+        //dd($modelo);
+        // Guardar la modelo en la base de datos
+        $modelo->save();
+
+        // Redirigir al usuario a la vista de detalles de la modelo recién creada
+        return redirect()->route('modelos.show', $modelo->id)->with('success', 'La modelo ha sido creada correctamente.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Modelo $modelo)
+    public function show($id)
     {
-        $modelo = Modelo::findOrFail($modelo);
-        return view('modelos.show', compact('modelo'));
+        $localidades = include(public_path('storage/localidades/localidades.php'));
+        $modelo = Modelo::findOrFail($id);
+        return view('modelos.show', compact('modelo', 'localidades'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Modelo $modelo)
+    public function edit($id)
     {
-        //
+        $modelo = Modelo::findOrFail($id);
+        return view('modelos.edit', compact('modelo'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Modelo $modelo)
+    public function update(ModeloRequest $request, $id)
     {
-        //
+        $modelo = Modelo::findOrFail($id);
+
+        // Actualizar los detalles de la modelo
+        $modelo->update(
+            $request()->all()
+        );
+
+        // Redirigir al usuario a la vista de detalles de la modelo actualizada
+        return redirect()->route('modelos.show', $modelo->id)->with('success', 'Los detalles de la modelo han sido actualizados correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Modelo $modelo)
+    public function destroy($id)
     {
-        //
+        $modelo = Modelo::findOrFail($id);
+        $modelo->delete();
+        return redirect()->route('modelos.index')->with('success', 'modelo eliminada correctamente.');
     }
 }

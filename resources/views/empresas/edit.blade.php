@@ -13,7 +13,7 @@
                     @livewire('Admin.show-user-empresa', ['empresaId' => $empresa->id])
                     <x-section-border />
 
-                    @livewire('actualizar-info-empresa', ['empresaId' => $empresa->id])
+                    @livewire('edit-info-empresa', ['empresaId' => $empresa->id])
                     <x-section-border />
                        
                     <div class="flex items-center justify-end mt-4">

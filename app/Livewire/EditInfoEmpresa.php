@@ -5,12 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Empresa;
 
-class ActualizarInfoEmpresa extends Component
+class EditInfoEmpresa extends Component
 {
-    //public $empresa;
-    /* public $nom_com;
-    public $domicilio;
-    public $rubro; */
     public $empresa, $empresaId;
 
     public function mount($empresaId)
@@ -41,13 +37,13 @@ class ActualizarInfoEmpresa extends Component
             'rubro' => $this->rubro,
         ]); */
         session()->flash('message', '¡Empresa actualizada con éxito!');
-
+        return redirect()->route('empresas.show', $this->empresaId);
         // Restablecer el estado del componente para recargar la página
         //$this->reset();
     }
 
     public function render()
     {
-        return view('livewire.actualizar-info-empresa');
+        return view('livewire.edit-info-empresa');
     }
 }
