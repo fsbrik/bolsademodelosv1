@@ -20,7 +20,7 @@ class EmpresaFactory extends Factory
             'nom_com' => fake()->company(),
             'domicilio' => fake()->address(),
             'rubro' => fake()->catchPhrase(),
-            'user_id' => fake()->unique()->numberBetween(1, 3)
+            'user_id' => fake()->unique()->numberBetween(29, 34)
         ];
     }
 }

@@ -31,21 +31,26 @@ class ModeloController extends Controller
      */
     public function store(ModeloRequest $request)
     {
-        $modelo = new Modelo();
+        try {
+            $modelo = new Modelo();
 
-        $ultimoModId = Modelo::max('id'); // Obtener el valor más alto de id
-        $nuevoModId = ++$ultimoModId; // Incrementar el valor en uno para obtener el siguiente
-        
-        $modelo->mod_id = 'mod'.$nuevoModId;
-        $modelo->fill(
-            $request->all()
-        );
-        //dd($modelo);
-        // Guardar la modelo en la base de datos
-        $modelo->save();
+            $ultimoModId = Modelo::max('id'); // Obtener el valor más alto de id
+            $nuevoModId = ++$ultimoModId; // Incrementar el valor en uno para obtener el siguiente
 
-        // Redirigir al usuario a la vista de detalles de la modelo recién creada
-        return redirect()->route('modelos.show', $modelo->id)->with('success', 'La modelo ha sido creada correctamente.');
+            $modelo->mod_id = 'mod' . $nuevoModId;
+            $modelo->fill(
+                $request->all()
+            );
+            //dd($modelo);
+            // Guardar la modelo en la base de datos
+            $modelo->save();
+
+            // Redirigir al usuario a la vista de detalles de la modelo recién creada
+            return redirect()->route('modelos.show', $modelo->id)->with('success', 'La modelo ha sido creada correctamente.');
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            return redirect()->route('users.show', $request->user_id)->with('error', $errorMessage);
+        }
     }
 
     /**

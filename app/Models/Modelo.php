@@ -11,6 +11,18 @@ class Modelo extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($modelo) {
+            if ($modelo->user->modelo) {
+                // Manejar la situación y mostrar un mensaje de error
+                throw new \Exception('Ya tienes un perfil de modelo creado');
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

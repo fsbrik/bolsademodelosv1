@@ -24,7 +24,7 @@ class ModeloRequest extends FormRequest
         return [
             'fec_nac' => 'required|date',
             'sexo' => 'required|in:M,F', // Asumiendo que solo se permiten 'M' y 'F'
-             'estatura' => 'required|numeric|between:1.45,2.10',
+            'estatura' => 'required|numeric|between:1.45,2.10',
             'medidas' => 'required|string',
             'calzado' => 'nullable|numeric|between:34.0,42.0',
             'zon_res' => 'nullable|string|max:100',

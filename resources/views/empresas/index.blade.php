@@ -51,7 +51,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{ $empresa->user->telefono }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 break-all">
                                         {{ $empresa->user->email }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-wrap">

@@ -18,8 +18,7 @@
                         <!-- Fecha de Nacimiento -->
                         <div class="col-span-6 sm:col-span-4">
                             <x-label for="fec_nac" value="{{ __('Fecha de Nacimiento') }}" />
-                            <x-input id="fec_nac" class="block mt-1 w-full" type="date" name="fec_nac"
-                                :value="old('fec_nac')" autofocus />
+                            <x-input id="fec_nac" class="block mt-1 w-full" type="date" name="fec_nac" :value="old('fec_nac')" autofocus />
                             <x-input-error for="fec_nac" class="mt-2" />
                         </div>
 
@@ -118,12 +117,9 @@
                             <x-label for="dis_tra" value="{{ __('Disponible para trabajos de:') }}" />
                             <select id="dis_tra" name="dis_tra"
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="modelo" {{ old('dis_tra') == 'modelo' ? 'selected' : '' }}>Modelo
-                                </option>
-                                <option value="promotor/a" {{ old('dis_tra') == 'promotor/a' ? 'selected' : '' }}>
-                                    Promotor/a</option>
-                                <option value="ambos" {{ old('dis_tra') == 'ambos' ? 'selected' : '' }}>Ambos
-                                </option>
+                                <option value="modelo" {{ old('dis_tra') == 'modelo' ? 'selected' : '' }}>Modelo</option>
+                                <option value="promotor/a" {{ old('dis_tra') == 'promotor/a' ? 'selected' : '' }}>Promotor/a</option>
+                                <option value="ambos" {{ old('dis_tra') == 'ambos' ? 'selected' : '' }}>Ambos</option>
                             </select>
                             <x-input-error for="dis_tra" class="mt-2" />
                         </div>
@@ -171,8 +167,7 @@
                         <!-- Habilitar -->
                         <div class="col-span-6 sm:col-span-4">
                             <div class="col-span-6 sm:col-span-4 flex items-center">
-                                <x-label class="mr-2" for="habilita"
-                                    value="{{ __('Habilitado / Inhabilitado') }}" />
+                                <x-label class="mr-2" for="habilita" value="{{ __('Habilitado / Inhabilitado') }}" />
                                 <select id="habilita" name="habilita"
                                     class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     <option value="0" {{ old('habilita') == '0' ? 'selected' : '' }}>

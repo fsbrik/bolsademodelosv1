@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ModeloController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () { return view('dashboard');})->name('dashboard');
+    Route::resource('/users', UserController::class)->names('users');
     Route::resource('/empresas', EmpresaController::class)->names('empresas');
     Route::resource('/modelos', ModeloController::class)->names('modelos');
 });
