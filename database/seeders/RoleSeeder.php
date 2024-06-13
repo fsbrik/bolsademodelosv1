@@ -18,17 +18,26 @@ class RoleSeeder extends Seeder
         $roleModelo = Role::create(['name' => 'modelo']);
         $roleEmpresa = Role::create(['name' => 'empresa']);
         
-        $permission = Permission::create(['name' => 'empresas.index'])->assignRole($roleAdmin);
-        $permission = Permission::create(['name' => 'modelos.index'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'users.index'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'empresas.index'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'modelos.index'])->assignRole($roleAdmin);
 
-        //$permission = Permission::create(['name' => 'empresas.index'])->assignRole($roleEmpresa);
-        $permission = Permission::create(['name' => 'empresas.create'])->syncRoles($roleAdmin, $roleEmpresa);
-        $permission = Permission::create(['name' => 'empresas.edit'])->syncRoles($roleAdmin, $roleEmpresa);
-        $permission = Permission::create(['name' => 'empresas.destroy'])->syncRoles($roleAdmin, $roleEmpresa);
+        //Permission::create(['name' => 'users.index'])->assignRole($roleEmpresa);
+        //Permission::create(['name' => 'users.create'])->syncRoles($roleAdmin);
+        Permission::create(['name' => 'users.edit'])->syncRoles($roleAdmin);
+        Permission::create(['name' => 'users.show'])->syncRoles($roleAdmin);
+        Permission::create(['name' => 'users.destroy'])->syncRoles($roleAdmin);
 
-        $permission = Permission::create(['name' => 'modelos.index']);
-        $permission = Permission::create(['name' => 'modelos.create']);
-        $permission = Permission::create(['name' => 'modelos.edit']);
-        $permission = Permission::create(['name' => 'modelos.destroy']);
+        //Permission::create(['name' => 'empresas.index'])->assignRole($roleEmpresa);
+        Permission::create(['name' => 'empresas.create'])->syncRoles($roleAdmin, $roleEmpresa);
+        Permission::create(['name' => 'empresas.edit'])->syncRoles($roleAdmin, $roleEmpresa);
+        Permission::create(['name' => 'empresas.show'])->syncRoles($roleAdmin, $roleEmpresa);
+        Permission::create(['name' => 'empresas.destroy'])->syncRoles($roleAdmin, $roleEmpresa);
+
+        //Permission::create(['name' => 'modelos.index'])->syncRoles($roleAdmin, $roleModelo);
+        Permission::create(['name' => 'modelos.create'])->syncRoles($roleAdmin, $roleModelo);
+        Permission::create(['name' => 'modelos.edit'])->syncRoles($roleAdmin, $roleModelo);
+        Permission::create(['name' => 'modelos.show'])->syncRoles($roleAdmin, $roleModelo);
+        Permission::create(['name' => 'modelos.destroy'])->syncRoles($roleAdmin, $roleModelo);
     }
 }

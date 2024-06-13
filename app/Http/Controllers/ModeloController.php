@@ -13,7 +13,7 @@ class ModeloController extends Controller
      */
     public function index()
     {
-        $modelos = Modelo::all();
+        $modelos = Modelo::paginate();
         return view('modelos.index', compact('modelos'));
     }
 

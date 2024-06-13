@@ -61,13 +61,16 @@
                                                 title="Borrar"
                                                 onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
                                                 <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                            </button>                                            
                                         </form>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="mt-8">
+                        {{ $users->links() }}
+                    </div>
                 </div>
             </div>
         </div>

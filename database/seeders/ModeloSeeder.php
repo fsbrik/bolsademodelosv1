@@ -13,6 +13,6 @@ class ModeloSeeder extends Seeder
      */
     public function run(): void
     {
-        Modelo::factory()->count(17)->create();
+        Modelo::factory()->count(1)->create();
     }
 }
