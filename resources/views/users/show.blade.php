@@ -13,7 +13,7 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    @livewire('Admin.show-user', ['id' => $user->id])
+                    @livewire('Admin.user-show', ['id' => $user->id])
                     <x-section-border />
 
                     <div class="flex items-center justify-end mt-4">

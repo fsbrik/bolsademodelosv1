@@ -1,10 +1,4 @@
-<x-action-section>
-    <x-slot name="title">
-        {{ __('Modelo') }}
-    </x-slot>
-    <x-slot name="description">
-    </x-slot>
-    
+<x-action-section :title="'Modelo'" :description="''">    
     <x-slot name="content">
 
         <!-- Mod Id -->

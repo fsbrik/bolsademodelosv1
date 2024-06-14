@@ -6,20 +6,16 @@ use Livewire\Component;
 use App\Models\Modelo;
 
 
-class EditInfoModelo extends Component
+class ModeloEdit extends Component
 {
     public $modelo, $modeloId, $localidades;
 
     public function mount($modeloId)
     {
-        $modelo = modelo::findOrFail($modeloId);
+        $modelo = Modelo::findOrFail($modeloId);
         $this->modelo = $modelo->toArray();
 
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
-
-        /* $this->modeloId = $modeloId;
-        $this->modelo['estado'] ? $this->modelo['estado']=true : $this->modelo['estado']=false;
-        $this->modelo['habilita'] ? $this->modelo['habilita']=true : $this->modelo['habilita']=false; */
     }
 
     public function updateModelo()
@@ -42,7 +38,7 @@ class EditInfoModelo extends Component
             'modelo.habilita' => 'boolean',
         ]);
 
-        $modelo = modelo::findOrFail($this->modeloId);
+        $modelo = Modelo::findOrFail($this->modeloId);
         $modelo->update($this->modelo);
         session()->flash('message', '¡modelo actualizada con éxito!');
         return redirect()->route('modelos.show', $this->modeloId);
@@ -50,6 +46,6 @@ class EditInfoModelo extends Component
 
     public function render()
     {
-        return view('livewire.edit-info-modelo');
+        return view('livewire.modelo-edit');
     }
 }

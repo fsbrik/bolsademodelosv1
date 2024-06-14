@@ -5,7 +5,7 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use App\Models\User;
 
-class EditUser extends Component
+class UserEdit extends Component
 {
     public $user, $id;
 
@@ -43,6 +43,6 @@ class EditUser extends Component
 
     public function render()
     {
-        return view('livewire.admin.edit-user');
+        return view('livewire.admin.user-edit');
     }
 }

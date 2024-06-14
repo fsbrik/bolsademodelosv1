@@ -7,7 +7,7 @@ use Livewire\Component;
 use App\Models\User;
 
 
-class ShowUser extends Component
+class UserShow extends Component
 {
  
     public $user;
@@ -20,6 +20,6 @@ class ShowUser extends Component
 
     public function render()
     {
-        return view('livewire.admin.show-user');
+        return view('livewire.admin.user-show');
     }
 }

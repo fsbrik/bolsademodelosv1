@@ -1,10 +1,4 @@
-<x-action-section>
-    <x-slot name="title">
-        {{ __('Empresa') }}
-    </x-slot>
-    <x-slot name="description">
-    </x-slot>
-    
+<x-action-section :title="'Empresa'" :description="''">    
     <x-slot name="content">
         <div class="col-span-6 sm:col-span-4">
             <x-label for="nom_com" value="{{ __('Nombre comercial') }}" />
@@ -20,6 +14,5 @@
             <x-label for="rubro" value="{{ __('Rubro') }}" />
             <x-input id="rubro" type="text" class="mt-1 block w-full" wire:model="empresa.rubro" disabled />
         </div>
-
     </x-slot>
 </x-action-section>

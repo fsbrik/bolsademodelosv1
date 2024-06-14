@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Empresa;
 
-class EditInfoEmpresa extends Component
+class EmpresaEdit extends Component
 {
     public $empresa, $empresaId;
 
@@ -44,6 +44,6 @@ class EditInfoEmpresa extends Component
 
     public function render()
     {
-        return view('livewire.edit-info-empresa');
+        return view('livewire.empresa-edit');
     }
 }

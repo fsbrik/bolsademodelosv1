@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\Empresa;
 
 
-class ShowInfoEmpresa extends Component
+class EmpresaShow extends Component
 {
  
     public $empresa;
@@ -19,6 +19,6 @@ class ShowInfoEmpresa extends Component
 
     public function render()
     {
-        return view('livewire.show-info-empresa');
+        return view('livewire.empresa-show');
     }
 }
