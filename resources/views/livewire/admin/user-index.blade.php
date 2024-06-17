@@ -9,18 +9,18 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="grid grid-cols-12 gap-6 mb-8">
-                        <div class="col-span-6 sm:col-span-3">
-                            <x-label for="searchName" value="{{ __('Nombre') }}" />
+                    <div class="w-2/3 mx-auto bg-gray-100 grid grid-cols-9 gap-2 mb-4 p-4">
+                        <div class="col-span-9 sm:col-span-3">
+                            <x-label for="searchName" value="{{ __('Nombre / apellido') }}" />
                             <x-input id="searchName" type="text" class="mt-1 block w-full"
                                 wire:model.live.debounce.250ms="searchName" />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div class="col-span-9 sm:col-span-3">
                             <x-label for="searchTelefono" value="{{ __('Teléfono') }}" />
                             <x-input id="searchTelefono" type="text" class="mt-1 block w-full"
                                 wire:model.live.debounce.250ms="searchTelefono" />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div class="col-span-9 sm:col-span-3">
                             <x-label for="searchEmail" value="{{ __('Email') }}" />
                             <x-input id="searchEmail" type="text" class="mt-1 block w-full"
                                 wire:model.live.debounce.250ms="searchEmail" />

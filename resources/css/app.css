@@ -6,3 +6,43 @@
 [x-cloak] {
     display: none;
 }
+
+/* Reducir el tamaño de los inputs y selects */
+input[type="text"], input[type="number"], input[type="date"], select {
+    font-size: 0.7rem; /* Tamaño de fuente más pequeño */
+    padding: 0.15rem; /* Padding reducido */
+}
+
+/* Estilos para las tablas */
+table th, table td {
+    padding: 0.2rem; /* Padding reducido */
+    font-size: 0.7rem; /* Tamaño de fuente más pequeño */
+}
+
+.table-container {
+    overflow-x: auto; /* Asegurarse de que la tabla sea responsive */
+}
+
+/* Estilo para los th (cabecera de la tabla) */
+th {
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+    font-size: 0.625rem; /* Más pequeño que text-xs */
+}
+
+.input-small {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.5);
+}
+
+.label-small {
+    font-size: 0.55rem;
+}
+
+.label-medium {
+    font-size: 0.7rem;
+}

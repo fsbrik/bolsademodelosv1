@@ -6,19 +6,18 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\User;
 
-/* class UserIndex extends Component
+class UserIndex extends Component
 {
+    public $searchName, $searchTelefono, $searchEmail;
+
     use WithPagination;
 
-    public $searchName = '';
-    public $searchEmail = '';
-
-    protected $updatesQueryString = [
-        'searchName' => ['except' => ''],
-        'searchEmail' => ['except' => ''],
-    ];
-
     public function updatingSearchName()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSearchTelefono()
     {
         $this->resetPage();
     }
@@ -27,23 +26,9 @@ use App\Models\User;
     {
         $this->resetPage();
     }
-
+    
     public function render()
-    {
-        $users = User::where('name', 'LIKE', '%'.$this->searchName.'%')
-                     ->orWhere('email', 'LIKE', '%'.$this->searchEmail.'%')
-                     ->paginate(10);
-
-        return view('livewire.admin.user-index', compact('users'));
-    }
-} */
-
-class UserIndex extends Component
-{
-    public $searchName, $searchTelefono, $searchEmail;
-
-    public function render()
-    {
+    {        
         $users = User::query();
 
         if ($this->searchName) {
