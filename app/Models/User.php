@@ -13,6 +13,14 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions)
+ * @method \Illuminate\Database\Eloquent\Builder|User hasRole($roles, $guard = null)
+ * @method \Illuminate\Database\Eloquent\Builder|User hasAnyRole(...$roles)
+ * @method bool hasRole(string|int|array $role, string|null $guard = null) Check if the user has any of the given roles.
+ */
+
 class User extends Authenticatable
 {
     use HasApiTokens;

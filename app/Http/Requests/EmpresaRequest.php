@@ -25,6 +25,16 @@ class EmpresaRequest extends FormRequest
             'nom_com' => 'required|string|max:100',
             'domicilio' => 'required|string|max:255',
             'rubro' => 'required|string|max:100',
+            'tipo' => 'required|in:A,C', // Asumiendo que solo se permiten 'M' y 'F'
+            'cuit' => ['required', 'regex:/^\d{2}-\d{8}-\d{1}$/'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'cuit' => 'El campo CUIT debe tener el formato XX-XXXXXXXX-X donde X son números.',
+            // otros mensajes de error
         ];
     }
 }

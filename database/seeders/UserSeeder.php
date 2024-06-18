@@ -14,17 +14,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        //$users = User::factory()->count(20)->create();
+        //$users = User::factory()->count(50)->create()->assignRole('empresa');
         /* User::create([
             'id' => 1,
             'name' => 'admin',
             'email' => 'fsbrik@hotmail.com',
             'password' => Hash::make('123')
         ])->assignRole('admin'); */
-        $users = User::whereBetween('id', [37, 75])->get();//->orWhereBetween('id', [9, 24])->get();
+         $users = User::whereBetween('id', [69, 176])->get();//->orWhereBetween('id', [9, 24])->get();
 
         foreach ($users as $user) {
-            $user->assignRole('modelo');
-        }
+            $user->assignRole('empresa');
+        } 
     }
 }

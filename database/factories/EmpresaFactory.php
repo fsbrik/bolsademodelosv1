@@ -14,6 +14,9 @@ class EmpresaFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    public $number = 69;
+
     public function definition(): array
     {
         return [
@@ -22,7 +25,7 @@ class EmpresaFactory extends Factory
             'rubro' => fake()->catchPhrase(),
             'tipo' => ['A', 'C'][array_rand(['A', 'C'])],  // Asigna 'A' o 'C' aleatoriamente
             'cuit' => $this->generateCuit(),  // Genera un CUIT en el formato XX-XXXXXXXX-X
-            'user_id' => fake()->unique()->numberBetween(29, 34)
+            'user_id' => $this->number++ //fake()->unique()->numberBetween(69, 176)
         ];
     }
 

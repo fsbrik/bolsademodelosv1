@@ -12,19 +12,13 @@ class UserIndex extends Component
 
     use WithPagination;
 
-    public function updatingSearchName()
+    public function updating($field)
     {
-        $this->resetPage();
-    }
-
-    public function updatingSearchTelefono()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSearchEmail()
-    {
-        $this->resetPage();
+        if(in_array($field, [
+            'searchName', 'searchTelefono', 'searchEmail'
+        ])) {
+           $this->resetPage(); 
+        }        
     }
     
     public function render()

@@ -184,10 +184,10 @@ return [
         'store' => 'default',
     ],
 
-    'roles' => [
+    /* 'roles' => [
         'administrador',
         'modelo',
-        'empresa',
-    ],
+        'empresa', 
+    ], */
     
 ];

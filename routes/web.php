@@ -34,4 +34,5 @@ Route::middleware([
     Route::resource('/users', UserController::class)->names('users');
     Route::resource('/empresas', EmpresaController::class)->names('empresas');
     Route::resource('/modelos', ModeloController::class)->names('modelos');
+    
 });

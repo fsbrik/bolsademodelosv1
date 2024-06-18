@@ -13,6 +13,6 @@ class EmpresaSeeder extends Seeder
      */
     public function run(): void
     {
-        Empresa::factory()->count(6)->create();
+        Empresa::factory()->count(107)->create();
     }
 }

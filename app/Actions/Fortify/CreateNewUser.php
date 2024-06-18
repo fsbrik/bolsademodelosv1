@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Spatie\Permission\Models\Role;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -23,13 +24,26 @@ class CreateNewUser implements CreatesNewUsers
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
+            'role' => ['required', 'in:modelo,empresa'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+
         ]);
+
+        // Verificar que el rol exista
+        $role = Role::where('name', $input['role'])->first();
+        if ($role) {
+            $user->assignRole($role);
+        } else {
+            // Manejar el caso donde el rol no exista, por ejemplo, lanzar una excepción o registrar un error
+            throw new \Exception('El rol no existe.');
+        }
+
+        return $user;
     }
 }
