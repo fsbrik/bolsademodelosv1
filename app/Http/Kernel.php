@@ -67,5 +67,9 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\CheckAdminRole::class,
         'empresa' => \App\Http\Middleware\CheckEmpresaRole::class,
         'modelo' => \App\Http\Middleware\CheckModeloRole::class,
+        'check.if.user.has.modelo' => \App\Http\Middleware\CheckIfUserHasModelo::class,
+        'check.if.user.has.empresa' => \App\Http\Middleware\CheckIfUserHasModelo::class,
+        'check.modelo.ownership' => \App\Http\Middleware\CheckModeloOwnership::class,
+        'check.empresa.ownership' => \App\Http\Middleware\CheckEmpresaOwnership::class,
     ];
 }

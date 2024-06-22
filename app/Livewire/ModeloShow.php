@@ -14,7 +14,7 @@ class ModeloShow extends Component
     public function mount($modeloId)
     {
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
-        $modelo = Modelo::findOrFail($modeloId);
+        $modelo = Modelo::findOrFail($modeloId);    
         $this->modelo = $modelo->toArray();   
     }
 

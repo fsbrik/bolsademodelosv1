@@ -8,7 +8,7 @@
 }
 
 /* Reducir el tamaño de los inputs y selects */
-input[type="text"], input[type="number"], input[type="email"], input[type="password"], input[type="date"], select {
+input[type="text"], input[type="number"], input[type="email"], input[type="password"], input[type="date"], textarea, select {
     font-size: 0.7rem; /* Tamaño de fuente más pequeño */
     padding: 0.15rem; /* Padding reducido */
 }

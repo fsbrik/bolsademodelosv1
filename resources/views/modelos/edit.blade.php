@@ -15,7 +15,8 @@
 
                     @livewire('modelo-edit', ['modeloId' => $modelo->id])
                     <x-section-border />
-                       
+                     
+                    @can('modelos.index')
                     <div class="flex items-center justify-end mt-4">
                             <x-button class="ml-4">
                                 <a href="{{ route('modelos.index') }}">
@@ -23,6 +24,7 @@
                                 </a>
                             </x-button>
                     </div>
+                    @endcan
                 </div>
             </div>
         </div>

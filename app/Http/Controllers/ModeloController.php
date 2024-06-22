@@ -2,12 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Modelo;
 use Illuminate\Http\Request;
 use App\Http\Requests\ModeloRequest;
 
 class ModeloController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:modelos.index')->only('index');
+        $this->middleware('can:modelos.create')->only('create', 'store');
+        $this->middleware('can:modelos.edit')->only('edit', 'update');
+        $this->middleware('can:modelos.show')->only('show');
+        $this->middleware('can:modelos.destroy')->only('destroy');
+        $this->middleware('check.modelo.ownership')->only(['show', 'edit', 'update', 'destroy']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -56,30 +66,30 @@ class ModeloController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Modelo $modelo)
     {
+        //$modelo = Modelo::findOrFail($id);
+
         $localidades = include(public_path('storage/localidades/localidades.php'));
-        $modelo = Modelo::findOrFail($id);
         return view('modelos.show', compact('modelo', 'localidades'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Modelo $modelo)
     {
-        $modelo = Modelo::findOrFail($id);
+        //$modelo = Modelo::findOrFail($id);
         return view('modelos.edit', compact('modelo'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ModeloRequest $request, $id)
+    public function update(ModeloRequest $request, Modelo $modelo)
     {
-        $modelo = Modelo::findOrFail($id);
+        //$modelo = Modelo::findOrFail($id);
 
-        // Actualizar los detalles de la modelo
         $modelo->update(
             $request()->all()
         );
@@ -91,10 +101,11 @@ class ModeloController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Modelo $modelo)
     {
-        $modelo = Modelo::findOrFail($id);
+        //$modelo = Modelo::findOrFail($id);
+
         $modelo->delete();
-        return redirect()->route('modelos.index')->with('success', 'modelo eliminada correctamente.');
+        return redirect()->route('profile.show')->with('success', 'modelo eliminada correctamente.');
     }
 }

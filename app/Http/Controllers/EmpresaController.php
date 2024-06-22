@@ -7,7 +7,16 @@ use App\Models\Empresa;
 use App\Http\Requests\EmpresaRequest;
 
 class EmpresaController extends Controller
-{
+{    
+    public function __construct()
+    {
+        $this->middleware('can:empresas.index')->only('index');
+        $this->middleware('can:empresas.create')->only('create', 'store');
+        $this->middleware('can:empresas.edit')->only('edit', 'update');
+        $this->middleware('can:empresas.show')->only('show');
+        $this->middleware('can:empresas.destroy')->only('destroy');
+        $this->middleware('check.empresa.ownership')->only(['show', 'edit', 'update', 'destroy']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -47,27 +56,27 @@ class EmpresaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Empresa $empresa)
     {
-        $empresa = Empresa::findOrFail($id);
+        //$empresa = Empresa::findOrFail($id);
         return view('empresas.show', compact('empresa'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Empresa $empresa)
     {
-        $empresa = Empresa::findOrFail($id);
+        //$empresa = Empresa::findOrFail($id);
         return view('empresas.edit', compact('empresa'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(EmpresaRequest $request, $id)
+    public function update(EmpresaRequest $request, Empresa $empresa)
     {
-        $empresa = Empresa::findOrFail($id);
+        //$empresa = Empresa::findOrFail($id);
 
         // Actualizar los detalles de la empresa
         $empresa->update([
@@ -84,10 +93,10 @@ class EmpresaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Empresa $empresa)
     {
-        $empresa = Empresa::findOrFail($id);
+        //$empresa = Empresa::findOrFail($id);
         $empresa->delete();
-        return redirect()->route('empresas.index')->with('success', 'Empresa eliminada correctamente.');
+        return redirect()->route('profile.show')->with('success', 'Empresa eliminada correctamente.');
     }
 }

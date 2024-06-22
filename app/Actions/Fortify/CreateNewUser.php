@@ -3,11 +3,13 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -23,25 +25,44 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'telefono' => ['required', 'string', 'max:20'],
             'password' => $this->passwordRules(),
             'role' => ['required', 'in:modelo,empresa'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        $user = User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
+        DB::beginTransaction();
 
-        ]);
+        try {
+            $user = User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'telefono' => $input['telefono'],
+                'password' => Hash::make($input['password']),
+            ]);
 
-        // Verificar que el rol exista
-        $role = Role::where('name', $input['role'])->first();
-        if ($role) {
-            $user->assignRole($role);
-        } else {
-            // Manejar el caso donde el rol no exista, por ejemplo, lanzar una excepción o registrar un error
-            throw new \Exception('El rol no existe.');
+            Log::info('User created:', ['user' => $user]);
+
+            $roleName = $input['role'];
+            Log::info('Role name:', ['role_name' => $roleName]);
+
+            $role = Role::where('name', $roleName)->first();
+            Log::info('Role found:', ['role' => $role]);
+
+            if ($role) {
+                $user->assignRole($roleName); // Usa el nombre del rol directamente
+                Log::info('Role assigned successfully:', ['user_id' => $user->id, 'role' => $roleName]);
+            } else {
+                Log::error('The role does not exist:', ['role' => $roleName]);
+                throw new \Exception('El rol no existe.');
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error in transaction:', ['error' => $e->getMessage()]);
+            throw $e;
         }
 
         return $user;

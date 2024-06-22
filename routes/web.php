@@ -31,8 +31,11 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    Route::resource('/users', UserController::class)->names('users');
+    Route::resource('/users', UserController::class)->except('create', 'store')->names('users');
     Route::resource('/empresas', EmpresaController::class)->names('empresas');
     Route::resource('/modelos', ModeloController::class)->names('modelos');
-    
+    Route::middleware(['auth', 'check.if.user.has.modelo'])->group(function () {
+        Route::get('/modelos/create', [ModeloController::class, 'create'])->name('modelos.create');
+        Route::post('/modelos', [ModeloController::class, 'store'])->name('modelos.store');
+    }); 
 });

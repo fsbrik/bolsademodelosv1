@@ -25,6 +25,8 @@ return [
          */
 
         'role' => Spatie\Permission\Models\Role::class,
+        'user' => \App\Models\User::class,
+        //'empresa' => \App\Models\Empresa::class,
 
     ],
 
@@ -183,11 +185,5 @@ return [
 
         'store' => 'default',
     ],
-
-    /* 'roles' => [
-        'administrador',
-        'modelo',
-        'empresa', 
-    ], */
     
 ];

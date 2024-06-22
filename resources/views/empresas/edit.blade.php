@@ -15,14 +15,16 @@
 
                     @livewire('empresa-edit', ['empresaId' => $empresa->id])
                     <x-section-border />
-                       
-                    <div class="flex items-center justify-end mt-4">
+
+                    @can('empresas.index')
+                        <div class="flex items-center justify-end mt-4">
                             <x-button class="ml-4">
                                 <a href="{{ route('empresas.index') }}">
                                     {{ __('Volver') }}
                                 </a>
                             </x-button>
-                    </div>
+                        </div>
+                    @endcan
                 </div>
             </div>
         </div>
