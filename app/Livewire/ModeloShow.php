@@ -18,6 +18,26 @@ class ModeloShow extends Component
         $this->modelo = $modelo->toArray();   
     }
 
+    public function getDisviaDisplayProperty()
+    {
+        return $this->modelo['dis_via'] == 1 ? 'sí' : 'no';
+    }
+
+    public function getTitmodDisplayProperty()
+    {
+        return $this->modelo['tit_mod'] == 1 ? 'sí' : 'no';
+    }
+
+    public function getEstadoDisplayProperty()
+    {
+        return $this->modelo['estado'] == 1 ? 'activo' : 'inactivo';
+    }
+
+    public function getHabilitaDisplayProperty()
+    {
+        return $this->modelo['habilita'] == 1 ? 'sí' : 'no';
+    }
+
     public function render()
     {
         return view('livewire.modelo-show');
