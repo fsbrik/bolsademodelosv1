@@ -122,7 +122,7 @@
                                             class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-xs"
                                             wire:model.live.debounce.250ms="searchDisTra">
                                             <option value="">--</option>
-                                            <option value="Ambos">Ambos</option>
+                                            <option value="Ambas">Ambas</option>
                                             <option value="Modelo">Modelo</option>
                                             <option value="Promotora">Promotor/a</option>
                                         </select>
@@ -317,7 +317,7 @@
                                                         {{ $modelo->tar_com }}
                                                     </td>
                                                     <td class="px-1 py-2 whitespace-nowrap">
-                                                        <input type="radio" disabled checked class="{{ $modelo->estado == '1' ? 'text-green-500' : 'text-red-500' }}" class="text-green-500">
+                                                        <input type="radio" disabled checked class="{{ $modelo->estado == '1' ? 'text-green-500' : 'text-red-500' }}">
                                                     </td>                                                    
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                         <a href="{{ route('modelos.show', $modelo->id) }}"

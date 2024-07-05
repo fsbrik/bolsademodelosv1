@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ModeloController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ServicioController;
 //use App\Livewire\Admin\UserIndex;
 
 
@@ -38,4 +39,7 @@ Route::middleware([
         Route::get('/modelos/create', [ModeloController::class, 'create'])->name('modelos.create');
         Route::post('/modelos', [ModeloController::class, 'store'])->name('modelos.store');
     }); 
+    Route::view('solicitudes-modelos', 'solicitudes.solicitudes-modelos');
 });
+
+Route::resource('/servicios', ServicioController::class)->names('servicios');

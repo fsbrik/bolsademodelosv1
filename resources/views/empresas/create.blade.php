@@ -42,7 +42,7 @@
                         <!-- Tipo -->
                         <div class="mt-4">
                             <x-label for="tipo" value="{{ __('Tipo') }}" />
-                            <select id="tipo" name="tipo" :value="old('empresa')" 
+                            <select id="tipo" name="tipo" :value="old('tipo')" 
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <option value="A">{{ __('A') }}</option>
                                 <option value="C">{{ __('C') }}</option>

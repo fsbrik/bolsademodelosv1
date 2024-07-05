@@ -16,10 +16,11 @@ class NavigationMenuVertical extends Component
         
         if ($user->hasRole('admin')) {
             $this->links = [
-                ['name' => 'Solicitudes', 'route' => 'modelos/solicitudes-modelos'],
+                ['name' => 'Solicitudes', 'route' => 'solicitudes-modelos'],
                 ['name' => 'Contrataciones', 'route' => 'empresas/contrataciones'],
                 ['name' => 'Modelos', 'route' => route('modelos.index')],
                 ['name' => 'Empresas', 'route' => route('empresas.index')],
+                ['name' => 'Servicios', 'route' => route('servicios.index')],
             ];
         } elseif ($user->hasRole('modelo')) {
             //$modeloId = Modelo::findOrFail($user->modelo->user_id);  

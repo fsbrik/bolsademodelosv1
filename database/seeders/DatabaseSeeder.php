@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
             //RoleSeeder::class,
             //UserSeeder::class,
             //ModeloSeeder::class
-            EmpresaSeeder::class
+            //EmpresaSeeder::class
+            ServicioSeeder::class,
         ]);
     }
 }
