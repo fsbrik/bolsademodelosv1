@@ -20,7 +20,7 @@
         </div>
         <nav class="mt-2 flex-1 px-2 space-y-1" :class="{ 'hidden': !open }">
             @foreach ($links as $link)
-                <x-responsive-nav-link-vert wire:navigate :href="url($link['route'])" :active="request()->is($link['route'])">
+                <x-responsive-nav-link-vert wire:navigate :href="route($link['route'])" :active="request()->routeIs($link['route'])">
                     {{ $link['name'] }}
                 </x-responsive-nav-link-vert>
             @endforeach

@@ -42,7 +42,7 @@ Route::middleware([
         Route::get('/modelos/create', [ModeloController::class, 'create'])->name('modelos.create');
         Route::post('/modelos', [ModeloController::class, 'store'])->name('modelos.store');
     }); 
-    Route::view('solicitudes-modelos', 'solicitudes.solicitudes-modelos');
+    Route::view('solicitudes-modelos', 'solicitudes.solicitudes-modelos')->name('solicitudes_modelos');
     Route::resource('/pedidos', PedidoController::class)->names('pedidos');
 });
 

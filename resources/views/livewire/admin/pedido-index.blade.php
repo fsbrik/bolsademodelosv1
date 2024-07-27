@@ -98,7 +98,7 @@
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900"
                                                 title="Borrar"
-                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este pedido?');">
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar esta reserva?');">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>

@@ -15,11 +15,12 @@ class NavigationMenuVertical extends Component
         
         if ($user->hasRole('admin')) {
             $this->links = [
-                ['name' => 'Solicitudes', 'route' => 'solicitudes-modelos'],
-                ['name' => 'Pedidos', 'route' => route('pedidos.index')],
-                ['name' => 'Modelos', 'route' => route('modelos.index')],
-                ['name' => 'Empresas', 'route' => route('empresas.index')],
-                ['name' => 'Servicios', 'route' => route('servicios.index')],
+                ['name' => 'Solicitudes', 'route' => 'solicitudes_modelos'],
+                ['name' => 'Reservas', 'route' => 'pedidos.index'],
+                ['name' => 'Modelos', 'route' => 'modelos.index'],
+                //['name' => 'Fotos', 'route' => ''],
+                ['name' => 'Empresas', 'route' => 'empresas.index'],
+                ['name' => 'Servicios', 'route' => 'servicios.index'],
             ];
         } elseif ($user->hasRole('modelo')) {
             $this->links = [
@@ -33,7 +34,7 @@ class NavigationMenuVertical extends Component
             $this->links = [
                 ['name' => 'Perfil', 'route' => route('profile.show')],
                 ['name' => 'Datos adicionales', 'route' => route('empresas.show', $user->id)],
-                ['name' => 'Pedidos', 'route' => route('pedidos.create')],
+                ['name' => 'Reservas', 'route' => route('pedidos.create')],
             ];
         }
     }
