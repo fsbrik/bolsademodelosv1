@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'check.if.user.has.empresa' => \App\Http\Middleware\CheckIfUserHasModelo::class,
         'check.modelo.ownership' => \App\Http\Middleware\CheckModeloOwnership::class,
         'check.empresa.ownership' => \App\Http\Middleware\CheckEmpresaOwnership::class,
+        'check.pedido.ownership' => \App\Http\Middleware\CheckPedidoOwnership::class,
     ];
 }

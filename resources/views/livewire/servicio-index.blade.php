@@ -71,8 +71,7 @@
                                         </td>
                                         <td class="px-1 py-2 whitespace-nowrap">
                                             <input type="radio" disabled checked
-                                                class="{{ $servicio->hab_ser == '1' ? 'text-green-500' : 'text-red-500' }}"
-                                                class="text-green-500">
+                                                class="{{ $servicio->hab_ser == '1' ? 'text-green-500' : 'text-red-500' }}">
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a wire:navigate href="{{ route('servicios.show', $servicio->id) }}"

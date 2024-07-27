@@ -82,5 +82,9 @@ class User extends Authenticatable
         return $this->hasOne(Modelo::class);
     }
     
+    public function pedidos(): HasMany
+    {
+        return $this->hasMany(Pedido::class);
+    }
 
 }

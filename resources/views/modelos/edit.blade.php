@@ -10,21 +10,13 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
 
-                    @livewire('Admin.modelo-user-show', ['modeloId' => $modelo->id])
-                    <x-section-border />
+                    @if (Auth::user()->hasRole('admin'))
+                        @livewire('Admin.modelo-user-show', ['modeloId' => $modelo->id])
+                        <x-section-border />
+                    @endif
 
                     @livewire('modelo-edit', ['modeloId' => $modelo->id])
                     <x-section-border />
-                     
-                    @can('modelos.index')
-                    <div class="flex items-center justify-end mt-4">
-                            <x-button class="ml-4">
-                                <a href="{{ route('modelos.index') }}">
-                                    {{ __('Volver') }}
-                                </a>
-                            </x-button>
-                    </div>
-                    @endcan
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Detalles de la modelo') }}
+            {{ __('Ficha técnica') }}
         </h2>
     </x-slot>
     <div class="py-12">
@@ -13,8 +13,10 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    @livewire('Admin.modelo-user-show', ['modeloId' => $modelo->id])
+                    @if (Auth::user()->hasRole('admin'))
+                        @livewire('Admin.modelo-user-show', ['modeloId' => $modelo->id])
                     <x-section-border />
+                    @endif
 
                     @livewire('modelo-show', ['modeloId' => $modelo->id])
                     <x-section-border />
@@ -33,11 +35,11 @@
                             </button>
                         </form>
                         @can('modelos.index')
-                        <x-button class="ml-4">
-                            <a href="{{ route('modelos.index') }}">
-                                {{ __('Volver') }}
-                            </a>
-                        </x-button>
+                            <x-button class="ml-4">
+                                <a href="{{ route('modelos.index') }}">
+                                    {{ __('Volver') }}
+                                </a>
+                            </x-button>
                         @endcan
                     </div>
                 </div>

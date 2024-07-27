@@ -24,6 +24,7 @@ class ModeloEdit extends Component
             'modelo.fec_nac' => 'required|date',
             'modelo.sexo' => 'required|in:M,F', // Asumiendo que solo se permiten 'M' y 'F'
             'modelo.estatura' => 'required|numeric|between:1.40,2.35',
+            'modelo.col_cab' => 'nullable|in:rubio,castaño,pelirrojo,morocho,otro',
             'modelo.medidas' => 'nullable|string',
             'modelo.calzado' => 'nullable|numeric|between:30.0,45.0',
             'modelo.zon_res' => 'nullable|string|max:100',

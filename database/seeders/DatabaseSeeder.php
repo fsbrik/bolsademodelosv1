@@ -30,7 +30,8 @@ class DatabaseSeeder extends Seeder
             //UserSeeder::class,
             //ModeloSeeder::class
             //EmpresaSeeder::class
-            ServicioSeeder::class,
+            //ServicioSeeder::class,
+            PermissionPedidoSeeder::class
         ]);
     }
 }

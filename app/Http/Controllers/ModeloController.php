@@ -74,6 +74,10 @@ class ModeloController extends Controller
         return view('modelos.show', compact('modelo', 'localidades'));
     }
 
+    /* public function cambiar_estado(Modelo $modelo){
+        return view('modelos.cambiar_estado', compact($modelo));
+    } */
+
     /**
      * Show the form for editing the specified resource.
      */
