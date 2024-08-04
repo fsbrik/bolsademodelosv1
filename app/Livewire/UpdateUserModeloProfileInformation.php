@@ -8,15 +8,23 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
-class UpdateUserProfileInformation implements UpdatesUserProfileInformation
+class UpdateUserModeloProfileInformation implements UpdatesUserProfileInformation
 {
     /**
      * Validate and update the given user's profile information.
      *
      * @param  array<string, mixed>  $input
      */
-    public function update(User $user, array $input): void
+    public $user;
+
+    public function mount($modeloId){
+        $this->user = User::with('modelo')->where('id',$modeloId)->get();
+    }
+
+    public function update(array $input): void
     {
+        $user = $this->user;
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
@@ -47,8 +55,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      *
      * @param  array<string, string>  $input
      */
-    protected function updateVerifiedUser(User $user, array $input): void
+    protected function updateVerifiedUser(array $input): void
     {
+        $user = $this->user;
+
         $user->forceFill([
             'name' => $input['name'],
             'email' => $input['email'],
@@ -59,4 +69,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         $user->sendEmailVerificationNotification();
     }
 
+    public function render(){
+        return view('livewire.profile.update-modelo-profile-information-form');
+    }
 }

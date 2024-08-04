@@ -12,6 +12,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
+
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null)
@@ -85,6 +87,19 @@ class User extends Authenticatable
     public function pedidos(): HasMany
     {
         return $this->hasMany(Pedido::class);
+    }
+
+    public function deleteProfilePhoto()
+    {
+        if (is_null($this->profile_photo_path)) {
+            return;
+        }
+
+        Storage::disk($this->profilePhotoDisk())->delete($this->profile_photo_path);
+
+        $this->forceFill([
+            'profile_photo_path' => null,
+        ])->save();
     }
 
 }

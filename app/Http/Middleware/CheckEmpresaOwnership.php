@@ -18,16 +18,16 @@ class CheckEmpresaOwnership
      */
     public function handle(Request $request, Closure $next)
     {
-        $model = $request->route('empresa');
+        $empresa = $request->route('empresa');
 
         //dd(Auth::user()->hasRole('admin'));
          // Asegúrate de que es una instancia de empresa
-         if (!$model instanceof Empresa) {
+         if (!$empresa instanceof Empresa) {
             abort(404, 'Empresa no encontrada.');
         }
 
         // Verifica la propiedad de la empresa
-        if (Auth::user()->id !== $model->user_id && !Auth::user()->hasRole('admin')) {
+        if (Auth::user()->id !== $empresa->user_id && !Auth::user()->hasRole('admin')) {
             abort(403, 'Unauthorized action.');
         }
 

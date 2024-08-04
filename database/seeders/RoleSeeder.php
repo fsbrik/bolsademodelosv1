@@ -14,13 +14,13 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $roleAdmin = Role::create(['name' => 'admin']);
+        /*$roleAdmin = Role::create(['name' => 'admin']);
         $roleModelo = Role::create(['name' => 'modelo']);
         $roleEmpresa = Role::create(['name' => 'empresa']);
         
         Permission::create(['name' => 'users.index'])->assignRole($roleAdmin);
         Permission::create(['name' => 'empresas.index'])->assignRole($roleAdmin);
-        Permission::create(['name' => 'modelos.index'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'modelos.index'])->syncRoles($roleAdmin, $roleEmpresa);
 
         //Permission::create(['name' => 'users.index'])->assignRole($roleEmpresa);
         //Permission::create(['name' => 'users.create'])->syncRoles($roleAdmin);
@@ -37,7 +37,30 @@ class RoleSeeder extends Seeder
         //Permission::create(['name' => 'modelos.index'])->syncRoles($roleAdmin, $roleModelo);
         Permission::create(['name' => 'modelos.create'])->syncRoles($roleAdmin, $roleModelo);
         Permission::create(['name' => 'modelos.edit'])->syncRoles($roleAdmin, $roleModelo);
-        Permission::create(['name' => 'modelos.show'])->syncRoles($roleAdmin, $roleModelo);
-        Permission::create(['name' => 'modelos.destroy'])->syncRoles($roleAdmin, $roleModelo);
+        Permission::create(['name' => 'modelos.show'])->syncRoles($roleAdmin, $roleModelo, $roleEmpresa);
+        Permission::create(['name' => 'modelos.destroy'])->syncRoles($roleAdmin, $roleModelo); 
+
+        $roleEmpresa = Role::findByName('empresa');
+        
+        // Recuperar el permiso existente
+        $permisoModeloIndex = Permission::findByName('modelos.index');
+        
+        // Asignar el rol adicionales al permiso
+        $permisoModeloIndex->assignRole($roleEmpresa);
+
+        $roleAdmin = Role::findByName('admin');
+        Permission::create(['name' => 'modelos.datos_de_contacto'])->syncRoles($roleAdmin);
+
+        $roleEmpresa = Role::findByName('empresa');        
+        Permission::create(['name' => 'modelos.ficha_tecnica'])->syncRoles($roleEmpresa);*/
+
+        $roleAdmin = Role::findByName('admin');
+        //Permission::create(['name' => 'modelos.ver_estado'])->syncRoles($roleAdmin);
+        Permission::create(['name' => 'modelos.ver_habilitar'])->syncRoles($roleAdmin);
+        //Permission::create(['name' => 'modelos.permite_editar'])->syncRoles($roleAdmin);
+        $roleEmpresa = Role::findByName('empresa');
+
+        //Permission::create(['name' => 'modelos.filtros_administrador'])->assignRole('admin');
+
     }
 }

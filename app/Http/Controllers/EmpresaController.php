@@ -22,8 +22,7 @@ class EmpresaController extends Controller
      */
     public function index()
     {
-        $empresas = Empresa::all();
-        return view('empresas.index', compact('empresas'));
+        return view('empresas.index');
     }
 
     /**
@@ -36,8 +35,9 @@ class EmpresaController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * Se reemplaza el metodo por otro igual en EmpresaCreate
      */
-    public function store(EmpresaRequest $request)
+    /* public function store(EmpresaRequest $request)
     {
         // Crear una nueva instancia de Empresa
         $empresa = new Empresa();
@@ -51,7 +51,7 @@ class EmpresaController extends Controller
 
         // Redirigir al usuario a la vista de detalles de la empresa recién creada
         return redirect()->route('empresas.show', $empresa->id)->with('success', 'La empresa ha sido creada correctamente.');
-    }
+    } */
 
     /**
      * Display the specified resource.
@@ -73,8 +73,9 @@ class EmpresaController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * Se reemplaza el metodo por otro igual en EmpresaEdit
      */
-    public function update(EmpresaRequest $request, Empresa $empresa)
+    /* public function update(EmpresaRequest $request, Empresa $empresa)
     {
         //$empresa = Empresa::findOrFail($id);
 
@@ -88,15 +89,16 @@ class EmpresaController extends Controller
 
         // Redirigir al usuario a la vista de detalles de la empresa actualizada
         return redirect()->route('empresas.show', $empresa->id)->with('success', 'Los detalles de la empresa han sido actualizados correctamente.');
-    }
+    } */
 
     /**
      * Remove the specified resource from storage.
+     * Se reemplaza el metodo por otros iguales en EmpresaIndex y EmpresaShow
      */
-    public function destroy(Empresa $empresa)
+   /*  public function destroy(Empresa $empresa)
     {
         //$empresa = Empresa::findOrFail($id);
         $empresa->delete();
         return redirect()->route('profile.show')->with('success', 'Empresa eliminada correctamente.');
-    }
+    } */
 }

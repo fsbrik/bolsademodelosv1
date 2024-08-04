@@ -10,16 +10,22 @@ class ModeloIndex extends Component
 {
     public $searchModId, $searchName, $searchTelefono, $searchEmail;
     public $searchEdadMin, $searchEdadMax, $searchSexo, $searchEstaturaMin, $searchEstaturaMax;
-    public $searchZonRes, $searchDisVia, $searchTitMod, $searchIngles, $searchDisTra;
+    public $searchZonRes, $searchDisVia, $searchTitMod, $searchIngles, $searchDisTra, $searchCabello;
     public $searchTarMedMin, $searchTarMedMax, $searchTarComMin, $searchTarComMax;
     public $searchEstado, $searchHabilita;
     public $localidades = [];
     public $sort_By = null, $sortDirection = 'asc';
-
+    public $showTable = true;
+    
     use WithPagination;
 
     public function mount(){
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
+    }
+
+    public function toggleView()
+    {
+        $this->showTable = !$this->showTable;
     }
 
     public function updating($field)
@@ -27,7 +33,7 @@ class ModeloIndex extends Component
         if (in_array($field, [
             'searchModId', 'searchName', 'searchTelefono', 'searchEmail',
             'searchEdadMin', 'searchEdadMax', 'searchSexo', 'searchEstaturaMin', 'searchEstaturaMax',
-            'searchZonRes', 'searchDisVia', 'searchTitMod', 'searchIngles', 'searchDisTra',
+            'searchCabello', 'searchZonRes', 'searchDisVia', 'searchTitMod', 'searchIngles', 'searchDisTra',
             'searchTarMedMin', 'searchTarMedMax', 'searchTarComMin', 'searchTarComMax',
             'searchEstado', 'searchHabilita'
         ])) {
@@ -81,6 +87,10 @@ class ModeloIndex extends Component
 
         if ($this->searchEstaturaMin || $this->searchEstaturaMax) {
             $modelos->whereBetween('estatura', [$this->searchEstaturaMin, $this->searchEstaturaMax]);
+        }
+
+        if ($this->searchCabello) {
+            $modelos->where('col_cab', 'like', '%' . $this->searchCabello . '%');
         }
 
         if ($this->searchZonRes) {

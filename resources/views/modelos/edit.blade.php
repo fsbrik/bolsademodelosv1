@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
 
                     @if (Auth::user()->hasRole('admin'))
-                        @livewire('Admin.modelo-user-show', ['modeloId' => $modelo->id])
+                        @livewire('Admin.modelo-user', ['modeloId' => $modelo->id])
                         <x-section-border />
                     @endif
 

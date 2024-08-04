@@ -5,12 +5,14 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Empresa;
+use Illuminate\Support\Facades\Auth;
 
 class EmpresaIndex extends Component
 {
     public $searchName, $searchTelefono, $searchEmail;
     public $searchComercial, $searchCuit;
-    
+    public $user;
+
     use WithPagination;
 
     public function updating($field)
@@ -20,11 +22,33 @@ class EmpresaIndex extends Component
         }
     }
 
+    public function userType(){
+        $this->user = Auth::user();
+
+        if ($this->user->hasRole('admin')) {
+            $this->empresas = Empresa::query();
+        } else {
+            $this->empresas = Empresa::where('user_id', $this->user->id);
+        }
+    }
+
+    public function destroy(Empresa $empresa){
+        $empresa->delete();
+        return redirect()->route('empresas.index');
+        session()->flash('message', 'Empresa eliminada con éxito.');
+    }
+
     public function render()
     {
-        $empresas = Empresa::query();
+        $this->user = Auth::user();
 
-        if ($this->searchName || $this->searchTelefono || $this->searchEmail) {
+        if ($this->user->hasRole('admin')) {
+            $empresas = Empresa::query();
+        } else {
+            $empresas = Empresa::where('user_id', $this->user->id);
+        }
+
+        if ($this->user->hasRole('admin') && ($this->searchName || $this->searchTelefono || $this->searchEmail)) {
             $empresas->whereHas('user', function ($query) {
                 if ($this->searchName) {
                     $query->where('name', 'like', '%' . $this->searchName . '%');
@@ -47,7 +71,7 @@ class EmpresaIndex extends Component
         }
 
         $empresas = $empresas->paginate(10);
-
-        return view('livewire.admin.empresa-index', compact('empresas'));
+        
+        return view('livewire.admin.empresa-index', ['empresas' => $empresas]);
     }
 }
