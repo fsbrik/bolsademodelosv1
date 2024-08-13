@@ -41,6 +41,18 @@
                                     <x-input-error for="cat_ser" class="mt-2" />
                                 </div>
 
+                                <!-- Subcategoría -->
+                                <div class="col-span-12 sm:col-span-1">
+                                    <x-label for="sub_cat" value="{{ __('Subcategoría') }}" />
+                                    <select id="sub_cat" wire:model="sub_cat"
+                                        class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <option value="" >{{ __('-') }}</option>
+                                        <option value="reservas">{{ __('Reservas') }}</option>
+                                        <option value="contrataciones">{{ __('Contrataciones') }}</option>
+                                    </select>
+                                    <x-input-error for="sub_cat" class="mt-2" />
+                                </div>
+
                                 <!-- Precio -->
                                 <div class="col-span-12 sm:col-span-1">
                                     <x-label for="precio" value="{{ __('Precio') }}" />
@@ -62,15 +74,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="flex items-center justify-end px-4 py-3 bg-gray-50 text-end sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
-                            <x-button class="ml-4">
-                                {{ __('Actualizar') }}
-                            </x-button>
-                        </div>
-
 
                         @if (Auth::user()->hasRole('admin'))
+                            <div
+                                class="flex items-center justify-end px-4 py-3 bg-gray-50 text-end sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
+                                <x-button class="ml-4">
+                                    {{ __('Actualizar') }}
+                                </x-button>
+                            </div>
                             <div class="flex items-center justify-end mt-4">
                                 <x-button class="ml-4">
                                     <a wire:navigate href="{{ route('servicios.index') }}">

@@ -16,6 +16,11 @@ class ServicioShow extends Component
         $this->servicio = $servicio;
     }
 
+    public function getHabilitaDisplayProperty()
+    {
+        return $this->servicio['hab_ser'] == 1 ? 'sí' : 'no';
+    }
+
     public function render()
     {
         return view('livewire.servicio-show');

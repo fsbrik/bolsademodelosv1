@@ -52,6 +52,15 @@ class ModeloIndex extends Component
         //$this->sort_By = $field;
     }
 
+    public function destroy(Modelo $modelo){
+        $modelo->delete();
+        session()->flash('message', '¡Se eliminó la ficha de la modelo '.$modelo->user->name.' exitosamente!');
+        $modelos = Modelo::paginate(10);
+        $localidades = $this->localidades;
+
+        return view('livewire.admin.modelo-index', compact('modelos', 'localidades'));
+    }
+
     public function render()
     {
         $modelos = Modelo::query();

@@ -89,8 +89,9 @@ class ModeloController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * Se reemplaza el metodo update por updateModelo en el componente ModeloEdit
      */
-    public function update(ModeloRequest $request, Modelo $modelo)
+    /* public function update(ModeloRequest $request, Modelo $modelo)
     {
         //$modelo = Modelo::findOrFail($id);
 
@@ -100,7 +101,7 @@ class ModeloController extends Controller
 
         // Redirigir al usuario a la vista de detalles de la modelo actualizada
         return redirect()->route('modelos.show', $modelo->id)->with('success', 'Los detalles de la modelo han sido actualizados correctamente.');
-    }
+    } */
 
     /**
      * Remove the specified resource from storage.

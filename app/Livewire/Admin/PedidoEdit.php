@@ -43,9 +43,20 @@ class PedidoEdit extends Component
             $this->selectedUser = User::findOrFail($pedido->user_id);
         }
 
-        $this->servicios = Servicio::where('cat_ser', $this->selectedUser->roles->first()->name)
-                                    ->where('hab_ser', 1)
-                                    ->get();
+        if (Auth::user()->hasRole('empresa')){
+            $this->servicios = Servicio::where('cat_ser', 'empresa')->where('sub_cat', 'reservas')->where('hab_ser', 1)->get();
+        }
+        elseif (Auth::user()->hasRole('modelo')){
+            $this->servicios = Servicio::where('cat_ser', 'modelo')->where('hab_ser', 1)->get();
+        }
+        elseif (Auth::user()->hasRole('admin')){
+            if($this->selectedUser->roles->first()->name == 'empresa'){
+                $this->servicios = Servicio::where('cat_ser', 'empresa')->where('hab_ser', 1)->where('sub_cat', 'reservas')->get();
+            } else {
+                // selectedUser es del role modelo
+                $this->servicios = Servicio::where('cat_ser', 'modelo')->where('hab_ser', 1)->get();
+            }
+        }
 
         foreach ($this->servicios as $servicio) {
             $cantidad = $pedido->servicios->firstWhere('id', $servicio->id)->pivot->cantidad ?? 0;
@@ -109,7 +120,7 @@ class PedidoEdit extends Component
             }
         }
 
-        session()->flash('message', 'Pedido actualizado con éxito.');
+        session()->flash('message', 'Reserva actualizada con éxito.');
         return redirect()->route('pedidos.index');
     }
 

@@ -27,4 +27,16 @@ class Modelo extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // app/Models/Modelo.php
+    public function fotos()
+    {
+        return $this->hasMany(Foto::class);
+    }
+
+    // app/Models/Foto.php
+    public function modelo()
+    {
+        return $this->belongsTo(Modelo::class);
+    }
 }

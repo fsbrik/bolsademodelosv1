@@ -1,4 +1,3 @@
-
 <div class="ml-2 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-2">
     @foreach ($modelos as $modelo)
         <div class="flex flex-col">
@@ -7,16 +6,17 @@
                     <img src="{{ $modelo->user->profile_photo_url }}" alt="{{ $modelo->user->name }}"
                         class="h-48 w-28 rounded-md object-cover">
                     <div class="flex flex-col ml-1">
-                        <p class="font-semibold">## {{ $modelo->mod_id }}</p>                        
-                        <x-label-sm class="border-t break-all">{{$modelo->user->name }}</x-label-sm>
-                        <x-label-sm>{{$modelo->user->telefono }}</x-label-sm>
-                        <x-label-sm class="border-b break-all">{{$modelo->user->email }}</x-label-sm>
+                        <p class="font-semibold">## {{ $modelo->mod_id }}</p>
+                        <x-label-sm class="border-t break-all">{{ $modelo->user->name }}</x-label-sm>
+                        <x-label-sm>{{ $modelo->user->telefono }}</x-label-sm>
+                        <x-label-sm class="border-b break-all">{{ $modelo->user->email }}</x-label-sm>
                         <x-label-sm>{{ __('Edad: ') . \Carbon\Carbon::parse($modelo->fec_nac)->age . __(' años') }}</x-label-sm>
                         <x-label-sm>{{ __('Estatura: ') . $modelo->estatura . __(' mts.') }}</x-label-sm>
                         <x-label-sm>{{ __('Calzado: ') . $modelo->calzado }}</x-label-sm>
                         <x-label-sm>{{ __('Medidas: ') . $modelo->medidas }}</x-label-sm>
                         <x-label-sm>{{ __('Viajar al exterior: ') . ($modelo->dis_via ? 'si' : 'no') }}</x-label-sm>
-                        <x-label-sm class="border-b">{{ __('Título de modelo: ') . ($modelo->tit_mod ? 'si' : 'no') }}</x-label-sm>
+                        <x-label-sm
+                            class="border-b">{{ __('Título de modelo: ') . ($modelo->tit_mod ? 'si' : 'no') }}</x-label-sm>
                         <x-label-sm><i class="fas fa-money-bill-wave"></i><i class="fas fa-money-bill-wave px-1"></i><i
                                 class="fas fa-money-bill-wave"></i></x-label-sm>
                         <x-label-sm>{{ __('1/2 jornada: u$s') . $modelo->tar_med }}</x-label-sm>
@@ -43,7 +43,8 @@
                                 <i class="fas fa-eye"></i>
                             </a>
                         @endcan
-                        <i class="fas fa-image"></i>
+                        <i class="fas fa-image text-success cursor-pointer"
+                            wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })"></i>
                         <i class="fas fa-add"></i>
                     </div>
 
@@ -51,9 +52,9 @@
             </div>
         </div>
     @endforeach
-    <div class="mt-4">
-
-        {{--  {{ $modelos->links() }} --}}
-
+    <div class="mt-4 col-span-1 md:col-span-4 lg:col-span-5">
+        {{ $modelos->links() }}
     </div>
+    {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
+    @livewire('modelo-galeria')
 </div>

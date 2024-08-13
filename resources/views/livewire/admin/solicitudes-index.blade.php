@@ -26,6 +26,16 @@
                                 wire:model.live.debounce.250ms="searchEmail" />
                         </div>
                     </div>
+                    @if (session()->has('message'))
+                        <div x-data="{ open: true }" x-show="open" class="relative p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                            role="alert">
+                            <button @click="open = false"
+                                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {{ session('message') }}
+                        </div>
+                    @endif
                     @if ($modelos->count())
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -75,7 +85,7 @@
                                             <div class="col-span-6 sm:col-span-4 flex items-center">
                                                 <x-button id="habilita" class="label-small"
                                                     wire:click="update({{ $modelo->id }})"
-                                                    wire:confirm="¿Estás seguro de que deseas actualizar este estado?">{{ __('Habilitar') }}
+                                                    wire:confirm="¿Estás seguro que deseas habilitar a la modelo?">{{ __('Habilitar') }}
                                                 </x-button>
                                             </div>
                                         </td>

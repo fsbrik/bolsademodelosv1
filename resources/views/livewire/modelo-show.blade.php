@@ -124,7 +124,7 @@
         @can('modelos.ver_habilitar')
             <div class="col-span-12 sm:col-span-11">
                 <x-label for="habilita" value="{{ __('Habilitado?') }}" />
-                <x-input id="habilita" type="text" class="mt-1 block w-8  " value="{{ $this->habilita_display }}"
+                <x-input id="habilita" type="text" class="mt-1 block w-8" value="{{ $this->habilita_display }}"
                     disabled />
                 <x-input-error for="habilita" class="mt-2" />
             </div>
@@ -134,6 +134,9 @@
     <x-section-border />
 
     <div class="flex items-center justify-end mt-4">
+        <i class="fas fa-image text-success cursor-pointer"
+            wire:click="$dispatch('openGallery', { modeloId: {{ $modeloId }} })"></i>
+        <i class="fas fa-add"></i>
         @can('modelos.edit')
             <a href="{{ route('modelos.edit', $modelo['id']) }}" class="text-yellow-600 hover:text-yellow-900 ml-4"
                 title="Editar">
@@ -158,4 +161,6 @@
             </x-button>
         @endcan
     </div>
+    {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
+    @livewire('modelo-galeria')
 </div>

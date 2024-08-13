@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="w-2/3 mx-auto bg-gray-100 grid grid-cols-9 gap-2 mb-4 p-4">
+                    <div class="w-2/3 mx-auto bg-gray-100 grid grid-cols-6 sm:grid-cols-12 gap-2 mb-4 p-4">
                         <div class="col-span-6 sm:col-span-3">
                             <x-label for="searchName" value="{{ __('Denominación') }}" />
                             <x-input id="searchName" type="text" class="mt-1 block w-full"
@@ -19,6 +19,11 @@
                             <x-label for="searchCategory" value="{{ __('Categoría') }}" />
                             <x-input id="searchCategory" type="text" class="mt-1 block w-full"
                                 wire:model.live.debounce.250ms="searchCategory" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
+                            <x-label for="searchSubCategory" value="{{ __('Subcategoría') }}" />
+                            <x-input id="searchSubCategory" type="text" class="mt-1 block w-full"
+                                wire:model.live.debounce.250ms="searchSubCategory" />
                         </div>
                         <div class="col-span-6 sm:col-span-3">
                             <x-label for="searchDescription" value="{{ __('Descripción') }}" />
@@ -37,6 +42,10 @@
                                         <th scope="col"
                                             class="px-1 py-2 text-left font-medium text-gray-500 uppercase ">
                                             {{ __('Categoría') }}
+                                        </th>
+                                        <th scope="col"
+                                            class="px-1 py-2 text-left font-medium text-gray-500 uppercase ">
+                                            {{ __('Subategoría') }}
                                         </th>
                                     @endif
                                     <th scope="col" class="px-1 py-2 text-left font-medium text-gray-500 uppercase ">
@@ -62,8 +71,11 @@
                                             <td class="px-1 py-2 whitespace-nowrap">
                                                 {{ $servicio->cat_ser }}
                                             </td>
+                                            <td class="px-1 py-2 whitespace-nowrap">
+                                                {{ $servicio->sub_cat }}
+                                            </td>
                                         @endif
-                                        <td class="px-1 py-2 break-all">
+                                        <td class="px-1 py-2 max-w-60 whitespace-wrap">
                                             {{ $servicio->des_ser }}
                                         </td>
                                         <td class="px-1 py-2 whitespace-wrap">
@@ -73,7 +85,7 @@
                                             <input type="radio" disabled checked
                                                 class="{{ $servicio->hab_ser == '1' ? 'text-green-500' : 'text-red-500' }}">
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <td class="px-1 py-4 whitespace-nowrap text-sm font-medium">
                                             <a wire:navigate href="{{ route('servicios.show', $servicio->id) }}"
                                                 class="text-indigo-600 hover:text-indigo-900" title="Ver">
                                                 <i class="fas fa-eye"></i>

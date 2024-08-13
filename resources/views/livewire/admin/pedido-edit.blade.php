@@ -85,7 +85,7 @@
                                             <x-input id="cantidad_{{ $servicio->id }}"
                                                 class="block mt-1 w-1/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                                 type="text"
-                                                wire:model.live.debounce.250ms="cantidad.{{ $servicio->id }}" />
+                                                wire:model.live.debounce.1000ms="cantidad.{{ $servicio->id }}" />
                                             <x-input-error for="cantidad.{{ $servicio->id }}" class="mt-2" />
                                         </td>
                                         <td class="px-1 py-2 whitespace-wrap">

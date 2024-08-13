@@ -2,7 +2,7 @@
     <div class="flex-1">
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Lista de Modelos') }}
+                {{ __('Listado de Modelos') }}
             </h2>
         </x-slot>
 
@@ -34,9 +34,7 @@
                                 </div>
                             </div>
                         @endcan
-                        <button wire:click="toggleView" class="bg-gray-800 text-white px-4 py-2 rounded mb-4">
-                            Toggle View
-                        </button>
+
 
 
                         <div class="flex">
@@ -208,8 +206,26 @@
                                 </div>
                             </aside>
 
-                            @if ($showTable)
-                                <div class="flex-1 ml-2">
+                            {{-- @if ($showTable) --}}
+                            <div x-data="{ toggle: $wire.showTable }">
+                                <button @click="toggle = !toggle"
+                                    class="bg-gray-800 text-white px-4 py-2 rounded mb-4">
+                                    Cambiar vista
+                                </button>
+
+                                @if (session()->has('message'))
+                                    <div x-data="{ open: true }" x-show="open"
+                                        class="relative p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                                        role="alert">
+                                        <button @click="open = false"
+                                            class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        {{ session('message') }}
+                                    </div>
+                                @endif
+
+                                <div x-show="toggle" class="flex-1 ml-2">
                                     @if ($modelos->count())
                                         <table class="min-w-full divide-y divide-gray-200 text-xs">
                                             <thead class="bg-gray-50">
@@ -325,10 +341,10 @@
                                                         <td class="py-2 text-center whitespace-nowrap">
                                                             {{ $modelo->mod_id }}
                                                         </td>
-                                                        <td class="py-2  whitespace-nowrap">                                                         
-                                                                <img src="{{ $modelo->user->profile_photo_url }}"
-                                                                    alt="{{ $modelo->user->name }}"
-                                                                    class="rounded-xl w-14 h-20 mx-auto object-cover">                                                     
+                                                        <td class="py-2  whitespace-nowrap">
+                                                            <img src="{{ $modelo->user->profile_photo_url }}"
+                                                                alt="{{ $modelo->user->name }}"
+                                                                class="rounded-xl w-14 h-20 mx-auto object-cover">
                                                         </td>
                                                         @can('modelos.datos_de_contacto')
                                                             <td class="py-2 text-center whitespace-nowrap">
@@ -394,6 +410,11 @@
                                                                     <i class="fas fa-eye"></i>
                                                                 </a>
                                                             @endcan
+                                                            {{-- Ver todas las fotos de la modelo --}}
+                                                            <i class="fas fa-image text-success cursor-pointer"
+                                                                wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })"></i>
+                                                            {{-- Agregar a contrataciones --}}
+                                                            <i class="fas fa-add"></i>
                                                             @can('modelos.edit')
                                                                 <a href="{{ route('modelos.edit', $modelo->id) }}"
                                                                     class="text-yellow-600 hover:text-yellow-900"
@@ -402,10 +423,7 @@
                                                                 </a>
                                                             @endcan
                                                             @can('modelos.destroy')
-                                                                <form action="{{ route('modelos.destroy', $modelo->id) }}"
-                                                                    method="POST" class="inline">
-                                                                    @csrf
-                                                                    @method('DELETE')
+                                                                <form wire:submit="destroy({{ $modelo->id }})" class="inline">                                                                    
                                                                     <button type="submit"
                                                                         class="text-red-600 hover:text-red-900"
                                                                         title="Borrar"
@@ -423,15 +441,19 @@
                                         <div class="mt-4">
                                             {{ $modelos->links() }}
                                         </div>
+                                        {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
+                                        @livewire('modelo-galeria')
                                     @else
                                         <div class="px-4 py-3">
                                             No se encontraron registros
                                         </div>
                                     @endif
                                 </div>
-                            @else
-                                @livewire('modelo-card')
-                            @endif
+                                <div x-show="!toggle">
+                                    {{-- Se visualiza la vista como en formato de tarjetas --}}
+                                    @livewire('modelo-card')
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

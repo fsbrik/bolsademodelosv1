@@ -25,12 +25,13 @@ class PedidoCreate extends Component
         'cantidad.*' => 'integer|gte:0',
     ];
     protected $messages = [
+        'selectedUser.required' => 'Debe seleccionarse un usuario',
         'cantidad.*.integer' => 'Ingresar un número entero',
         'cantidad.*.gte' => 'El número debe ser igual o mayor a 0',
     ];
 
     public function mount(){
-        $servicios = Servicio::where('hab_ser',1)->get();
+        $servicios = Servicio::where('hab_ser',1)->where('sub_cat', '<>', 'contrataciones')->get();
         $this->servicios = $servicios;
         $this->cantidad = array_fill(0, $this->servicios->count(), 0);
         $this->calculateSubtotals();
@@ -43,8 +44,18 @@ class PedidoCreate extends Component
 
     public function updateUser(User $user)
     {
+        // obtener el rol del usuario
         $userRole = $user->roles->first()->name;
-        $this->servicios = Servicio::where('hab_ser',1)->where('cat_ser', $userRole)->get();
+
+        // obtener la subcategoria 'reservas' evitando las 'contrataciones' para el caso de las empresas
+        if($userRole == 'empresa'){
+            $this->servicios = Servicio::where('hab_ser',1)->where('cat_ser', $userRole)
+                               ->where('sub_cat', 'reservas')->get();
+        } 
+        elseif($userRole == 'modelo'){
+            $this->servicios = Servicio::where('hab_ser',1)->where('cat_ser', $userRole)->get();
+        }
+
         $this->cantidad = array_fill(0, $this->servicios->count(), 0);
         $this->calculateSubtotals();
         $this->calculateTotal();
@@ -58,11 +69,12 @@ class PedidoCreate extends Component
         if ($value === '') {
             $value = 0;
         }
+        
         $this->cantidad[$index] = $value;
         $this->subtotals[$this->servicios[$index]->id] = $this->servicios[$index]->precio * $value;
         $this->calculateTotal();
-    }
-
+    } 
+   
     public function calculateSubtotals()
     {
         foreach ($this->servicios as $index => $servicio) {
@@ -79,15 +91,6 @@ class PedidoCreate extends Component
 
     public function submit()
     {
-        /* $this->validate([
-            'selectedUser' => 'required',
-            'cantidad.*' => 'integer|gte:0',
-        ],
-        [
-            'cantidad.*.integer' => 'Ingresar un número entero',
-            'cantidad.*.gte' => 'El número debe ser igual o mayor a 0',
-        ]); */
-
         $this->validate();
 
         $totalCantidades = array_sum($this->cantidad);
@@ -114,7 +117,7 @@ class PedidoCreate extends Component
             }
         });
 
-        session()->flash('message', 'Pedido creado con éxito.');
+        session()->flash('message', 'Reserva de '.$this->selectedUser->name.' creada con éxito.');
 
         return redirect()->route('pedidos.index');
     }

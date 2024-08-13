@@ -9,7 +9,7 @@ use App\Models\Servicio;
 
 class ServicioIndex extends Component
 {
-    public $searchName, $searchCategory, $searchDescription;
+    public $searchName, $searchCategory, $searchSubCategory, $searchDescription;
     public $user;
 
     use WithPagination;
@@ -21,7 +21,7 @@ class ServicioIndex extends Component
 
     public function updating($field)
     {
-        if (in_array($field, ['searchName', 'searchCategory', 'searchDescription'])) {
+        if (in_array($field, ['searchName', 'searchCategory', 'searchSubCategory', 'searchDescription'])) {
             $this->resetPage();
         }
     }
@@ -57,6 +57,10 @@ class ServicioIndex extends Component
 
         if ($this->searchCategory) {
             $servicios->where('cat_ser', 'like', '%' . $this->searchCategory . '%');
+        }
+
+        if ($this->searchSubCategory) {
+            $servicios->where('sub_cat', 'like', '%' . $this->searchSubCategory . '%');
         }
 
         if ($this->searchDescription) {

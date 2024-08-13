@@ -35,6 +35,14 @@
                                     disabled />
                             </div>
 
+                            <!-- Subcategoría -->
+                            <div class="col-span-12 sm:col-span-1">
+                                <x-label for="sub_cat" value="{{ __('Subcategoría') }}" />
+                                <x-input id="sub_cat" type="text" wire:model="servicio.sub_cat"
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    disabled />
+                            </div>
+
                             <!-- Precio -->
                             <div class="col-span-12 sm:col-span-1">
                                 <x-label for="precio" value="{{ __('Precio') }}" />
@@ -43,10 +51,10 @@
                                     disabled />
                             </div>
 
-                            <!-- Habilitar -->
+                            <!-- Habilitado -->
                             <div class="col-span-12 sm:col-span-1">
-                                <x-label class="mr-2" for="hab_ser" value="{{ __('Habilitar') }}" />
-                                <x-input id="hab_ser" type="text" wire:model="servicio.hab_ser"
+                                <x-label class="mr-2" for="hab_ser" value="{{ __('Habilitado') }}" />
+                                <x-input id="hab_ser" type="text" value="{{ $this->habilita_display }}"
                                     class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                     disabled />
                             </div>
@@ -56,6 +64,19 @@
                     <div
                         class="flex items-center justify-end px-4 py-3 bg-gray-50 text-end sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
                         @if (Auth::user()->hasRole('admin'))
+                            <a href="{{ route('servicios.edit', $servicio['id']) }}"
+                                class="text-yellow-600 hover:text-yellow-900 ml-4" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('servicios.destroy', $servicio['id']) }}" method="POST"
+                                class="inline ml-4">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar esta servicio?');">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
                             <x-button class="ml-4">
                                 <a wire:navigate href="{{ route('servicios.index') }}">
                                     {{ __('Volver') }}

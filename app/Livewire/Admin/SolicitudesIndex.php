@@ -27,8 +27,12 @@ class SolicitudesIndex extends Component
         $modelo = Modelo::findOrFail($modeloId);
         $modelo->habilita = 1;
         $modelo->save();
+        $modelos = Modelo::where('habilita', 0)->orderBy('created_at');
 
-        //$this->selectedModelos[$modeloId] = $value;
+        session()->flash('message', $modelo->user->name.' ya está habilitada!');
+        $modelos = $modelos->paginate(10);
+
+        return view('livewire.admin.solicitudes-index', compact('modelos'));
     }
     
     public function render()

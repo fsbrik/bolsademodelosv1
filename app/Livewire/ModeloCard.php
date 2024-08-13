@@ -8,17 +8,11 @@ use Livewire\WithPagination;
 
 class ModeloCard extends Component
 {
-    public $modelos;
-
     use WithPagination;
-
-    public function mount()
-    {
-        $this->modelos = Modelo::all();
-    }
 
     public function render()
     {
-        return view('livewire.modelo-card');
+        $modelos = Modelo::with('user')->paginate(10); // Ajusta el número de elementos por página según lo necesites
+        return view('livewire.modelo-card', ['modelos' => $modelos]);
     }
 }

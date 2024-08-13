@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Livewire;
 
 use Livewire\Component;
@@ -9,7 +10,7 @@ class ServicioEdit extends Component
 {
     public $servicioId;
     public $nom_ser;
-    public $cat_ser;
+    public $cat_ser, $sub_cat;
     public $des_ser;
     public $precio;
     public $hab_ser;
@@ -17,6 +18,7 @@ class ServicioEdit extends Component
     protected $rules = [
         'nom_ser' => 'required|string|max:100',
         'cat_ser' => 'required|string|in:modelo,empresa',
+        'sub_cat' => 'string|in:"",reservas,contrataciones',
         'des_ser' => 'required|string',
         'precio' => 'required|numeric|min:0',
         'hab_ser' => 'required|boolean',
@@ -29,6 +31,7 @@ class ServicioEdit extends Component
             'nom_ser.max' => 'El nombre del servicio no puede superar los 100 caracteres.',
             'cat_ser.required' => 'La categoría del servicio es obligatoria.',
             'cat_ser.in' => 'La categoría del servicio debe ser "modelo" o "empresa".',
+            'sub_cat.in' => 'La subcategoría del servicio debe ser vacía, "reservas" o "contrataciones".',
             'des_ser.required' => 'La descripción del servicio es obligatoria.',
             'precio.required' => 'El precio del servicio es obligatorio.',
             'precio.numeric' => 'El precio del servicio debe ser un número.',

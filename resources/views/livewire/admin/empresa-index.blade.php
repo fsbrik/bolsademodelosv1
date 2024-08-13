@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-1 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     @if (Auth::user()->hasRole('admin'))
@@ -40,43 +40,56 @@
                             </div>
                         </div>
                     @endif
+
+                    @if (session()->has('message'))
+                        <div x-data="{ open: true }" x-show="open"
+                            class="relative p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                            role="alert">
+                            <button @click="open = false"
+                                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {{ session('message') }}
+                        </div>
+                    @endif
+
                     @if ($empresas->count())
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
                                     @if (Auth::user()->hasRole('admin'))
                                         <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Contacto
                                         </th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Teléfono
                                         </th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Email
                                         </th>
                                     @endif
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nombre Comercial
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Domicilio
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tipo
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Cuit
                                     </th>
                                     @can('empresas.index')
                                         <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Acciones
                                         </th>
                                     @endcan
@@ -86,30 +99,30 @@
                                 @foreach ($empresas as $empresa)
                                     <tr>
                                         @if (Auth::user()->hasRole('admin'))
-                                            <td class="px-6 py-4 whitespace-nowrap">
+                                            <td class="px-1 py-2 whitespace-nowrap">
                                                 {{ $empresa->user->name }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
+                                            <td class="px-1 py-2 whitespace-nowrap">
                                                 {{ $empresa->user->telefono }}
                                             </td>
-                                            <td class="px-6 py-4 break-all">
+                                            <td class="px-1 py-2 break-all">
                                                 {{ $empresa->user->email }}
                                             </td>
                                         @endif
-                                        <td class="px-6 py-4 whitespace-wrap">
+                                        <td class="px-1 py-2 whitespace-wrap">
                                             {{ $empresa->nom_com }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-wrap">
+                                        <td class="px-1 py-2 whitespace-wrap">
                                             {{ $empresa->domicilio }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-wrap">
+                                        <td class="px-1 py-2 whitespace-wrap">
                                             {{ $empresa->tipo }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-wrap">
+                                        <td class="px-1 py-2 whitespace-wrap">
                                             {{ $empresa->cuit }}
                                         </td>
                                         @can('empresas.index')
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <td class="px-1 py-2 whitespace-nowrap text-sm font-medium">
                                                 <a href="{{ route('empresas.show', $empresa->id) }}"
                                                     class="text-indigo-600 hover:text-indigo-900" title="Ver">
                                                     <i class="fas fa-eye"></i>

@@ -33,6 +33,8 @@ class EmpresaShow extends Component
         }
 
         $empresas = $empresas->paginate(10);
+
+        session()->flash('message', 'se eliminó la empresa de '.$empresa->user->name);
        return redirect()->route('empresas.index', compact('empresas'));
     }
 

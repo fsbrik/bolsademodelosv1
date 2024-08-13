@@ -9,7 +9,7 @@
         <form wire:submit.prevent="update">
             @csrf
             <div class="grid grid-cols-1 md:grid md:grid-cols-3 md:gap-3">
-                <div class="col-span-3 sm:col-span-1">
+                <div class="col-span-3 sm:col-span-1 sm:row-span-2">
                     <!-- Profile Photo -->
                     @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                         <div x-data="{ photoName: null, photoPreview: null }" class="col-span-6 sm:col-span-4">
@@ -24,7 +24,7 @@
                                 reader.readAsDataURL($refs.photo.files[0]);
                         " />
 
-                            <x-label for="photo" value="{{ __('Photo') }}" />
+                            <x-label for="photo" value="{{ __('Foto') }}" />
 
                             <!-- Current Profile Photo -->
                             <div class="mt-2" x-show="! photoPreview">

@@ -1,13 +1,4 @@
-{{-- <x-form-section submit="updateEmpresa">
-
-    <x-slot name="title">{{ __('Información comercial') }}</x-slot>
-    <x-slot name="description">{{ __('Actualice la información de su empresa') }}</x-slot>
-
-    <x-slot name="form"> --}}
-
-
-
-<form wire:submit="updateEmpresa">
+<form wire:submit="updateEmpresa({{$empresaId}})">
     <div class="grid grid-cols-1 sm:grid md:grid-cols-12 sm:gap-3">
         <!-- Tipo -->
         <div class="col-span-12 sm:col-span-1">

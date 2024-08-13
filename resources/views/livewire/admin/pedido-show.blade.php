@@ -98,9 +98,7 @@
                             </a>
                         @endcan
                         @can('pedidos.destroy')
-                            <form action="{{ route('pedidos.destroy', $pedido->id) }}" method="POST" class="inline ml-4">
-                                @csrf
-                                @method('DELETE')
+                            <form wire:submit="destroy({{ $pedido->id }})" class="inline ml-4">
                                 <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
                                     onclick="return confirm('¿Estás seguro de que deseas eliminar esta reserva?');">
                                     <i class="fas fa-trash-alt"></i>
@@ -109,7 +107,7 @@
                         @endcan
                         @can('pedidos.index')
                             <x-button class="ml-4">
-                                <a href="{{ route('pedidos.index') }}">
+                                <a wire:navigate href="{{ route('pedidos.index') }}">
                                     {{ __('Volver') }}
                                 </a>
                             </x-button>
@@ -121,3 +119,4 @@
         </div>
     </div>
 </div>
+

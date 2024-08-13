@@ -25,6 +25,9 @@
                             </div>
                         @endif
                     </div>
+
+                    <x-input-error for="selectedUser" class="mt-2" />
+
                     <form wire:submit.prevent="submit">
                         @csrf
 
@@ -102,44 +105,50 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="flex items-center justify-end mt-4 mr-4">
-                                <div class="border border-gray-800 rounded-lg overflow-hidden">
-                                    <table class="w-40">
-                                        <tr class="bg-gray-200">
-                                            <td class="p-4">{{ __('Total') }}</td>
-                                            <td class="p-4">{{ $total }}</td>
-                                        </tr>
-                                    </table>
+                            @if (session()->has('error'))
+                                    <div class="flex items-center justify-between mt-4 mr-4">
+                                @else
+                                    <div class="flex items-center justify-end mt-4 mr-4">
+                            @endif
+                            @if (session()->has('error'))
+                                <div class="mt-4 text-red-500 justify-self-start">
+                                    {{ session('error') }}
                                 </div>
+                            @endif
+                            <div class="border border-gray-800 rounded-lg overflow-hidden">
+                                <table class="w-40">
+                                    <tr class="bg-gray-200">
+                                        <td class="p-4">{{ __('Total') }}</td>
+                                        <td class="p-4">{{ $total }}</td>
+                                    </tr>
+                                </table>
                             </div>
-                        @endif
-
-                        <div class="flex items-center justify-end mt-4">
-                            @can('pedidos.index')
-                                <x-button class="ml-4">
-                                    <a href="{{ route('pedidos.index') }}">
-                                        {{ __('Volver') }}
-                                    </a>
-                                </x-button>
-                                <x-button class="ml-4">
-                                    {{ __('Reservar') }}
-                                </x-button>
-                            </div>
-                        @endcan
-                    </form>
-                    @if (session()->has('message'))
-                        <div class="mt-4 text-green-500">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-
-                    @if (session()->has('error'))
-                        <div class="mt-4 text-red-500">
-                            {{ session('error') }}
-                        </div>
-                    @endif
                 </div>
+
+                @endif
+
+                <div class="flex items-center justify-end mt-4">
+                    @can('pedidos.index')
+                        <x-button class="ml-4">
+                            <a href="{{ route('pedidos.index') }}">
+                                {{ __('Volver') }}
+                            </a>
+                        </x-button>
+                        <x-button class="ml-4">
+                            {{ __('Reservar') }}
+                        </x-button>
+                    </div>
+                @endcan
+                </form>
+                @if (session()->has('message'))
+                    <div class="mt-4 text-green-500">
+                        {{ session('message') }}
+                    </div>
+                @endif
+
+
             </div>
         </div>
     </div>
+</div>
 </div>

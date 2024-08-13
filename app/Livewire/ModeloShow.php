@@ -9,13 +9,14 @@ use Livewire\Attributes\On;
 
 class ModeloShow extends Component
 {
-    public $modelo, $localidades;
+    public $modelo, $modeloId, $localidades;
 
     public function mount($modeloId)
     {
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
         $modelo = Modelo::findOrFail($modeloId);    
-        $this->modelo = $modelo->toArray();   
+        $this->modelo = $modelo->toArray();
+        $this->modeloId = $modeloId;   
     }
 
     public function getDisviaDisplayProperty()
