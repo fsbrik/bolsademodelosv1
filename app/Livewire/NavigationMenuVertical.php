@@ -38,6 +38,7 @@ class NavigationMenuVertical extends Component
             $this->links = [
                 ['name' => 'Perfil', 'route' => 'profile.show'],
                 ['name' => 'Mis empresas', 'route' => 'empresas.index'],
+                ['name' => 'Planes', 'route' => 'empresas.planes'],
                 ['name' => 'Modelos', 'route' => 'modelos.index'],
                 ['name' => 'Contrataciones', 'route' => 'empresas.contrataciones'],
                 ['name' => 'Reservas', 'route' => 'pedidos.index'],

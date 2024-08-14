@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
     <div class="py-12">
-        <div class="max-w-2xl sm:max-w-3xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-2xl sm:max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
 
@@ -16,7 +16,7 @@
                     @endif
 
                     @if (Auth::user()->hasRole('admin'))
-                        @livewire('Admin.empresa-user-show', ['empresaId' => $empresa->id])
+                        @livewire('Admin.empresa-user', ['empresaId' => $empresa->id])
                         <x-section-border />
                     @endif
 

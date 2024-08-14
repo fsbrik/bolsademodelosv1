@@ -34,6 +34,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
     Route::resource('/users', UserController::class)->except('create', 'store')->names('users');
+    Route::view('empresas/planes', 'empresas.planes')->name('empresas.planes');
     Route::view('empresas/contrataciones', 'empresas.contrataciones')->name('empresas.contrataciones');
     Route::resource('/empresas', EmpresaController::class)->names('empresas');
     Route::view('/modelos/cambiar_estado', 'modelos.cambiar_estado')->name('modelos.cambiar_estado');

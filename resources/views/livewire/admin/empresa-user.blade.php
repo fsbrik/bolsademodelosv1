@@ -4,7 +4,6 @@
     </x-slot>
     <x-slot name="description">
     </x-slot>
-
     <x-slot name="content">
         <form wire:submit.prevent="update">
             @csrf

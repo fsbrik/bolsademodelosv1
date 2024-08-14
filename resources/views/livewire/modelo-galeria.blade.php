@@ -64,8 +64,12 @@
             </button>
 
             <!-- Modal para visualizar la imagen en tamaño grande -->
-            <div x-show="selectedPhoto" class="w-full h-full flex justify-center items-center">
-                <img :src="selectedPhoto" alt="Foto Grande" class="max-w-full max-h-full object-cover">
+            <div x-show="selectedPhoto" class="w-full h-full flex justify-center items-start">
+                <img :src="selectedPhoto" alt="Foto Grande" class="max-w-full max-h-full object-cover" @click.away="selectedPhoto = null">
+                <button @click="selectedPhoto = null" class="-mx-5 my-1 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+                
             </div>
 
             @can('modelos.subir_fotos')
