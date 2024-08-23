@@ -23,10 +23,10 @@ class ModeloIndex extends Component
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
     }
 
-    public function toggleView()
+    /* public function toggleView()
     {
         $this->showTable = !$this->showTable;
-    }
+    } */
 
     public function updating($field)
     {
@@ -55,7 +55,7 @@ class ModeloIndex extends Component
     public function destroy(Modelo $modelo){
         $modelo->delete();
         session()->flash('message', '¡Se eliminó la ficha de la modelo '.$modelo->user->name.' exitosamente!');
-        $modelos = Modelo::paginate(10);
+        $modelos = Modelo::paginate(5);
         $localidades = $this->localidades;
 
         return view('livewire.admin.modelo-index', compact('modelos', 'localidades'));
@@ -142,7 +142,7 @@ class ModeloIndex extends Component
             $modelos->where('habilita', 'like', '%' . $this->searchHabilita . '%');
         }
 
-        $modelos = $modelos->paginate(10);
+        $modelos = $modelos->paginate(5);
         $localidades = $this->localidades;
 
         return view('livewire.admin.modelo-index', compact('modelos', 'localidades'));

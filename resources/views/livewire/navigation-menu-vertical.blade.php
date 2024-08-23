@@ -66,9 +66,10 @@
                             $link['route'] === 'modelos.edit') &&
                         !request()->routeIs('modelos.cambiar_estado')
                             ? $isModeloRouteActive
-                            : ($link['route'] === 'empresas.index' ||
+                            : (($link['route'] === 'empresas.index' ||
                             $link['route'] === 'empresas.create' ||
-                            $link['route'] === 'empresas.edit'
+                            $link['route'] === 'empresas.edit') && (
+                            !request()->routeIs('empresas.planes') && !request()->routeIs('empresas.contrataciones'))
                                 ? $isEmpresaRouteActive
                                 : ($link['route'] === 'modelos.cambiar_estado'
                                     ? request()->routeIs('modelos.cambiar_estado')

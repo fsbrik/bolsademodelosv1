@@ -35,14 +35,21 @@ class NavigationMenuVertical extends Component
                 ];
             }
         } elseif ($user->hasRole('empresa')) {
-            $this->links = [
-                ['name' => 'Perfil', 'route' => 'profile.show'],
-                ['name' => 'Mis empresas', 'route' => 'empresas.index'],
-                ['name' => 'Planes', 'route' => 'empresas.planes'],
-                ['name' => 'Modelos', 'route' => 'modelos.index'],
-                ['name' => 'Contrataciones', 'route' => 'empresas.contrataciones'],
-                ['name' => 'Reservas', 'route' => 'pedidos.index'],
-            ];
+            if (!$user->empresas()->count()) {
+                $this->links = [
+                    ['name' => 'Perfil', 'route' => 'profile.show'],
+                    ['name' => 'Inscribir empresa', 'route' => 'empresas.create'],
+                ];
+            } else {
+                $this->links = [
+                    ['name' => 'Perfil', 'route' => 'profile.show'],
+                    ['name' => 'Mis empresas', 'route' => 'empresas.index'],
+                    ['name' => 'Planes', 'route' => 'empresas.planes'],
+                    ['name' => 'Modelos', 'route' => 'modelos.index'],
+                    ['name' => 'Contrataciones', 'route' => 'empresas.contrataciones'],
+                    ['name' => 'Reservas', 'route' => 'pedidos.index'],
+                ];
+            }
         }
     }
 

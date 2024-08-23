@@ -6,8 +6,8 @@
             </h2>
         </x-slot>
 
-        <div class="py-4">
-            <div class="max-w-full mx-auto sm:px-6 lg:px-8">
+        <div class="py-2 @guest pt-1 w-full bg-white @endguest">
+            <div class="max-w-full @guest w-full sm:w-fit @endguest mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4 bg-white border-b border-gray-200">
                         @can('modelos.filtros_administrador')
@@ -35,10 +35,8 @@
                             </div>
                         @endcan
 
-
-
                         <div class="flex">
-                            <aside class="w-44 p-2 bg-gray-100">
+                            <aside class="w-44 p-2 bg-gray-100 mr-2 rounded-md">
                                 <div class="grid grid-cols-12 gap-2">
                                     <div class="col-span-12 sm:col-span-6">
                                         <x-label-sm for="searchEdadMin" value="{{ __('Edad Min') }}" class="text-xs" />
@@ -56,8 +54,8 @@
                                             class="block mt-1 w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-xs"
                                             wire:model.live.debounce.250ms="searchSexo">
                                             <option value="">--</option>
-                                            <option value="F">F</option>
-                                            <option value="M">M</option>
+                                            <option value="F">Femenino</option>
+                                            <option value="M">Masculino</option>
                                         </select>
                                     </div>
                                     <div class="col-span-12 sm:col-span-6">
@@ -145,40 +143,42 @@
                                             <option value="Promotora">Promotor/a</option>
                                         </select>
                                     </div>
-                                    <div class="col-span-12 sm:col-span-12 -mb-3 mt-2">
-                                        <p class="label-medium">{{ __('Tarifa 1/2 jornada') }}</p>
-                                    </div>
-                                    <div class="col-span-12 sm:col-span-6">
-                                        <x-label-sm for="searchTarMedMin" value="{{ __('min') }}"
-                                            class="text-xs" />
-                                        <x-input id="searchTarMedMin" type="number"
-                                            class="mt-1 block w-full text-xs"
-                                            wire:model.live.debounce.250ms="searchTarMedMin" />
-                                    </div>
-                                    <div class="col-span-12 sm:col-span-6">
-                                        <x-label-sm for="searchTarMedMax" value="{{ __('max') }}"
-                                            class="text-xs" />
-                                        <x-input id="searchTarMedMax" type="number"
-                                            class="mt-1 block w-full text-xs"
-                                            wire:model.live.debounce.250ms="searchTarMedMax" />
-                                    </div>
-                                    <div class="col-span-12 sm:col-span-12 -mb-3 mt-2">
-                                        <p class="label-medium">{{ __('Tarifa jornada comp') }}</p>
-                                    </div>
-                                    <div class="col-span-12 sm:col-span-6">
-                                        <x-label-sm for="searchTarComMin" value="{{ __('min') }}"
-                                            class="text-xs" />
-                                        <x-input id="searchTarComMin" type="number"
-                                            class="mt-1 block w-full text-xs"
-                                            wire:model.live.debounce.250ms="searchTarComMin" />
-                                    </div>
-                                    <div class="col-span-12 sm:col-span-6">
-                                        <x-label-sm for="searchTarComMax" value="{{ __('max') }}"
-                                            class="text-xs" />
-                                        <x-input id="searchTarComMax" type="number"
-                                            class="mt-1 block w-full text-xs"
-                                            wire:model.live.debounce.250ms="searchTarComMax" />
-                                    </div>
+                                    @can('modelos.ficha_tecnica')
+                                        <div class="col-span-12 sm:col-span-12 -mb-3 mt-2">
+                                            <p class="label-medium">{{ __('Tarifa 1/2 jornada') }}</p>
+                                        </div>
+                                        <div class="col-span-12 sm:col-span-6">
+                                            <x-label-sm for="searchTarMedMin" value="{{ __('min') }}"
+                                                class="text-xs" />
+                                            <x-input id="searchTarMedMin" type="number"
+                                                class="mt-1 block w-full text-xs"
+                                                wire:model.live.debounce.250ms="searchTarMedMin" />
+                                        </div>
+                                        <div class="col-span-12 sm:col-span-6">
+                                            <x-label-sm for="searchTarMedMax" value="{{ __('max') }}"
+                                                class="text-xs" />
+                                            <x-input id="searchTarMedMax" type="number"
+                                                class="mt-1 block w-full text-xs"
+                                                wire:model.live.debounce.250ms="searchTarMedMax" />
+                                        </div>
+                                        <div class="col-span-12 sm:col-span-12 -mb-3 mt-2">
+                                            <p class="label-medium">{{ __('Tarifa jornada comp') }}</p>
+                                        </div>
+                                        <div class="col-span-12 sm:col-span-6">
+                                            <x-label-sm for="searchTarComMin" value="{{ __('min') }}"
+                                                class="text-xs" />
+                                            <x-input id="searchTarComMin" type="number"
+                                                class="mt-1 block w-full text-xs"
+                                                wire:model.live.debounce.250ms="searchTarComMin" />
+                                        </div>
+                                        <div class="col-span-12 sm:col-span-6">
+                                            <x-label-sm for="searchTarComMax" value="{{ __('max') }}"
+                                                class="text-xs" />
+                                            <x-input id="searchTarComMax" type="number"
+                                                class="mt-1 block w-full text-xs"
+                                                wire:model.live.debounce.250ms="searchTarComMax" />
+                                        </div>
+                                    @endcan
                                     @can('modelos.filtros_administrador')
                                         <div class="col-span-12 sm:col-span-6">
                                             <x-label-sm for="searchEstado" value="{{ __('Estado') }}"
@@ -206,8 +206,7 @@
                                 </div>
                             </aside>
 
-                            {{-- @if ($showTable) --}}
-                            <div x-data="{ toggle: $wire.showTable }">
+                            <div x-data="{ toggle: 'true'}">
                                 <button @click="toggle = !toggle"
                                     class="bg-gray-800 text-white px-4 py-2 rounded mb-4">
                                     Cambiar vista
@@ -224,7 +223,7 @@
                                         {{ session('message') }}
                                     </div>
                                 @endif
-
+                                
                                 <div x-show="toggle" class="flex-1 ml-2">
                                     @if ($modelos->count())
                                         <table class="min-w-full divide-y divide-gray-200 text-xs">
@@ -252,77 +251,76 @@
                                                             Email
                                                         </th>
                                                     @endcan
-                                                    @can('modelos.ficha_tecnica')
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Edad
-                                                        </th>
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Sexo
-                                                        </th>
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Estatura
-                                                        </th>
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Calzado
-                                                        </th>
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Medidas
-                                                        </th>
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Zona Resid.
-                                                        </th>
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Dispo Viajes
-                                                        </th>
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Tit. Modelo
-                                                        </th>
-                                                        <th scope="col"
-                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
-                                                            Inglés
-                                                        </th>
-                                                    @endcan
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Edad
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Sexo
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Estatura
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Calzado
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Medidas
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Zona Resid.
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Dispo Viajes
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Tit. de Modelo
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
+                                                        Inglés
+                                                    </th>
                                                     <th scope="col"
                                                         class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
                                                         Tipo Trabajo
                                                     </th>
-                                                    <th scope="col"
-                                                        class="px-1 py-2 text-center font-medium text-gray-500 uppercase  cursor-pointer">
-
-                                                        <button class="flex items-center"
-                                                            wire:click="sortBy('tar_med')">
-                                                            1/2 JORNADA<br />(U$S)
-                                                            @if ($sort_By === 'tar_med')
-                                                                @if ($sortDirection === 'asc')
-                                                                    <span class="ml-1 text-green-500">↑</span>
-                                                                @else
-                                                                    <span class="ml-1 text-red-500">↓</span>
+                                                    @can('modelos.ficha_tecnica')
+                                                        <th scope="col"
+                                                            class="px-1 py-2 text-center font-medium text-gray-500 uppercase  cursor-pointer">
+                                                            <button class="flex items-center"
+                                                                wire:click="sortBy('tar_med')">
+                                                                1/2 JORNADA<br />(U$S)
+                                                                @if ($sort_By === 'tar_med')
+                                                                    @if ($sortDirection === 'asc')
+                                                                        <span class="ml-1 text-green-500">↑</span>
+                                                                    @else
+                                                                        <span class="ml-1 text-red-500">↓</span>
+                                                                    @endif
                                                                 @endif
-                                                            @endif
-                                                        </button>
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-1 py-2  font-medium text-gray-500 uppercase  cursor-pointer">
-                                                        <button class="flex items-center"
-                                                            wire:click="sortBy('tar_com')">
-                                                            JORNADA COMP.<br />(U$S)
-                                                            @if ($sort_By === 'tar_com')
-                                                                @if ($sortDirection === 'asc')
-                                                                    <span class="ml-1 text-green-500">↑</span>
-                                                                @else
-                                                                    <span class="ml-1 text-red-500">↓</span>
+                                                            </button>
+                                                        </th>
+                                                        <th scope="col"
+                                                            class="px-1 py-2  font-medium text-gray-500 uppercase  cursor-pointer">
+                                                            <button class="flex items-center"
+                                                                wire:click="sortBy('tar_com')">
+                                                                JORNADA COMP.<br />(U$S)
+                                                                @if ($sort_By === 'tar_com')
+                                                                    @if ($sortDirection === 'asc')
+                                                                        <span class="ml-1 text-green-500">↑</span>
+                                                                    @else
+                                                                        <span class="ml-1 text-red-500">↓</span>
+                                                                    @endif
                                                                 @endif
-                                                            @endif
-                                                        </button>
-                                                    </th>
+                                                            </button>
+                                                        </th>
+                                                    @endcan
                                                     @can('modelos.ver_estado')
                                                         <th scope="col"
                                                             class="px-1 py-2 text-center font-medium text-gray-500 uppercase ">
@@ -341,10 +339,10 @@
                                                         <td class="py-2 text-center whitespace-nowrap">
                                                             {{ $modelo->mod_id }}
                                                         </td>
-                                                        <td class="py-2  whitespace-nowrap">
-                                                            <img src="{{ $modelo->user->profile_photo_url }}"
-                                                                alt="{{ $modelo->user->name }}"
-                                                                class="rounded-xl w-14 h-20 mx-auto object-cover">
+                                                        <td class="py-2  whitespace-nowrap">                                                            
+                                                            <img src="{{$modelo->user->profile_photo_url}}"
+                                                                alt="{{ $modelo->mod_id }}"
+                                                                class="rounded-xl w-14 h-20 mx-auto object-cover" />
                                                         </td>
                                                         @can('modelos.datos_de_contacto')
                                                             <td class="py-2 text-center whitespace-nowrap">
@@ -356,53 +354,52 @@
                                                             <td class="py-2 text-center whitespace-wrap">
                                                                 {{ $modelo->user->email }}
                                                             </td>
-                                                        @endcan
-                                                        @can('modelos.ficha_tecnica')
-                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                                {{ \Carbon\Carbon::parse($modelo->fec_nac)->age }}
-                                                            </td>
-                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                                {{ $modelo->sexo }}
-                                                            </td>
-                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                                {{ $modelo->estatura }}
-                                                            </td>
-                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                                {{ $modelo->calzado }}
-                                                            </td>
-                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                                {{ $modelo->medidas }}
-                                                            </td>
-                                                            <td class="px-1 py-2 text-center whitespace-wrap">
-                                                                {{ $modelo->zon_res }}
-                                                            </td>
-                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                                {{ $modelo->dis_via ? 'SI' : 'NO' }}
-                                                            </td>
-                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                                {{ $modelo->tit_mod ? 'SI' : 'NO' }}
-                                                            </td>
-                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                                {{ $modelo->ingles }}
-                                                            </td>
-                                                        @endcan
+                                                        @endcan                                                        
+                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                            {{ \Carbon\Carbon::parse($modelo->fec_nac)->age }}
+                                                        </td>
+                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                            {{ $modelo->sexo }}
+                                                        </td>
+                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                            {{ $modelo->estatura }}
+                                                        </td>
+                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                            {{ $modelo->calzado }}
+                                                        </td>
+                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                            {{ $modelo->medidas }}
+                                                        </td>
+                                                        <td class="px-1 py-2 text-center whitespace-wrap">
+                                                            {{ $modelo->zon_res }}
+                                                        </td>
+                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                            {{ $modelo->dis_via ? 'SI' : 'NO' }}
+                                                        </td>
+                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                            {{ $modelo->tit_mod ? 'SI' : 'NO' }}
+                                                        </td>
+                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                            {{ $modelo->ingles }}
+                                                        </td>
                                                         <td class="px-1 py-2 text-center whitespace-nowrap">
                                                             {{ $modelo->dis_tra }}
                                                         </td>
-                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                            {{ $modelo->tar_med }}
-                                                        </td>
-                                                        <td class="px-1 py-2 text-center whitespace-nowrap">
-                                                            {{ $modelo->tar_com }}
-                                                        </td>
+                                                        @can('modelos.ficha_tecnica')
+                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                                {{ $modelo->tar_med }}
+                                                            </td>
+                                                            <td class="px-1 py-2 text-center whitespace-nowrap">
+                                                                {{ $modelo->tar_com }}
+                                                            </td>
+                                                        @endcan
                                                         @can('modelos.ver_estado')
                                                             <td class="px-1 py-2 text-center whitespace-nowrap">
                                                                 <input type="radio" disabled checked
                                                                     class="{{ $modelo->estado == '1' ? 'text-green-500' : 'text-red-500' }}">
                                                             </td>
                                                         @endcan
-                                                        <td
-                                                            class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
+                                                        <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
                                                             @can('modelos.show')
                                                                 <a href="{{ route('modelos.show', $modelo->id) }}"
                                                                     class="text-indigo-600 hover:text-indigo-900"
@@ -442,7 +439,7 @@
                                             {{ $modelos->links() }}
                                         </div>
                                         {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
-                                        @livewire('modelo-galeria')
+                                        {{-- @livewire('modelo-galeria') --}}
                                     @else
                                         <div class="px-4 py-3">
                                             No se encontraron registros
@@ -450,9 +447,17 @@
                                     @endif
                                 </div>
                                 <div x-show="!toggle">
-                                    {{-- Se visualiza la vista como en formato de tarjetas --}}
-                                    @livewire('modelo-card')
+                                    @if($modelos->count())
+                                        {{-- Se visualiza la vista como en formato de tarjetas --}}
+                                        @livewire('modelo-card')
+                                    @else
+                                        <div class="px-4 py-3">
+                                            No se encontraron registros
+                                        </div>
+                                    @endif
                                 </div>
+                                {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
+                                @livewire('modelo-galeria')
                             </div>
                         </div>
                     </div>

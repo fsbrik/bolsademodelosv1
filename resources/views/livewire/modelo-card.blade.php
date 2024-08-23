@@ -7,21 +7,23 @@
                         class="h-48 w-28 rounded-md object-cover">
                     <div class="flex flex-col ml-1">
                         <p class="font-semibold">## {{ $modelo->mod_id }}</p>
+                        @can('modelos.datos_de_contacto')
                         <x-label-sm class="border-t break-all">{{ $modelo->user->name }}</x-label-sm>
                         <x-label-sm>{{ $modelo->user->telefono }}</x-label-sm>
                         <x-label-sm class="border-b break-all">{{ $modelo->user->email }}</x-label-sm>
+                        @endcan
                         <x-label-sm>{{ __('Edad: ') . \Carbon\Carbon::parse($modelo->fec_nac)->age . __(' años') }}</x-label-sm>
                         <x-label-sm>{{ __('Estatura: ') . $modelo->estatura . __(' mts.') }}</x-label-sm>
                         <x-label-sm>{{ __('Calzado: ') . $modelo->calzado }}</x-label-sm>
                         <x-label-sm>{{ __('Medidas: ') . $modelo->medidas }}</x-label-sm>
                         <x-label-sm>{{ __('Viajar al exterior: ') . ($modelo->dis_via ? 'si' : 'no') }}</x-label-sm>
-                        <x-label-sm
-                            class="border-b">{{ __('Título de modelo: ') . ($modelo->tit_mod ? 'si' : 'no') }}</x-label-sm>
+                        <x-label-sm class="border-b">{{ __('Título de modelo: ') . ($modelo->tit_mod ? 'si' : 'no') }}</x-label-sm>
+                        @can('modelos.ficha_tecnica')
                         <x-label-sm><i class="fas fa-money-bill-wave"></i><i class="fas fa-money-bill-wave px-1"></i><i
                                 class="fas fa-money-bill-wave"></i></x-label-sm>
                         <x-label-sm>{{ __('1/2 jornada: u$s') . $modelo->tar_med }}</x-label-sm>
                         <x-label-sm>{{ __('Jorn. comp.: u$s') . $modelo->tar_com }}</x-label-sm>
-
+                        @endcan
                     </div>
                 </div>
                 <div class="px-2 flex border-t flex-auto items-center">

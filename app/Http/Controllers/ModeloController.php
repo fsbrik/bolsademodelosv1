@@ -11,7 +11,7 @@ class ModeloController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:modelos.index')->only('index');
+        //$this->middleware('can:modelos.index')->only('index');
         $this->middleware('can:modelos.create')->only('create', 'store');
         $this->middleware('can:modelos.edit')->only('edit', 'update');
         $this->middleware('can:modelos.show')->only('show');
@@ -23,8 +23,9 @@ class ModeloController extends Controller
      */
     public function index()
     {
-        $modelos = Modelo::paginate();
-        return view('modelos.index', compact('modelos'));
+        /* $modelos = Modelo::paginate();
+        return view('modelos.index', compact('modelos')); */
+        return view('modelos.index');
     }
 
     /**

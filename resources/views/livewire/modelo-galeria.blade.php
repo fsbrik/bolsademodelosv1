@@ -92,16 +92,18 @@
                     <x-input-error for="newPhotos.*" />
                 </div>
             @endcan
-
-            @if (Auth::user()->hasRole('admin'))
-                <h2 x-show="!selectedPhoto" class="text-2xl font-bold text-center mb-2">Galería de Fotos</h2>
-            @endif
+            
+            @auth
+                @if (Auth::user()->hasRole('admin'))
+                    <h2 x-show="!selectedPhoto" class="text-2xl font-bold text-center mb-2">Galería de Fotos</h2>
+                @endif
+            @endauth
 
             <!-- Gallery of uploaded photos -->
-            <div x-show="!selectedPhoto" class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 overflow-y-auto w-full max-h-64 {{ Auth::user()->hasRole('admin') ? 'sm:max-h-[512px]' : 'sm:max-h-[95%]' }}">
+            <div x-show="!selectedPhoto" class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 overflow-y-auto w-full max-h-64 @auth {{ Auth::user()->hasRole('admin') ? 'sm:max-h-[512px]' : 'sm:max-h-[95%]' }}" @endauth>
                 @forelse ($fotos as $foto)
                     <div class="relative flex flex-col items-center">
-                        <img src="{{ Storage::url($foto->url) }}" alt="Photo" class="object-cover cursor-pointer" @click="selectedPhoto = '{{ Storage::url($foto->url) }}'; open = true">
+                        <img src="{{ Storage::url($foto->url) }}" alt="foto" class="object-cover cursor-pointer" @click="selectedPhoto = '{{ Storage::url($foto->url) }}'; open = true">
                         @can('modelos.eliminar_fotos')
                             <button wire:click="deletePhoto({{ $foto->id }})"
                                 class="absolute top-1 right-1 border rounded-full px-1 bg-red-500 text-white hover:text-gray-400">
