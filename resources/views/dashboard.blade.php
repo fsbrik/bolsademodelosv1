@@ -41,7 +41,7 @@
 
     @auth
         @if(Auth::user()->hasRole('empresa'))
-            @if(!isset(Auth::user()->empresa))
+            @if(!isset(Auth::user()->empresas))
             <section id="pasos" class="w-full h-screen mx-0 sm:mx-auto p-6 pb-0 sm:p-6 bg-no-repeat bg-fixed flex flex-col sm:flex-row justify-center"             
             style="background-image: url('{{ asset('storage/dashboard/dashboard_empresas_BdM.svg') }}'); background-size: cover;">
             <div class="bg-slate-800 bg-opacity-80 w-2/5 h-fit p-20 relative">
@@ -55,10 +55,12 @@
                 <div class="absolute -top-3 left-48 rounded-full w-20 h-20 bg-orange-300 bg-opacity-80"><p class="fa-2x font-black text-center pt-4">2</p></div>
                 <h1 class="underline text-xl font-bold text-slate-400 mb-2">Inscribí a tu/s empresa/s</h1>
                 <p class="text-justify text-white">Hacé click en el link de <span class="font-semibold underline text-slate-400">inscribir empresa</span>.</p>
-                <p class="text-justify text-white"><span class="text-lg font-bold">Tené en cuenta: </span>Los datos de tu empresa serán suministrados a la/s modelo/s que contrates.</p>
+                <p class="text-justify text-white"><span class="text-lg font-bold">Tené en cuenta: </span>Los datos de tu empresa solamente serán suministrados a la/s modelo/s que contrates.</p>
                 <p class="text-justify text-white">De esta manera <x-application-mark /> asegura la privacidad de la información de tu empresa.</p>
             </div>
             </section>
+            @else
+            
             @endif
         @elseif(Auth::user()->hasRole('modelo'))
         @endif

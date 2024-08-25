@@ -22,7 +22,7 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div class="min-h-screen bg-gray-100 flex">
+    <div class="min-h-screen bg-gray-100 flex flex-col">
         <!-- Sidebar -->
         @auth
             @livewire('navigation-menu-vertical')
@@ -41,7 +41,7 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="flex-grow">
                 {{ $slot }}
             </main>
 

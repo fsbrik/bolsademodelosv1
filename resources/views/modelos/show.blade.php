@@ -9,7 +9,11 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     @if (session('error'))
-                        <div class="alert alert-danger">
+                        <div x-data="{ open: true }" x-show="open" class="relative p-4 mb-4 text-sm text-red-200 bg-red-500 rounded-lg" role="alert">
+                            <button @click="open = false"
+                                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
                             {{ session('error') }}
                         </div>
                     @endif

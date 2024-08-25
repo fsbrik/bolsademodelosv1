@@ -100,7 +100,9 @@
             @endauth
 
             <!-- Gallery of uploaded photos -->
-            <div x-show="!selectedPhoto" class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 overflow-y-auto w-full max-h-64 @auth {{ Auth::user()->hasRole('admin') ? 'sm:max-h-[512px]' : 'sm:max-h-[95%]' }}" @endauth>
+            <div x-show="!selectedPhoto" class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 overflow-y-auto w-full  
+                    @guest max-h-full @endguest    
+                    @auth {{ Auth::user()->hasRole('admin') ? 'sm:max-h-[512px]' : 'sm:max-h-[95%]' }} @endauth">
                 @forelse ($fotos as $foto)
                     <div class="relative flex flex-col items-center">
                         <img src="{{ Storage::url($foto->url) }}" alt="foto" class="object-cover cursor-pointer" @click="selectedPhoto = '{{ Storage::url($foto->url) }}'; open = true">

@@ -80,16 +80,15 @@ class ModeloGaleria extends Component
 
     protected $listeners = ['openGallery' => 'openModal'];
 
-    public function mount()
+    /* public function mount()
     {
-        //dd($this->modeloId);
         $this->loadPhotos();
-    }
+    } */
 
     public function loadPhotos()
     { 
         // Carga las fotos del modelo (asumiendo que hay una relación definida)
-        $this->fotos = Foto::where('modelo_id', $this->modeloId)->get();
+        $this->fotos = Foto::where('modelo_id', $this->modeloId)->get();        
     }
 
     public function openModal($modeloId)

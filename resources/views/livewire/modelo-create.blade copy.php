@@ -1,4 +1,4 @@
-{{-- <x-app-layout>
+<div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Inscripción de Modelos') }}
@@ -217,7 +217,7 @@
                         </div>
                         <div class="flex items-center justify-end mt-4">
                             <x-button class="ml-4">
-                                {{ __('Inscribir Modelo') }}
+                                {{ __('Inscribir') }}
                             </x-button>
                         </div>
                     </form>
@@ -225,8 +225,5 @@
             </div>
         </div>
     </div>
-</x-app-layout> --}}
+</div>
 
-<x-app-layout>
-    @livewire('modelo-create')
-</x-app-layout>

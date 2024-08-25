@@ -21,7 +21,7 @@ class CheckIfUserHasModelo
 
         if ($user && $user->hasRole('modelo') && $user->modelo) {
             // Redirigir con un mensaje de error si el usuario ya tiene un modelo asociado
-            return redirect()->route('modelos.show', $user->modelo->id)->with('error', 'Ya tienes un modelo asociado y no puedes crear otro.');
+            return redirect()->route('modelos.show', $user->modelo->id)->with('error', 'Ya tenés una ficha asociada y no podés crear otra.');
         }
 
         return $next($request);

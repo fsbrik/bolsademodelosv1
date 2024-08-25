@@ -36,8 +36,8 @@
                         @endcan
 
                         <div class="flex">
-                            <aside class="w-44 p-2 bg-gray-100 mr-2 rounded-md">
-                                <div class="grid grid-cols-12 gap-2">
+                            <aside class="w-20 sm:w-44 p-2 bg-gray-100 mr-2 rounded-md">
+                                <div class="grid grid-cols-12 gap-0 sm:gap-2">
                                     <div class="col-span-12 sm:col-span-6">
                                         <x-label-sm for="searchEdadMin" value="{{ __('Edad Min') }}" class="text-xs" />
                                         <x-input id="searchEdadMin" type="number" class="mt-1 block w-full text-xs"
@@ -51,7 +51,7 @@
                                     <div class="col-span-12 sm:col-span-12">
                                         <x-label-sm for="searchSexo" value="{{ __('Sexo') }}" class="text-xs" />
                                         <select id="searchSexo"
-                                            class="block mt-1 w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-xs"
+                                            class="block mt-1 w-full sm:w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-xs"
                                             wire:model.live.debounce.250ms="searchSexo">
                                             <option value="">--</option>
                                             <option value="F">Femenino</option>
@@ -101,7 +101,7 @@
                                         <x-label-sm for="searchDisVia" value="{{ __('Dispo Viajes') }}"
                                             class="text-xs" />
                                         <select id="searchDisVia"
-                                            class="block mt-1 w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-xs"
+                                            class="block mt-1 w-full sm:w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-xs"
                                             wire:model.live.debounce.500ms="searchDisVia">
                                             <option value="">--</option>
                                             <option value="1">SI</option>
@@ -112,7 +112,7 @@
                                         <x-label-sm for="searchTitMod" value="{{ __('Tit. Modelo') }}"
                                             class="text-xs" />
                                         <select id="searchTitMod"
-                                            class="block mt-1 w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-xs"
+                                            class="block mt-1 w-full sm:w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-xs"
                                             wire:model.live.debounce.250ms="searchTitMod">
                                             <option value="">--</option>
                                             <option value="1">SI</option>
@@ -149,7 +149,7 @@
                                         </div>
                                         <div class="col-span-12 sm:col-span-6">
                                             <x-label-sm for="searchTarMedMin" value="{{ __('min') }}"
-                                                class="text-xs" />
+                                                class="text-xs mt-2 sm:mt-0" />
                                             <x-input id="searchTarMedMin" type="number"
                                                 class="mt-1 block w-full text-xs"
                                                 wire:model.live.debounce.250ms="searchTarMedMin" />
@@ -166,7 +166,7 @@
                                         </div>
                                         <div class="col-span-12 sm:col-span-6">
                                             <x-label-sm for="searchTarComMin" value="{{ __('min') }}"
-                                                class="text-xs" />
+                                                class="text-xs mt-2 sm:mt-0" />
                                             <x-input id="searchTarComMin" type="number"
                                                 class="mt-1 block w-full text-xs"
                                                 wire:model.live.debounce.250ms="searchTarComMin" />
@@ -206,9 +206,10 @@
                                 </div>
                             </aside>
 
-                            <div x-data="{ toggle: 'true'}">
+                            <div x-data="{ toggle: window.innerWidth < 640}"
+                                 {{-- x-init="{toggle: window.innerWidth < 640}" --}}>
                                 <button @click="toggle = !toggle"
-                                    class="bg-gray-800 text-white px-4 py-2 rounded mb-4">
+                                    class="bg-gray-800 text-white px-4 py-2 rounded mb-4 hidden sm:block">
                                     Cambiar vista
                                 </button>
 
@@ -224,6 +225,7 @@
                                     </div>
                                 @endif
                                 
+                                {{-- Se visualiza la vista en formato de lista --}}
                                 <div x-show="toggle" class="flex-1 ml-2">
                                     @if ($modelos->count())
                                         <table class="min-w-full divide-y divide-gray-200 text-xs">
@@ -448,8 +450,68 @@
                                 </div>
                                 <div x-show="!toggle">
                                     @if($modelos->count())
-                                        {{-- Se visualiza la vista como en formato de tarjetas --}}
-                                        @livewire('modelo-card')
+                                        {{-- Se visualiza la vista en formato de tarjetas --}}
+                                        <div class="ml-2 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                                            @foreach ($modelos as $modelo)
+                                                <div class="flex flex-col">
+                                                    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                                                        <div class="p-2 flex justify-between">
+                                                            <img src="{{ $modelo->user->profile_photo_url }}" alt="{{ $modelo->user->name }}"
+                                                                class="h-48 w-28 rounded-md object-cover">
+                                                            <div class="flex flex-col ml-1">
+                                                                <p class="font-semibold">## {{ $modelo->mod_id }}</p>
+                                                                @can('modelos.datos_de_contacto')
+                                                                <x-label-sm class="border-t break-all">{{ $modelo->user->name }}</x-label-sm>
+                                                                <x-label-sm>{{ $modelo->user->telefono }}</x-label-sm>
+                                                                <x-label-sm class="border-b break-all">{{ $modelo->user->email }}</x-label-sm>
+                                                                @endcan
+                                                                <x-label-sm>{{ __('Edad: ') . \Carbon\Carbon::parse($modelo->fec_nac)->age . __(' años') }}</x-label-sm>
+                                                                <x-label-sm>{{ __('Estatura: ') . $modelo->estatura . __(' mts.') }}</x-label-sm>
+                                                                <x-label-sm>{{ __('Calzado: ') . $modelo->calzado }}</x-label-sm>
+                                                                <x-label-sm>{{ __('Medidas: ') . $modelo->medidas }}</x-label-sm>
+                                                                <x-label-sm>{{ __('Viajar al exterior: ') . ($modelo->dis_via ? 'si' : 'no') }}</x-label-sm>
+                                                                <x-label-sm class="border-b">{{ __('Título de modelo: ') . ($modelo->tit_mod ? 'si' : 'no') }}</x-label-sm>
+                                                                @can('modelos.ficha_tecnica')
+                                                                <x-label-sm><i class="fas fa-money-bill-wave"></i><i class="fas fa-money-bill-wave px-1"></i><i
+                                                                        class="fas fa-money-bill-wave"></i></x-label-sm>
+                                                                <x-label-sm>{{ __('1/2 jornada: u$s') . $modelo->tar_med }}</x-label-sm>
+                                                                <x-label-sm>{{ __('Jorn. comp.: u$s') . $modelo->tar_com }}</x-label-sm>
+                                                                @endcan
+                                                            </div>
+                                                        </div>
+                                                        <div class="px-2 flex border-t flex-auto items-center">
+                                                            <i
+                                                                class="fas fa-map-marker-alt pr-1"></i><x-label-sm>{{ __('Residencia: ') . $modelo->zon_res }}</x-label-sm>
+                                                        </div>
+                                                        <div class="p-2 flex justify-between">
+                                                            <div class="">
+                                                                <x-label-sm><i class="fas fa-book"></i>
+                                                                    {{ __('Nivel de inglés: ') . $modelo->ingles }}</x-label-sm>
+                                                                <x-label-sm><i class="fas fa-briefcase"></i>
+                                                                    {{ __('Disponibilidad: ') . $modelo->dis_tra }}</x-label-sm>
+                                                            </div>
+                                        
+                                                            <div class="px-2 -mt-5 flex justify-between shadow-md rounded-lg overflow-hidden items-center">
+                                                                @can('modelos.show')
+                                                                    <a href="{{ route('modelos.show', $modelo->id) }}"
+                                                                        class="text-indigo-600 hover:text-indigo-900 pr-2" title="Ver">
+                                                                        <i class="fas fa-eye"></i>
+                                                                    </a>
+                                                                @endcan
+                                                                <i class="fas fa-image text-success cursor-pointer"
+                                                                    wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })"></i>
+                                                                <i class="fas fa-add"></i>
+                                                            </div>
+                                        
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            <div class="mt-4 col-span-1 md:col-span-4 lg:col-span-5">
+                                                {{ $modelos->links() }}
+                                            </div>
+                                            
+                                        </div>
                                     @else
                                         <div class="px-4 py-3">
                                             No se encontraron registros
