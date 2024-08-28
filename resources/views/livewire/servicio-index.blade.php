@@ -9,6 +9,16 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    @if (session()->has('message'))
+                        <div x-data="{ open: true }" x-show="open" class="relative p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                            role="alert">
+                            <button @click="open = false"
+                                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {{ session('message') }}
+                        </div>
+                    @endif
                     <div class="w-2/3 mx-auto bg-gray-100 grid grid-cols-6 sm:grid-cols-12 gap-2 mb-4 p-4">
                         <div class="col-span-6 sm:col-span-3">
                             <x-label for="searchName" value="{{ __('Denominación') }}" />

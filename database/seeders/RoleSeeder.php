@@ -67,7 +67,11 @@ class RoleSeeder extends Seeder
         //Permission::create(['name' => 'modelos.subir_fotos'])->assignRole('admin');
         //Permission::create(['name' => 'modelos.eliminar_fotos'])->assignRole('admin');
         //Permission::create(['name' => 'empresas.contratar_modelos'])->syncRoles($roleAdmin, $roleEmpresa);
-        $permissionModelosIndex = Permission::findByName('modelos.index');
-        $permissionModelosIndex->syncRoles();
+        
+        Permission::create(['name' => 'servicios.index'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'servicios.create'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'servicios.edit'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'servicios.show'])->syncRoles($roleAdmin);
+        Permission::create(['name' => 'servicios.destroy'])->syncRoles($roleAdmin);
     }
 }

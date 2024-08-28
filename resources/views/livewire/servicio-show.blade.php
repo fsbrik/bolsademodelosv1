@@ -10,6 +10,17 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+                        @if (session()->has('message'))
+                            <div x-data="{ open: true }" x-show="open"
+                                class="relative p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                                role="alert">
+                                <button @click="open = false"
+                                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                {{ session('message') }}
+                            </div>
+                        @endif
                         <div class="grid grid-cols-1 md:grid md:grid-cols-12 md:gap-3">
                             <!-- Denominación del servicio -->
                             <div class="col-span-12 sm:col-span-4">
@@ -64,7 +75,7 @@
                     <div
                         class="flex items-center justify-end px-4 py-3 bg-gray-50 text-end sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
                         @if (Auth::user()->hasRole('admin'))
-                            <a href="{{ route('servicios.edit', $servicio['id']) }}"
+                            <a wire:navigate href="{{ route('servicios.edit', $servicio['id']) }}"
                                 class="text-yellow-600 hover:text-yellow-900 ml-4" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>

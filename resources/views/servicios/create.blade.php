@@ -18,7 +18,7 @@
                                 <x-label for="nom_ser" value="{{ __('Denominación del servicio') }}" />
                                 <x-input id="nom_ser" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
                                 type="text" name="nom_ser" :value="old('nom_ser')" autofocus />
-                                <x-input-error for="nom_ser" class="mt-2" />
+                                {{-- <x-input-error for="nom_ser" class="mt-2" /> --}}
                             </div>
 
                             <!-- Descripción -->
@@ -26,7 +26,7 @@
                                 <x-label for="des_ser" value="{{ __('Descripción') }}" />
                                 <textarea id="des_ser" name="des_ser"
                                     class="block mt-1 w-full pl-2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('des_ser') }}</textarea>
-                                <x-input-error for="des_ser" class="mt-2" />
+                                {{-- <x-input-error for="des_ser" class="mt-2" /> --}}
                             </div>
 
                             <!-- Categoría -->
@@ -37,7 +37,19 @@
                                     <option value="modelo" {{ old('cat_ser') == 'modelo' ? 'selected' : '' }}>{{ __('Modelo') }}</option>
                                     <option value="empresa" {{ old('cat_ser') == 'empresa' ? 'selected' : '' }}>{{ __('Empresa') }}</option>
                                 </select>
-                                <x-input-error for="cat_ser" class="mt-2" />
+                                {{-- <x-input-error for="cat_ser" class="mt-2" /> --}}
+                            </div>
+
+                            <!-- Subcategoría -->
+                            <div class="col-span-12 sm:col-span-1">
+                                <x-label for="sub_cat" value="{{ __('Subcategoría') }}" />
+                                <select id="sub_cat" name="sub_cat"
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    <option value="" {{ old('sub_cat') == '' ? 'selected' : '' }}>{{ __('-') }}</option>
+                                    <option value="reservas" {{ old('sub_cat') == 'reservas' ? 'selected' : '' }}>{{ __('Reservas') }}</option>
+                                    <option value="contrataciones" {{ old('sub_cat') == 'contrataciones' ? 'selected' : '' }}>{{ __('Contrataciones') }}</option>
+                                </select>
+                                {{-- <x-input-error for="sub_cat" class="mt-2" /> --}}
                             </div>
 
                             <!-- Precio -->
@@ -45,7 +57,7 @@
                                 <x-label for="precio" value="{{ __('Precio') }}" />
                                 <x-input id="precio" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
                                 type="number" name="precio" :value="old('precio')" step="500" />
-                                <x-input-error for="precio" class="mt-2" />
+                                {{-- <x-input-error for="precio" class="mt-2" /> --}}
                             </div>
 
                             <!-- Habilitar -->
@@ -58,16 +70,30 @@
                                     <option value="1" {{ old('hab_ser') == '1' ? 'selected' : '' }}>
                                         {{ __('Habilitado') }}</option>
                                 </select>
-                                <x-input-error for="hab_ser" class="mt-2" />
+                                {{-- <x-input-error for="hab_ser" class="mt-2" /> --}}
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-end mt-4">
-                            <x-button class="ml-4">
-                                {{ __('Crear servicio') }}
-                            </x-button>
-                        </div>
+                        @if (Auth::user()->hasRole('admin'))    
+                            <div class="flex items-center justify-end mt-4">
+                                <x-button class="ml-4">
+                                    {{ __('Crear servicio') }}
+                                </x-button>
+                            </div>
+                            <div class="flex items-center justify-end mt-4">
+                                <x-button class="ml-4">
+                                    <a wire:navigate href="{{ route('servicios.index') }}">
+                                        {{ __('Volver') }}
+                                    </a>
+                                </x-button>
+                            </div>
+                        @endif
                     </form>
+
+                    {{-- Mostrar los mensajes de error --}}
+                    <div class="col-span-12 sm:col-span-12">
+                        <x-validation-errors></x-validation-errors>
+                    </div>
                 </div>
             </div>
         </div>

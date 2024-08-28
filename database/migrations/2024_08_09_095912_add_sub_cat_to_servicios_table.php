@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('servicios', function (Blueprint $table) {
-            $table->enum('sub_cat', ['reservas', 'contrataciones'])->after('cat_ser')->nullable();
+            $table->enum('sub_cat', ['reservas', 'contrataciones'])->nullable()->after('cat_ser');
         });
     }
     

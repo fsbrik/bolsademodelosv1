@@ -37,8 +37,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () { return view('dashboard');})->name('dashboard');
-        
-    
+
     Route::resource('/users', UserController::class)->except('create', 'store')->names('users');
     
     Route::view('empresas/contrataciones', 'empresas.contrataciones')->name('empresas.contrataciones');
@@ -52,6 +51,7 @@ Route::middleware([
     }); 
     Route::view('solicitudes-modelos', 'solicitudes.solicitudes-modelos')->name('solicitudes_modelos');
     Route::resource('/pedidos', PedidoController::class)->names('pedidos');
+    Route::resource('/servicios', ServicioController::class)->names('servicios');
 });
 
-Route::resource('/servicios', ServicioController::class)->names('servicios');
+

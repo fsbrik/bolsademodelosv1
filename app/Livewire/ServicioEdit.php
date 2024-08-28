@@ -18,7 +18,7 @@ class ServicioEdit extends Component
     protected $rules = [
         'nom_ser' => 'required|string|max:100',
         'cat_ser' => 'required|string|in:modelo,empresa',
-        'sub_cat' => 'string|in:"",reservas,contrataciones',
+        'sub_cat' => 'nullable|in:reservas,contrataciones',
         'des_ser' => 'required|string',
         'precio' => 'required|numeric|min:0',
         'hab_ser' => 'required|boolean',
@@ -56,6 +56,7 @@ class ServicioEdit extends Component
         $servicio->update($this->validate());
 
         session()->flash('message', 'Servicio actualizado exitosamente.');
+        return redirect()->route('servicios.show', $this->servicioId);
     }
 
     public function render()

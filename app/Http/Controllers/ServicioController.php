@@ -11,6 +11,14 @@ class ServicioController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct(){
+        $this->middleware('can:servicios.index')->only('index');
+        $this->middleware('can:servicios.create')->only('create', 'store');
+        $this->middleware('can:servicios.edit')->only('edit', 'update');
+        $this->middleware('can:servicios.show')->only('show');
+        $this->middleware('can:servicios.destroy')->only('destroy');
+    }
+
     public function index()
     {
         $servicios = Servicio::all();
@@ -34,7 +42,7 @@ class ServicioController extends Controller
         
         Servicio::create($validatedData);
 
-        return redirect()->route('servicios.index')->with('success', 'Servicio creado con éxito.');
+        return redirect()->route('servicios.index')->with('message', 'Servicio creado con éxito.');
     }
 
     /**
@@ -55,11 +63,12 @@ class ServicioController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * El update se hace en el componente ServicioEdit
      */
-    public function update(ServicioRequest $request, Servicio $servicio)
+    /* public function update(ServicioRequest $request, Servicio $servicio)
     {
         //
-    }
+    } */
 
     /**
      * Remove the specified resource from storage.
@@ -67,6 +76,6 @@ class ServicioController extends Controller
     public function destroy(Servicio $servicio)
     {
         $servicio->delete();
-        return redirect()->route('servicios.index')->with('success', 'servicio eliminado correctamente.');
+        return redirect()->route('servicios.index')->with('message', 'servicio eliminado correctamente.');
     }
 }
