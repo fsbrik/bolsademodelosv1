@@ -6,6 +6,7 @@ use App\Http\Controllers\ModeloController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\ContratacionController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\PolicyController;
 
@@ -40,7 +41,7 @@ Route::middleware([
 
     Route::resource('/users', UserController::class)->except('create', 'store')->names('users');
     
-    Route::view('empresas/contrataciones', 'empresas.contrataciones')->name('empresas.contrataciones');
+    Route::resource('empresas/contrataciones', ContratacionController::class)->names('empresas.contrataciones');
     Route::resource('/empresas', EmpresaController::class)->names('empresas');
     Route::view('/modelos/cambiar_estado', 'modelos.cambiar_estado')->name('modelos.cambiar_estado');
     Route::resource('/modelos', ModeloController::class)->except('index')->names('modelos');

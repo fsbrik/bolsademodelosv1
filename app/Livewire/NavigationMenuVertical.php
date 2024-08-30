@@ -46,7 +46,7 @@ class NavigationMenuVertical extends Component
                     ['name' => 'Mis empresas', 'route' => 'empresas.index'],
                     ['name' => 'Planes', 'route' => 'empresas.planes'],
                     ['name' => 'Modelos', 'route' => 'modelos.index'],
-                    ['name' => 'Contrataciones', 'route' => 'empresas.contrataciones'],
+                    ['name' => 'Contrataciones', 'route' => 'empresas.contrataciones.index'],
                     ['name' => 'Reservas', 'route' => 'pedidos.index'],
                 ];
             }
