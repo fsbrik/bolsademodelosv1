@@ -12,9 +12,8 @@ class ContratacionController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $modelos = Modelo::all();
-        return view ('empresas.contrataciones', compact('modelos'));
+    {   
+        return view ('empresas.contrataciones');
     }
 
     /**

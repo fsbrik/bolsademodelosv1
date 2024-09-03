@@ -286,6 +286,36 @@
                         <x-nav-link wire:navigate href="{{ route('dashboardguest') }}" :active="request()->routeIs('dashboardguest')">         
                             {{ __('Información general') }}
                         </x-nav-link>
+
+                        <!-- Dropdown de Servicios -->
+                        <div class="ml-3 relative inline-flex items-center px-1">
+                            <x-dropdown align="left" contentClasses="rounded-none -mt-2 bg-white" class="flex flex-col items-end text-sm text-gray-700">  
+                                <x-slot name="trigger">
+                                    <span class="inline-flex rounded-md">
+                                        <button type="button" class="inline-flex items-center px-3 space-y-1 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
+                                            <x-nav-link wire:navigate href="{{ route('serviciosgenerales') }}" :active="request()->routeIs('serviciosgenerales')"
+                                                class="py-5 mt-5">         
+                                                {{ __('Servicios') }}
+                                            </x-nav-link>
+                                            {{-- la flechita para abajo del dropdown --}}
+                                            <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M5.292 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <x-dropdown-link href="{{ route('serviciosmodelos') }}">
+                                        {{ __('Servicios para modelos') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link href="{{ route('serviciosempresas') }}">
+                                        {{ __('Servicios para empresas') }}
+                                    </x-dropdown-link>   
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
+
                         @endguest
                         <x-nav-link wire:navigate href="{{ route('novedades') }}" :active="request()->routeIs('novedades')">
                             {{ __('Novedades') }}
@@ -297,7 +327,7 @@
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 @guest
                     <x-nav-link wire:navigate href="{{ route('login') }}"
-                        class="flex flex-col items-center space-y-1 text-sm text-gray-700">
+                        class="flex flex-col items-center space-y-1 text-sm text-gray-700 py-3 mt-3">
                         <i class="fa-solid fa-user"></i>
                         <span>Log in/Registro</span>
                     </x-nav-link>
@@ -418,12 +448,74 @@
             </div>
         @endauth
         <div class="flex flex-col items-end space-y-1 text-sm text-gray-700">{{-- :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden" --}}
-            <x-nav-link wire:navigate href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Información general') }}
-            </x-nav-link>
-            <x-nav-link wire:navigate href="{{ route('novedades') }}" :active="request()->routeIs('novedades')">
+            @auth
+                <x-responsive-nav-link wire:navigate href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
+                    class="flex flex-col items-end space-y-1 text-sm text-gray-700">
+                    {{ __('Información general') }}
+                </x-responsive-nav-link>
+            @endauth
+            @guest
+                <!-- Dropdown de Informacion general -->
+                <div class="ml-3 relative inline-flex items-center px-1">
+                    <x-dropdown align="left" width="30" class="flex flex-col items-end text-sm text-gray-700">  
+                        <x-slot name="trigger">
+                            <span class="inline-flex rounded-md">
+                                <button type="button" class="inline-flex items-center px-3 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
+                                    <x-responsive-nav-link wire:navigate href="{{ route('dashboardguest') }}" :active="request()->routeIs('dashboardguest')"
+                                        class="flex flex-col items-end text-sm text-gray-700">         
+                                        {{ __('Información general') }}
+                                    </x-responsive-nav-link>
+                                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.292 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </span>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link wire:navigate href="{{ route('infomodelos') }}"> 
+                                Info modelos
+                            </x-dropdown-link>
+                            <x-dropdown-link wire:navigate href="{{ route('infoempresas') }}">
+                                Info empresas
+                            </x-dropdown-link>   
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
+                <!-- Dropdown de Servicios -->
+                <div class="ml-3 relative inline-flex items-center px-1">
+                    <x-dropdown align="left" width="30" class="flex flex-col items-end text-sm text-gray-700">  
+                        <x-slot name="trigger">
+                            <span class="inline-flex rounded-md">
+                                <button type="button" class="inline-flex items-center px-3 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
+                                    <x-responsive-nav-link wire:navigate href="{{ route('serviciosgenerales') }}" :active="request()->routeIs('serviciosgenerales')"
+                                        class="flex flex-col items-end space-y-1 text-sm text-gray-700">         
+                                        {{ __('Servicios') }}
+                                    </x-responsive-nav-link>
+                                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.292 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </span>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link href="{{ route('serviciosmodelos') }}">
+                                {{ __('Servicios para modelos') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link href="{{ route('serviciosempresas') }}">
+                                {{ __('Servicios para empresas') }}
+                            </x-dropdown-link>   
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
+            @endguest
+            <x-responsive-nav-link wire:navigate href="{{ route('novedades') }}" :active="request()->routeIs('novedades')"
+                class="flex flex-col w-fit items-end space-y-1 text-sm text-gray-700">  
                 {{ __('Novedades') }}
-            </x-nav-link>
+            </x-responsive-nav-link>
         </div>
     </div>
 </nav>

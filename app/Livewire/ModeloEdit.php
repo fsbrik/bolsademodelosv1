@@ -8,7 +8,7 @@ use App\Models\Modelo;
 
 class ModeloEdit extends Component
 {
-    public $modelo, $modeloId, $localidades;
+    public $modelo, $modeloId, $profile_photo_url, $localidades;
 
     protected $rules = [
         'modelo.fec_nac' => 'required|date',
@@ -56,6 +56,7 @@ class ModeloEdit extends Component
     public function mount($modeloId)
     {
         $modelo = Modelo::findOrFail($modeloId);
+        $this->profile_photo_url = $modelo->user->profile_photo_url;
         $this->modelo = $modelo->toArray();
         $this->modeloId = $modeloId;
         $this->localidades = include(public_path('storage/localidades/localidades.php'));

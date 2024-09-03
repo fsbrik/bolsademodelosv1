@@ -46,7 +46,7 @@
 
                 <!-- Footer -->
                 @if (isset($footer))
-                    <footer class="bg-gray-800 text-white py-6 mt-8">
+                    <footer class="bg-gray-800 text-white py-6">
                         <div class="container mx-auto px-4">
                             <div class="flex flex-col md:flex-row justify-between items-center">
                                 <!-- Sección de Redes Sociales -->

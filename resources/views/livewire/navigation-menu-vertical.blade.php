@@ -51,7 +51,7 @@
     <!-- Sidebar content -->
     <div class="flex flex-col flex-grow">
         <div class="px-4 py-2 text-2xl font-semibold bg-gray-900" :class="{ 'hidden': !open }">
-            My App
+            Menú
         </div>
         <nav class="mt-2 flex-1 px-2 space-y-1" :class="{ 'hidden': !open }">
             @foreach ($links as $link)
@@ -69,11 +69,9 @@
                             : (($link['route'] === 'empresas.index' ||
                             $link['route'] === 'empresas.create' ||
                             $link['route'] === 'empresas.edit') && (
-                            !request()->routeIs('empresas.planes') && !request()->routeIs('empresas.contrataciones'))
+                            !request()->routeIs('empresas.planes') && !request()->routeIs('empresas.contrataciones.index'))
                                 ? $isEmpresaRouteActive
-                                : ($link['route'] === 'modelos.cambiar_estado'
-                                    ? request()->routeIs('modelos.cambiar_estado')
-                                    : request()->routeIs($link['route'])));
+                                : request()->routeIs($link['route']));                               
                 @endphp
                 <x-responsive-nav-link-vert wire:navigate :href="$route" :active="$isActive">
                     {{ $link['name'] }}

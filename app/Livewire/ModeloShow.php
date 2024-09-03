@@ -9,12 +9,13 @@ use Livewire\Attributes\On;
 
 class ModeloShow extends Component
 {
-    public $modelo, $modeloId, $localidades;
+    public $modelo, $modeloId, $profile_photo_url, $localidades;
 
     public function mount($modeloId)
     {
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
-        $modelo = Modelo::findOrFail($modeloId);    
+        $modelo = Modelo::findOrFail($modeloId); 
+        $this->profile_photo_url = $modelo->user->profile_photo_url;   
         $this->modelo = $modelo->toArray();
         $this->modeloId = $modeloId;   
     }

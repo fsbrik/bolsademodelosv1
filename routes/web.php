@@ -25,10 +25,13 @@ use App\Http\Controllers\PolicyController;
 
 Route::get('/', function () {/* return view('welcome'); */  return view('dashboardguest');})->name('dashboardguest');
 Route::get('/novedades', function () {/* return view('welcome'); */  return view('novedades');})->name('novedades');
-Route::view('/informacion_para_modelos', 'infomodelos')->name('infomodelos');
-Route::view('/informacion_para_empresas', 'infoempresas')->name('infoempresas');
-Route::get('/terminos_y_condiciones', [TermsController::class, 'show'])->name('terminos');
-Route::get('/politicas_de_privacidad', [PolicyController::class, 'show'])->name('politicas');
+Route::view('/informacion-para-modelos', 'infomodelos')->name('infomodelos');
+Route::view('/informacion-para-empresas', 'infoempresas')->name('infoempresas');
+Route::view('/servicios-generales', 'serviciosgenerales')->name('serviciosgenerales');
+Route::view('/servicios-para-empresas', 'serviciosempresas')->name('serviciosempresas');
+Route::view('/servicios-para-modelos', 'serviciosmodelos')->name('serviciosmodelos');
+Route::get('/terminos-y-condiciones', [TermsController::class, 'show'])->name('terminos');
+Route::get('/politicas-de-privacidad', [PolicyController::class, 'show'])->name('politicas');
 Route::get('/modelos', [ModeloController::class, 'index'])->name('modelos.index');
 Route::view('empresas/planes', 'empresas.planes')->name('empresas.planes');
 

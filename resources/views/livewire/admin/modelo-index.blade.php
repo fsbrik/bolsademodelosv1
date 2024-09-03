@@ -342,8 +342,7 @@
                                                             {{ $modelo->mod_id }}
                                                         </td>
                                                         <td class="py-2  whitespace-nowrap">                                                            
-                                                            <img src="{{$modelo->user->profile_photo_url}}"
-                                                                alt="{{ $modelo->mod_id }}"
+                                                            <img src="{{$modelo->user->profile_photo_url}}" alt="{{ $modelo->mod_id }}"
                                                                 class="rounded-xl w-14 h-20 mx-auto object-cover" />
                                                         </td>
                                                         @can('modelos.datos_de_contacto')
@@ -456,7 +455,7 @@
                                                 <div class="flex flex-col">
                                                     <div class="bg-white shadow-md rounded-lg overflow-hidden">
                                                         <div class="p-2 flex justify-between">
-                                                            <img src="{{ $modelo->user->profile_photo_url }}" alt="{{ $modelo->user->name }}"
+                                                            <img src="{{ $modelo->user->profile_photo_url }}" alt="{{ $modelo->mod_id }}"
                                                                 class="h-48 w-28 rounded-md object-cover">
                                                             <div class="flex flex-col ml-1">
                                                                 <p class="font-semibold">## {{ $modelo->mod_id }}</p>

@@ -1,4 +1,7 @@
 <div>
+    <div>
+        <img src="{{ $profile_photo_url }}" alt="{{ $modelo['mod_id'] }}" class="rounded-xl mb-4 w-28 h-40 object-cover" />
+    </div>
     <div class="grid grid-cols-1 md:grid md:grid-cols-12 md:gap-3">
         <!-- Mod Id -->
         <div class="col-span-12 sm:col-span-12">
