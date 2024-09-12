@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Modelo extends Model
 {
@@ -29,14 +31,14 @@ class Modelo extends Model
     }
 
     // app/Models/Modelo.php
-    public function fotos()
+    public function fotos(): HasMany
     {
         return $this->hasMany(Foto::class);
     }
 
-    // app/Models/Foto.php
-    public function modelo()
+    // Relación de muchos a muchos con Contratacion
+    public function contrataciones(): BelongsToMany
     {
-        return $this->belongsTo(Modelo::class);
+        return $this->belongsToMany(Contratacion::class);
     }
 }

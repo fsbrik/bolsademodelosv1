@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Contratacion extends Model
 {
@@ -12,8 +13,15 @@ class Contratacion extends Model
     protected $guarded = [];
     use HasFactory;
 
-    public function user(): BelongsTo
+    // Definir la relación inversa de muchos a uno con Empresa
+    public function empresa(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Empresa::class);
+    }
+
+    // Relación de muchos a muchos con Modelo
+    public function modelos(): BelongsToMany
+    {
+        return $this->belongsToMany(Modelo::class, 'contratacion_modelo', 'contratacion_id', 'modelo_id');
     }
 }

@@ -12,12 +12,12 @@
                     <div class="p-4 bg-white border-b border-gray-200">
                         @can('modelos.filtros_administrador')
                             <div class="w-2/3 mx-auto bg-gray-100 grid grid-cols-9 gap-2 mb-4 p-4">
-                                <div class="col-span-9 sm:col-span-1">
+                                {{-- <div class="col-span-9 sm:col-span-1">
                                     <x-label for="searchModId" value="{{ __('ID') }}" class="text-xs" />
                                     <x-input id="searchModId" type="text" class="mt-1 block w-full text-sm"
                                         wire:model.live.debounce.250ms="searchModId" />
-                                </div>
-                                <div class="col-span-9 sm:col-span-3">
+                                </div> --}}
+                                <div class="col-span-9 sm:col-span-4">
                                     <x-label for="searchName" value="{{ __('Nombre') }}" class="text-xs" />
                                     <x-input id="searchName" type="text" class="mt-1 block w-full text-sm"
                                         wire:model.live.debounce.250ms="searchName" />
@@ -38,6 +38,11 @@
                         <div class="flex">
                             <aside class="w-20 sm:w-44 p-2 bg-gray-100 mr-2 rounded-md">
                                 <div class="grid grid-cols-12 gap-0 sm:gap-2">
+                                    <div class="col-span-12 sm:col-span-12">
+                                        <x-label-sm for="searchModId" value="{{ __('ID') }}" class="text-xs" />
+                                        <x-input id="searchModId" type="text" class="mt-1 block w-full sm:w-1/2 text-xs"
+                                            wire:model.live.debounce.250ms="searchModId" />
+                                    </div>
                                     <div class="col-span-12 sm:col-span-6">
                                         <x-label-sm for="searchEdadMin" value="{{ __('Edad Min') }}" class="text-xs" />
                                         <x-input id="searchEdadMin" type="number" class="mt-1 block w-full text-xs"
@@ -206,12 +211,24 @@
                                 </div>
                             </aside>
 
-                            <div x-data="{ toggle: window.innerWidth < 640}"
-                                 {{-- x-init="{toggle: window.innerWidth < 640}" --}}>
-                                <button @click="toggle = !toggle"
-                                    class="bg-gray-800 text-white px-4 py-2 rounded mb-4 hidden sm:block">
-                                    Cambiar vista
-                                </button>
+                            <div x-data="{ toggle: window.innerWidth < 640}">
+                                <section class="flex flex-wrap">
+                                    <button @click="toggle = !toggle"
+                                        class="bg-gray-800 text-white px-4 py-2 rounded mb-4 hidden sm:block">
+                                        Cambiar vista
+                                    </button>
+                                    @if($modelosSeleccionadas)                                        
+                                        <div x-data="{ open: true }" x-show="open"
+                                            class="relative p-4 ml-2 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                                            role="alert">
+                                            {{ __($seleccionMessage) }} {{ implode(', ', $modelosSeleccionadas )}}
+                                        </div>
+                                        <a href="{{ route('empresas.contrataciones.create') }}"
+                                            class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
+                                            Agregar modelos
+                                        </a>
+                                    @endif
+                                </section>
 
                                 @if (session()->has('message'))
                                     <div x-data="{ open: true }" x-show="open"
@@ -411,8 +428,28 @@
                                                             {{-- Ver todas las fotos de la modelo --}}
                                                             <i class="fas fa-image text-success cursor-pointer"
                                                                 wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })"></i>
-                                                            {{-- Agregar a contrataciones --}}
-                                                            <i class="fas fa-add"></i>
+{{-- Seleccionar o remover modelo --}}
+@can('empresas.contratar_modelos')                                                                
+    <section class="inline">
+        @if(in_array($modelo->mod_id, $modelosSeleccionadas))
+            {{-- Botón para remover el modelo --}}
+            <button wire:click="removeModelo({{ $modelo->id }})"
+                class="text-red-600 hover:text-red-900"
+                title="Remover">
+                <i class="fas fa-circle-minus"></i>
+            </button>
+        @else
+            {{-- Botón para seleccionar el modelo --}}
+            <button wire:click="selectModelo({{ $modelo->id }})"
+                class="text-green-600 hover:text-green-900"
+                title="Seleccionar">
+                <i class="fas fa-add"></i>
+            </button>
+        @endif
+    </section>
+@endcan
+
+                                                            {{-- Editar modelos --}}
                                                             @can('modelos.edit')
                                                                 <a href="{{ route('modelos.edit', $modelo->id) }}"
                                                                     class="text-yellow-600 hover:text-yellow-900"
@@ -420,6 +457,7 @@
                                                                     <i class="fas fa-edit"></i>
                                                                 </a>
                                                             @endcan
+                                                            {{-- Eliminar modelos --}}
                                                             @can('modelos.destroy')
                                                                 <form wire:submit="destroy({{ $modelo->id }})" class="inline">                                                                    
                                                                     <button type="submit"
@@ -499,7 +537,26 @@
                                                                 @endcan
                                                                 <i class="fas fa-image text-success cursor-pointer"
                                                                     wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })"></i>
-                                                                <i class="fas fa-add"></i>
+{{-- Seleccionar o remover modelo --}}
+@can('empresas.contratar_modelos')                                                            
+    <section class="inline ml-2">
+        @if(in_array($modelo->mod_id, $modelosSeleccionadas))
+            {{-- Botón para remover el modelo --}}
+            <button wire:click="removeModelo({{ $modelo->id }})"
+                class="text-red-600 hover:text-red-900"
+                title="Remover">
+                <i class="fas fa-circle-minus"></i>
+            </button>
+        @else
+            {{-- Botón para seleccionar el modelo --}}
+            <button wire:click="selectModelo({{ $modelo->id }})"
+                class="text-green-600 hover:text-green-900"
+                title="Seleccionar">
+                <i class="fas fa-add"></i>
+            </button>
+        @endif
+    </section>
+@endcan
                                                             </div>
                                         
                                                         </div>

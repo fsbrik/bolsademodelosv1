@@ -16,17 +16,83 @@ class ModeloIndex extends Component
     public $localidades = [];
     public $sort_By = null, $sortDirection = 'asc';
     public $showTable = true;
-    
+    public $modelosSeleccionadas = [];
+    // variables para mostrar con el mensaje de las modelos seleccionadas
+    public $seleccionMessage, $strModelo;
+
     use WithPagination;
 
     public function mount(){
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
+        
+        // mostrar las modelos seleccionadas en el alert
+        $this->modelosSeleccionadas = session()->get('modelos_seleccionadas', []);
+        //muestra el mensaje inicial dependiendo si es una o varias modelos seleccionadas
+
+        if(count($this->modelosSeleccionadas) > 0)
+        {
+            $this->mostrarMensajeInicialAlert();
+        }
     }
 
-    /* public function toggleView()
+    /* mensaje en el alert de las modelos seleccionadas dependiendo la cantidad de modelos */
+    public function mostrarMensajeInicialAlert()
     {
-        $this->showTable = !$this->showTable;
-    } */
+        if(count($this->modelosSeleccionadas) > 1){
+            $this->seleccionMessage = 'Seleccionaste a las modelos '; 
+        } else {
+            $this->seleccionMessage = 'Seleccionaste a la modelo ';
+        }
+    }
+
+    /* agregar por valores de sesion a modelos seleccionadas */
+    public function selectModelo($modeloId)
+    {
+        // Obtén el modelo por su id
+        $modelo = Modelo::findOrFail($modeloId);
+
+        // Obtén los modelos seleccionados desde la sesión
+        $this->modelosSeleccionadas = session()->get('modelos_seleccionadas', []);
+
+        // Verifica si el mod_id no está ya en el array
+        if (!in_array($modelo->mod_id, $this->modelosSeleccionadas)) {
+            // Agrega el mod_id al array
+            $this->modelosSeleccionadas[] = $modelo->mod_id;
+        }
+        
+        // ordena el array de las modelos
+        asort($this->modelosSeleccionadas, SORT_NATURAL);
+        
+        // Actualiza la sesión con el nuevo array
+        session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
+
+        //muestra el mensaje inicial dependiendo si es una o varias modelos seleccionadas
+        $this->mostrarMensajeInicialAlert();       
+
+        //return redirect()->route('empresas.contrataciones.create')->with('message', 'Seleccionaste a la modelo '.$modelo->mod_id);
+    }
+
+    public function removeModelo($modeloId)
+    {
+        // Obtén el modelo por su id
+        $modelo = Modelo::findOrFail($modeloId);
+
+        // Obtén el array de modelos seleccionados desde la sesión
+        $this->modelosSeleccionadas = session()->get('modelos_seleccionadas', []);
+
+        // Elimina el mod_id del array
+        $this->modelosSeleccionadas = array_diff($this->modelosSeleccionadas, [$modelo->mod_id]);
+
+        // ordena el array de las modelos seleccionadas
+        asort($this->modelosSeleccionadas, SORT_NATURAL);
+
+        // Actualiza la sesión con el nuevo array
+        session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
+
+       //muestra el mensaje inicial dependiendo si es una o varias modelos seleccionadas
+       $this->mostrarMensajeInicialAlert();
+    }
+
 
     public function updating($field)
     {

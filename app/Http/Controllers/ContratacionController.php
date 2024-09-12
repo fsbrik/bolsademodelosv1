@@ -13,7 +13,7 @@ class ContratacionController extends Controller
      */
     public function index()
     {   
-        return view ('empresas.contrataciones');
+        return view ('empresas.contrataciones.index');
     }
 
     /**
@@ -21,31 +21,33 @@ class ContratacionController extends Controller
      */
     public function create()
     {
-        //
+        //$mod_id = session()->get('modelos_seleccionadas', []);
+        return view ('empresas.contrataciones.create');
     }
 
     /**
      * Store a newly created resource in storage.
+     * Se reemplaza el metodo por otro igual en EmpresaContratacionCreate
      */
-    public function store(Request $request)
+    /* public function store(Request $request)
     {
         //
-    }
+    } */
 
     /**
      * Display the specified resource.
      */
-    public function show(Contratacion $contratacion)
+    public function show($contratacionId)
     {
-        //
+        return view ('empresas.contrataciones.show', compact('contratacionId'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Contratacion $contratacion)
+    public function edit($contratacionId)
     {
-        //
+        return view('empresas.contrataciones.edit', compact('contratacionId'));
     }
 
     /**
