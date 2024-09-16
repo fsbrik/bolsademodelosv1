@@ -139,7 +139,26 @@
     <div class="flex items-center justify-end mt-4">
         <i class="fas fa-image text-success cursor-pointer"
             wire:click="$dispatch('openGallery', { modeloId: {{ $modeloId }} })"></i>
-        <i class="fas fa-add"></i>
+        {{-- Seleccionar o remover modelo --}}
+        @can('empresas.contratar_modelos')                                                                
+            <section class="inline ml-2">
+                @if(in_array($modelo['mod_id'], $modelosSeleccionadas))
+                    {{-- Botón para remover el modelo --}}
+                    <button wire:click="removeModelo({{ $modelo['id'] }})"
+                        class="text-red-600 hover:text-red-900"
+                        title="Remover">
+                        <i class="fas fa-circle-minus"></i>
+                    </button>
+                @else
+                    {{-- Botón para seleccionar el modelo --}}
+                    <button wire:click="addModeloSeleccionada({{ $modelo['id'] }})"
+                        class="text-green-600 hover:text-green-900"
+                        title="Seleccionar">
+                        <i class="fas fa-add"></i>
+                    </button>
+                @endif
+            </section>
+        @endcan
         @can('modelos.edit')
             <a href="{{ route('modelos.edit', $modelo['id']) }}" class="text-yellow-600 hover:text-yellow-900 ml-4"
                 title="Editar">

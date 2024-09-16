@@ -148,19 +148,19 @@
                                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                     <div>
                                         <label for="dom_tra" class="block text-sm font-medium text-gray-700">Dirección</label>
-                                        <input type="text" wire:model="dom_tra" id="dom_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <input type="text" wire:model.live.debounce.250ms="dom_tra" id="dom_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     </div>
                                     <div>
                                         <label for="loc_tra" class="block text-sm font-medium text-gray-700">Localidad</label>
-                                        <input type="text" wire:model="loc_tra" id="loc_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <input type="text" wire:model.live.debounce.250ms="loc_tra" id="loc_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     </div>
                                     <div>
                                         <label for="pro_tra" class="block text-sm font-medium text-gray-700">Provincia</label>
-                                        <input type="text" wire:model="pro_tra" id="pro_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <input type="text" wire:model.live.debounce.250ms="pro_tra" id="pro_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     </div>
                                     <div>
                                         <label for="pai_tra" class="block text-sm font-medium text-gray-700">País</label>
-                                        <input type="text" wire:model="pai_tra" id="pai_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <input type="text" wire:model.live.debounce.250ms="pai_tra" id="pai_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +178,7 @@
                             <!-- Descripción del Trabajo -->
                             <div class="mb-4">
                                 <label for="des_tra" class="block text-sm font-medium text-gray-700">Descripción del Trabajo</label>
-                                <textarea wire:model="des_tra" id="des_tra" class="mt-1 block w-full sm:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                                <textarea wire:model.live.debounce.250ms="des_tra" id="des_tra" class="mt-1 block w-full sm:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                             </div>
                     
                             {{-- Mostrar los mensajes de error --}}

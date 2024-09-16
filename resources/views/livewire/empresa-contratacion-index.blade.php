@@ -76,19 +76,37 @@
                 {{ $contrataciones->links() }}
 
                 <div class="flex items-center justify-end mt-4">
-                    <x-button class="ml-4">
-                        <a wire:navigate href="{{ route('empresas.contrataciones.create') }}">
-                            @if($contrataciones)
-                                @if(session()->get('fec_con'))
-                                    {{ __('Continuar con la contratación') }}
-                                @else
-                                    {{ __('Generar otra contratación') }}
-                                @endif
-                            @else
-                                {{ __('Generar contratación')}}
-                            @endif
-                        </a>
-                    </x-button>
+                    {{-- determinar si proviene de crear o editar --}}
+@if ($action === 'contratEdit')
+{{-- <script type="text/javascript"> 
+    window.onload = function() {
+                    if (confirm('¿Querés continuar con la edición de la contratación?')) {
+                // Redirigir a la ruta de edición de Laravel
+                window.location.href = "{{ route('empresas.contrataciones.edit', $contratacion->id) }}";
+            }        
+    }
+</script> --}}
+<a href="{{ route('empresas.contrataciones.edit', $contratacionId) }}" 
+    {{-- onclick="return confirm('Tenés una contratación pendiente, ¿Querés continuarla?')" --}}
+    class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
+    {{ __('Continuar editando') }}
+</a>
+<a href="{{ route('empresas.contrataciones.create') }}" 
+    onclick="return confirm('Tenés una contratación pendiente. Hacé click en \'CANCELAR\' y luego en el botón de \'CONTINUAR EDITANDO\' para retormarla, de lo contrario vas a perder los cambios')"
+    class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
+    {{ __('Nueva contratación') }}
+</a>
+@elseif ($action === 'contratCreateNew')
+<a href="{{ route('empresas.contrataciones.create') }}" 
+    class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
+    {{ __('Nueva contratación') }}
+</a>
+@elseif ($action === 'contratCreate')                    
+<a href="{{ route('empresas.contrataciones.create') }}"
+    class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
+    {{ __('Continuar con la contratación') }}
+</a>
+@endif
                 </div>
             </div>
         </div>

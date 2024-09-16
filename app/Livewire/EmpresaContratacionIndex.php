@@ -13,14 +13,19 @@ class EmpresaContratacionIndex extends Component
 {
     use WithPagination;
 
-    // variables para index
-    //public $contrataciones;
+    public $action, $contratacionId;
 
-    // variables para create
-    /* public $fec_con, $fec_ini, $fec_fin, $hor_dia, $dom_tra, $loc_tra, $pro_tra, $pai_tra, $mon_tot, $des_tra;     
-    public $dias_trabajo, $valor_hora; 
-    public $empresa, $empresas;
-    public $modelos, $pagination; */
+    public function mount()
+    {
+        if (session()->get('contratacion') == 'contratCreate'){
+            $this->action = 'contratCreate';
+        } elseif (session()->get('contratacion') == 'contratEdit'){
+            $this->action = 'contratEdit';//dd(session()->get('contratacionId'));
+            $this->contratacionId = session()->get('contratacionId');
+        } elseif (session()->get('contratacion') === null){
+            $this->action = 'contratCreateNew';
+        }
+    }
 
     public function obtenerFechaFormateada($fecha)
     {

@@ -83,54 +83,126 @@ class EmpresaContratacionEdit extends Component
     {
         // Asignar el ID de la contratación recibido al componente
         $this->contratacionId = $contratacionId;
-        
+
+        // Recuperar la contratacion
         $this->contratacion = Contratacion::findOrFail($contratacionId);
-        $this->empresas = Auth::user()->empresas->toArray();
-        $this->empresa = $this->contratacion->empresa_id;
 
-        //dd($this->empresas);
-        //$this->empresa_id = Auth::user()->empresas->first()->id; // Obtiene el ID de la empresa del usuario autenticado
-        $this->fec_con = $this->contratacion->fec_con;
-        $this->fec_ini = $this->contratacion->fec_ini;
-        $this->fec_fin = $this->contratacion->fec_fin;
-        $this->hor_dia = $this->contratacion->hor_dia;
-        $this->dom_tra = $this->contratacion->dom_tra;
-        $this->loc_tra = $this->contratacion->loc_tra;
-        $this->pro_tra = $this->contratacion->pro_tra;
-        $this->pai_tra = $this->contratacion->pai_tra;
-        $this->mon_tot = $this->contratacion->mon_tot;
-        $this->des_tra = $this->contratacion->des_tra;
+        //verifica si ya existe o no una sesion de contratacionEdit
+        $this->checkForSessions();
+        
+        //$this->contratacion = Contratacion::findOrFail($contratacionId); lo introduje en checkForSessions()
+        $this->empresas = Auth::user()->empresas->toArray();        
 
+        $this->empresa = session()->get('empresa',$this->contratacion->empresa_id);
+        $this->fec_con = session()->get('fec_con',$this->contratacion->fec_con);
+        $this->fec_ini = session()->get('fec_ini',$this->contratacion->fec_ini);
+        $this->fec_fin = session()->get('fec_fin',$this->contratacion->fec_fin);
+        $this->hor_dia = session()->get('hor_dia',$this->contratacion->hor_dia);
+        $this->dom_tra = session()->get('dom_tra',$this->contratacion->dom_tra);
+        $this->loc_tra = session()->get('loc_tra',$this->contratacion->loc_tra);
+        $this->pro_tra = session()->get('pro_tra',$this->contratacion->pro_tra);
+        $this->pai_tra = session()->get('pai_tra',$this->contratacion->pai_tra);
+        $this->mon_tot = session()->get('mon_tot',$this->contratacion->mon_tot);
+        $this->des_tra = session()->get('des_tra',$this->contratacion->des_tra);
         $this->calcularDiasTrabajo();
         $this->calcularValorHora();
         
+    }
+
+    public function checkForSessions()
+    {
+        // establecer la sesion de edit
+        if(session()->get('contratacion') != 'contratEdit'){
+            session()->put('contratacion', 'contratEdit'); 
+        }
+
+        // establecer la sesion con el id de la contratacion
+        if($this->contratacionId != session()->get('contratacionId')){
+            session()->forget(['empresa', 'fec_con', 'fec_ini', 'fec_fin', 'hor_dia',
+                 'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'des_tra',
+                 'modelos_seleccionadas']);
+            
+            // asigno una variable de sesion nueva de contratacionId
+            session()->put('contratacionId', $this->contratacionId);
+        }
+
+    }
+
+    /* public function checkForModelos()
+    {
+        if(session()->has('modelosSeleccionadas'))
+        {dd('1');
+            $this->modelosSeleccionadas = session()->get('modelosSeleccionadas');
+            // ordena el array de las modelos seleccionadas
+            asort($this->modelosSeleccionadas, SORT_NATURAL);
+
+        } else {dd('2');
+            $this->modelosSeleccionadas = Modelo::whereHas('contrataciones', function($query) {
+                $query->where('contratacion_id', $this->contratacionId);});          
+        }
+        return $this->modelosSeleccionadas;
+    } */
+
+    public function updatedEmpresa()
+    {
+        session()->put('empresa', $this->empresa);
     }
 
     public function updatedFecIni()
     {
         $this->calcularDiasTrabajo();
         $this->calcularValorHora();
+        session()->put('fec_ini', $this->fec_ini);
     }
 
     public function updatedFecFin()
     {
         $this->calcularDiasTrabajo();
         $this->calcularValorHora();
+        session()->put('fec_fin', $this->fec_fin);
     }
 
-    public function setMismoDia(){
-        $this->fec_fin = $this->fec_ini;
-        $this->dias_trabajo = 1;
-    }
-
-    public function updatedHorDia()
+    public function updatedDomTra()
     {
-        $this->calcularValorHora();
+        session()->put('dom_tra', $this->dom_tra);
+    }
+
+    public function updatedLocTra()
+    {
+        session()->put('loc_tra', $this->loc_tra);
+    }
+
+    public function updatedProTra()
+    {
+        session()->put('pro_tra', $this->pro_tra);
+    }
+
+    public function updatedPaiTra()
+    {
+        session()->put('pai_tra', $this->pai_tra);
     }
 
     public function updatedMonTot()
     {
         $this->calcularValorHora();
+        session()->put('mon_tot', $this->mon_tot);
+    }
+
+    public function updatedDesTra()
+    {
+        session()->put('des_tra', $this->des_tra);
+    }
+
+    public function setMismoDia(){
+        $this->fec_fin = $this->fec_ini;
+        $this->dias_trabajo = 1;
+        session()->put('fec_fin', $this->fec_fin);
+    }
+
+    public function updatedHorDia()
+    {
+        $this->calcularValorHora();
+        session()->put('hor_dia', $this->hor_dia);
     }
 
     public function calcularDiasTrabajo()
@@ -149,6 +221,25 @@ class EmpresaContratacionEdit extends Component
         } else {
             $this->valor_hora = 0;
         }
+    }
+
+    //eliminar una modelo de la contratacion 
+    public function removeModelo($modeloId)
+    {
+        // Obtén el modelo por su id
+        $modelo = Modelo::findOrFail($modeloId);
+
+        // Obtén el array de modelos seleccionados desde la sesión
+        $this->modelosSeleccionadas = session()->get('modelos_seleccionadas', []);//dd($this->modelosSeleccionadas);
+
+        // Elimina el mod_id del array
+        $this->modelosSeleccionadas = array_diff($this->modelosSeleccionadas, [$modelo->mod_id]);//dd($this->modelosSeleccionadas);
+
+        // ordena el array de las modelos seleccionadas
+        asort($this->modelosSeleccionadas, SORT_NATURAL); 
+
+        // Actualiza la sesión con el nuevo array
+        session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
     }
 
     public function update()
@@ -170,26 +261,52 @@ class EmpresaContratacionEdit extends Component
             'mon_tot' => $this->mon_tot,
             'des_tra' => $this->des_tra,
         ]);
-//dd($this->modelosSeleccionadas);
+
+        /// Obtener los IDs correspondientes a los mod_id seleccionados
+        $modelosIds = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->pluck('id')->toArray();
+
         // Asignar los modelos seleccionados a la contratación
-        $this->contratacion->modelos()->sync($this->modelos);
+        $this->contratacion->modelos()->sync($modelosIds);
+
+        session()->forget(['empresa', 'fec_con', 'fec_ini', 'fec_fin', 'hor_dia',
+                 'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'des_tra',
+                 'modelos_seleccionadas', 'contratacion']);
 
         // Redirigir o mostrar un mensaje de éxito
-        session()->flash('message', 'Propuesta enviada con éxito.');
+        session()->flash('message', 'Propuesta reenviada con éxito.');
         return redirect()->route('empresas.contrataciones.index');
     }
 
 
     public function render()
     {
-        // Recuperar las modelos asignadas a la contratación
-        $modelos = Modelo::whereHas('contrataciones', function($query) {
-            $query->where('contratacion_id', $this->contratacionId);
-        })->paginate(10);
+        //verifica si ya existe o no una sesion con modelos
+       /*  if(session()->has('modelosSeleccionadas'))
+        {
+            $this->modelosSeleccionadas = session()->get('modelosSeleccionadas');
+            $modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->paginate(10);dd('1');
+        } else {
+
+            $this->modelosSeleccionadas = $this->contratacion->modelos;dd('2');
+            session()->put('modelos_seleccionadas', $this->modelosSeleccionadas->pluck('mod_id')->toArray());  
+            $modelos = $this->contratacion->modelos()->paginate(10);
+        } */
+
+        if(session()->has('modelos_seleccionadas')){
+            $this->modelosSeleccionadas = session()->get('modelos_seleccionadas',[]);//dd( $this->modelosSeleccionadas);
+            $modelos = Modelo::whereIn('mod_id',$this->modelosSeleccionadas)
+                        ->orderByRaw('CAST(SUBSTRING(mod_id, 4) AS UNSIGNED) ASC')->paginate(10);//dd($modelos);
+        } else {
+            $modelos = $this->contratacion->modelos()->paginate(10);
+            $this->modelosSeleccionadas = $this->contratacion->modelos()->pluck('mod_id')->toArray();
+            session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
+        }
+        
+        
+        //$modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->orderByRaw('CAST(SUBSTRING(mod_id, 4) AS UNSIGNED) ASC')->paginate(10);
 
         // Pasar los modelos a la vista sin asignarlos a una propiedad
-        return view('livewire.empresa-contratacion-edit', [
-            'modelos' => $modelos
-        ]);
+        return view('livewire.empresa-contratacion-edit', compact('modelos'));
+
     }
 }

@@ -223,10 +223,21 @@
                                             role="alert">
                                             {{ __($seleccionMessage) }} {{ implode(', ', $modelosSeleccionadas )}}
                                         </div>
-                                        <a href="{{ route('empresas.contrataciones.create') }}"
-                                            class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
-                                            Agregar modelos
-                                        </a>
+{{-- determinar si proviene de crear o editar --}}
+{{-- @if($action == 'contratEdit')
+    <a href="{{ route('empresas.contrataciones.edit', $contratacionId) }}"
+        class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
+        {{ __('Agregar modelos') }}
+    </a>
+@elseif($action == 'contratCreate')
+    <a href="{{ route('empresas.contrataciones.create') }}"
+        class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
+        {{ __('Agregar modelos') }}
+    </a>
+@endif --}}
+<button wire:click="addModelosSeleccionadas" class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">
+    {{ __('Agregar modelos') }}
+</button>
                                     @endif
                                 </section>
 
@@ -428,26 +439,26 @@
                                                             {{-- Ver todas las fotos de la modelo --}}
                                                             <i class="fas fa-image text-success cursor-pointer"
                                                                 wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })"></i>
-{{-- Seleccionar o remover modelo --}}
-@can('empresas.contratar_modelos')                                                                
-    <section class="inline">
-        @if(in_array($modelo->mod_id, $modelosSeleccionadas))
-            {{-- Botón para remover el modelo --}}
-            <button wire:click="removeModelo({{ $modelo->id }})"
-                class="text-red-600 hover:text-red-900"
-                title="Remover">
-                <i class="fas fa-circle-minus"></i>
-            </button>
-        @else
-            {{-- Botón para seleccionar el modelo --}}
-            <button wire:click="selectModelo({{ $modelo->id }})"
-                class="text-green-600 hover:text-green-900"
-                title="Seleccionar">
-                <i class="fas fa-add"></i>
-            </button>
-        @endif
-    </section>
-@endcan
+                                                            {{-- Seleccionar o remover modelo --}}
+                                                            @can('empresas.contratar_modelos')                                                                
+                                                                <section class="inline">
+                                                                    @if(in_array($modelo->mod_id, $modelosSeleccionadas))
+                                                                        {{-- Botón para remover el modelo --}}
+                                                                        <button wire:click="removeModelo({{ $modelo->id }})"
+                                                                            class="text-red-600 hover:text-red-900"
+                                                                            title="Remover">
+                                                                            <i class="fas fa-circle-minus"></i>
+                                                                        </button>
+                                                                    @else
+                                                                        {{-- Botón para seleccionar el modelo --}}
+                                                                        <button wire:click="selectModelo({{ $modelo->id }})"
+                                                                            class="text-green-600 hover:text-green-900"
+                                                                            title="Seleccionar">
+                                                                            <i class="fas fa-add"></i>
+                                                                        </button>
+                                                                    @endif
+                                                                </section>
+                                                            @endcan
 
                                                             {{-- Editar modelos --}}
                                                             @can('modelos.edit')
@@ -537,26 +548,26 @@
                                                                 @endcan
                                                                 <i class="fas fa-image text-success cursor-pointer"
                                                                     wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })"></i>
-{{-- Seleccionar o remover modelo --}}
-@can('empresas.contratar_modelos')                                                            
-    <section class="inline ml-2">
-        @if(in_array($modelo->mod_id, $modelosSeleccionadas))
-            {{-- Botón para remover el modelo --}}
-            <button wire:click="removeModelo({{ $modelo->id }})"
-                class="text-red-600 hover:text-red-900"
-                title="Remover">
-                <i class="fas fa-circle-minus"></i>
-            </button>
-        @else
-            {{-- Botón para seleccionar el modelo --}}
-            <button wire:click="selectModelo({{ $modelo->id }})"
-                class="text-green-600 hover:text-green-900"
-                title="Seleccionar">
-                <i class="fas fa-add"></i>
-            </button>
-        @endif
-    </section>
-@endcan
+                                                                {{-- Seleccionar o remover modelo --}}
+                                                                @can('empresas.contratar_modelos')                                                            
+                                                                    <section class="inline ml-2">
+                                                                        @if(in_array($modelo->mod_id, $modelosSeleccionadas))
+                                                                            {{-- Botón para remover el modelo --}}
+                                                                            <button wire:click="removeModelo({{ $modelo->id }})"
+                                                                                class="text-red-600 hover:text-red-900"
+                                                                                title="Remover">
+                                                                                <i class="fas fa-circle-minus"></i>
+                                                                            </button>
+                                                                        @else
+                                                                            {{-- Botón para seleccionar el modelo --}}
+                                                                            <button wire:click="selectModelo({{ $modelo->id }})"
+                                                                                class="text-green-600 hover:text-green-900"
+                                                                                title="Seleccionar">
+                                                                                <i class="fas fa-add"></i>
+                                                                            </button>
+                                                                        @endif
+                                                                    </section>
+                                                                @endcan
                                                             </div>
                                         
                                                         </div>

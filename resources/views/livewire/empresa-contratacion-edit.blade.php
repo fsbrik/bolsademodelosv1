@@ -46,27 +46,31 @@
                                                             <x-label-sm><i class="fas fa-briefcase"></i>{{ __('Disponibilidad: ') . $modelo->dis_tra }}</x-label-sm>
                                                         </div>
                                                     </div>
-                                                    <div wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })" class="cursor-pointer">
-                                                    <i class="fas fa-image text-success mr-1"></i><x-label-sm class="inline-block lowercase">galería</x-label-sm>
+                                                    <div class="flex flex-wrap">
+                                                        <div wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })" class="cursor-pointer mr-2">
+                                                            <i class="fas fa-image text-success mr-1"></i><x-label-sm class="inline-block lowercase">galería</x-label-sm>
+                                                        </div>
+                                                        {{-- Botón para remover el modelo --}}
+                                                        <button wire:click.prevent="removeModelo({{ $modelo->id }})"
+                                                            class="text-red-600 hover:text-red-900"
+                                                            title="Remover">
+                                                            <i class="fas fa-circle-minus"></i>
+                                                        </button>
                                                     </div>
-                                                    <i class="fas fa-circle-minus text-red-600 absolute bottom-4 right-2"></i>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
                                 <div class="flex items-stretch m-2">
-                                    <div class="bg-white shadow-md rounded-lg overflow-hidden flex items-center px-2">
-                                    <i class="fas fa-circle-plus fa-6x text-green-600"></i>
+                                    <div class="bg-white shadow-md rounded-lg overflow-hidden flex items-center p-2">
+                                        <a href="{{ route('modelos.index') }}"><i class="fas fa-circle-plus fa-6x text-green-600"></i></a>
                                     </div>
                                 </div>
+                            </div>                      
+                            <div class="w-fit">
+                                {{ $modelos->links() }}
                             </div>
-                            @if(isset($pagination) && $pagination)                        
-                                <div class="my-4 w-fit">
-                                    {{ $modelos->links() }}
-                                </div>
-                            @endif
-
                         </div>
                         {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
                         @livewire('modelo-galeria')
@@ -78,7 +82,7 @@
                             <!-- empresa contratista -->
                             <div class="col-span-12 sm:col-span-2">
                                 <x-label for="empresa" value="{{ __('Empresa contratista') }}" />
-                                <select id="empresa" wire:model="empresa"
+                                <select id="empresa" wire:model.live.debounce.250ms="empresa"
                                     class="block mt-1 w-1/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     <option>{{ __('Seleccionar empresa') }}
                                     @foreach ($empresas as $empresa)
@@ -126,19 +130,19 @@
                                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                     <div>
                                         <label for="dom_tra" class="block text-sm font-medium text-gray-700">Dirección</label>
-                                        <input type="text" wire:model="dom_tra" id="dom_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <input type="text" wire:model.live.debounce.250ms="dom_tra" id="dom_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     </div>
                                     <div>
                                         <label for="loc_tra" class="block text-sm font-medium text-gray-700">Localidad</label>
-                                        <input type="text" wire:model="loc_tra" id="loc_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <input type="text" wire:model.live.debounce.250ms="loc_tra" id="loc_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     </div>
                                     <div>
                                         <label for="pro_tra" class="block text-sm font-medium text-gray-700">Provincia</label>
-                                        <input type="text" wire:model="pro_tra" id="pro_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <input type="text" wire:model.live.debounce.250ms="pro_tra" id="pro_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     </div>
                                     <div>
                                         <label for="pai_tra" class="block text-sm font-medium text-gray-700">País</label>
-                                        <input type="text" wire:model="pai_tra" id="pai_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <input type="text" wire:model.live.debounce.250ms="pai_tra" id="pai_tra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     </div>
                                 </div>
                             </div>
@@ -156,7 +160,7 @@
                             <!-- Descripción del Trabajo -->
                             <div class="mb-4">
                                 <label for="des_tra" class="block text-sm font-medium text-gray-700">Descripción del Trabajo</label>
-                                <textarea wire:model="des_tra" id="des_tra" class="mt-1 block w-full sm:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                                <textarea wire:model.live.debounce.250ms="des_tra" id="des_tra" class="mt-1 block w-full sm:w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                             </div>
                     
                             {{-- Mostrar los mensajes de error --}}

@@ -81,10 +81,13 @@ class EmpresaContratacionCreate extends Component
 
     public function mount()
     {
+        //verifica si ya existe o no una sesion de contratacionCreate
+        $this->checkForSessions();        
+
+        
         $this->empresas = Auth::user()->empresas->toArray();
-        session()->put('fec_con', Carbon::now()->format('Y-m-d')); // Fecha actual
-        $this->fec_con = session()->get('fec_con');
         $this->empresa = session()->get('empresa');
+        $this->fec_con = session()->get('fec_con', Carbon::now()->format('Y-m-d'));  // Fecha actual;       
         $this->fec_ini = session()->get('fec_ini', Carbon::now()->format('Y-m-d'));
         $this->fec_fin = session()->get('fec_fin', $this->fec_ini);
         $this->hor_dia = session()->get('hor_dia', 7);
@@ -96,6 +99,18 @@ class EmpresaContratacionCreate extends Component
         $this->des_tra = session()->get('des_tra', 'aca hay que poner una descripcion de lo que es el trabajo requerido');
         $this->calcularDiasTrabajo();
         $this->calcularValorHora();
+    }
+
+    public function checkForSessions()
+    {
+        // establecer la sesion de create
+        if(session()->get('contratacion') != 'contratCreate'){
+            session()->forget(['empresa', 'fec_con', 'fec_ini', 'fec_fin', 'hor_dia',
+                 'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'des_tra',
+                 'modelos_seleccionadas']);
+
+            session()->put('contratacion', 'contratCreate'); 
+        }
     }
 
     public function updatedEmpresa()
@@ -223,8 +238,9 @@ class EmpresaContratacionCreate extends Component
         // Asignar los modelos seleccionados a la contratación
         $contratacion->modelos()->sync($modelos);
 
-        // resetear todos los valores de sesion
-        session()->put('fec_con');
+        session()->forget(['empresa', 'fec_con', 'fec_ini', 'fec_fin', 'hor_dia',
+                 'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'des_tra',
+                 'modelos_seleccionadas', 'contratacion']);
 
         // Redirigir o mostrar un mensaje de éxito
         session()->flash('message', 'Propuesta enviada con éxito.');
@@ -233,9 +249,9 @@ class EmpresaContratacionCreate extends Component
 
 
     public function render()
-    {   
+    {           
         $this->modelosSeleccionadas = session()->get('modelos_seleccionadas',[]);
-        $modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->orderBy('id', 'asc')->paginate(10);
+        $modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->paginate(10);
         
         return view('livewire.empresa-contratacion-create', compact('modelos'));
     }
