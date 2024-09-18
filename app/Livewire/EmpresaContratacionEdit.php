@@ -4,6 +4,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Modelo;
 use App\Models\Contratacion;
+use App\Models\Confirmacion;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,8 @@ class EmpresaContratacionEdit extends Component
     public $fec_con, $fec_ini, $fec_fin, $hor_dia, $dom_tra, $loc_tra, $pro_tra, $pai_tra, $mon_tot, $des_tra;     
     public $dias_trabajo, $valor_hora; 
     public $empresa, $empresas;
-    public $parametrosContratacion;
     public $contratacion, $contratacionId, $modelosSeleccionadas;
+    public $confirmaciones;
 
 
     protected $rules = [
@@ -86,6 +87,9 @@ class EmpresaContratacionEdit extends Component
 
         // Recuperar la contratacion
         $this->contratacion = Contratacion::findOrFail($contratacionId);
+
+        // Recuperar las confirmaciones
+        $this->confirmaciones = Confirmacion::where('contratacion_id', $contratacionId)->get();
 
         //verifica si ya existe o no una sesion de contratacionEdit
         $this->checkForSessions();
@@ -223,6 +227,15 @@ class EmpresaContratacionEdit extends Component
         }
     }
 
+    // mostrar el estado de la confirmacion de la modelo
+    public function confirmacionEstado($modelo)
+    {
+        $confirmacion = collect($this->confirmaciones)->where('modelo_id', $modelo->id)->first();
+        $estadoDeConfirmacion = collect($confirmacion)['estado'];
+        $estadoDeConfirmacion = $estadoDeConfirmacion === null ? 'Pendiente' : ($estadoDeConfirmacion === 1 ? 'Aceptado' : 'Rechazado');
+        return $estadoDeConfirmacion;
+    }
+
     //eliminar una modelo de la contratacion 
     public function removeModelo($modeloId)
     {
@@ -281,17 +294,6 @@ class EmpresaContratacionEdit extends Component
     public function render()
     {
         //verifica si ya existe o no una sesion con modelos
-       /*  if(session()->has('modelosSeleccionadas'))
-        {
-            $this->modelosSeleccionadas = session()->get('modelosSeleccionadas');
-            $modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->paginate(10);dd('1');
-        } else {
-
-            $this->modelosSeleccionadas = $this->contratacion->modelos;dd('2');
-            session()->put('modelos_seleccionadas', $this->modelosSeleccionadas->pluck('mod_id')->toArray());  
-            $modelos = $this->contratacion->modelos()->paginate(10);
-        } */
-
         if(session()->has('modelos_seleccionadas')){
             $this->modelosSeleccionadas = session()->get('modelos_seleccionadas',[]);//dd( $this->modelosSeleccionadas);
             $modelos = Modelo::whereIn('mod_id',$this->modelosSeleccionadas)
@@ -301,6 +303,7 @@ class EmpresaContratacionEdit extends Component
             $this->modelosSeleccionadas = $this->contratacion->modelos()->pluck('mod_id')->toArray();
             session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
         }
+        
         
         
         //$modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->orderByRaw('CAST(SUBSTRING(mod_id, 4) AS UNSIGNED) ASC')->paginate(10);

@@ -30,7 +30,6 @@ class Modelo extends Model
         return $this->belongsTo(User::class);
     }
 
-    // app/Models/Modelo.php
     public function fotos(): HasMany
     {
         return $this->hasMany(Foto::class);
@@ -41,4 +40,11 @@ class Modelo extends Model
     {
         return $this->belongsToMany(Contratacion::class);
     }
+
+    // Definir la relación inversa de muchos a uno con Confirmacion
+    public function confirmaciones(): HasMany
+    {
+        return $this->hasMany(Confirmacion::class);
+    }
+
 }

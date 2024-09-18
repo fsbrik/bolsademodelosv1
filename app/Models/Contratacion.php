@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Contratacion extends Model
 {
@@ -24,4 +25,11 @@ class Contratacion extends Model
     {
         return $this->belongsToMany(Modelo::class, 'contratacion_modelo', 'contratacion_id', 'modelo_id');
     }
+
+    // Definir la relación inversa de muchos a uno con Confirmacion
+    public function confirmaciones(): HasMany
+    {
+        return $this->hasMany(Confirmacion::class);
+    }
+
 }

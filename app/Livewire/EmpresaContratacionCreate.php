@@ -4,6 +4,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Modelo;
 use App\Models\Contratacion;
+use App\Models\Confirmacion;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -234,6 +235,15 @@ class EmpresaContratacionCreate extends Component
 
         // recupera la coleccion para las modelos seleccionadas
         $modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->get();
+
+        // crear las confirmaciones
+        collect($modelos)->each(function($modelo) use ($contratacion) {
+            Confirmacion::create([
+                'contratacion_id' => $contratacion->id,
+                'modelo_id' => $modelo->id,
+                'estado' => null
+            ]);
+        });
 
         // Asignar los modelos seleccionados a la contratación
         $contratacion->modelos()->sync($modelos);

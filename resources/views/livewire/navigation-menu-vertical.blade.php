@@ -59,23 +59,87 @@
             {{-- Determinar si la ruta tiene o no parametros
             Definir el estado "active" si esta activo o no --}}
                 @php
-                    $route = isset($link['param']) ? route($link['route'], $link['param']) : route($link['route']);
-                    $isActive =
+                   // $route = isset($link['param']) ? route($link['route'], $link['param']) : route($link['route']);
+                    /* $isActive =
                         ($link['route'] === 'modelos.show' ||
                             $link['route'] === 'modelos.index' ||
-                            $link['route'] === 'modelos.edit') &&
-                        !request()->routeIs('modelos.cambiar_estado')
+                            $link['route'] === 'modelos.edit') && (
+                        !request()->routeIs('modelos.cambiar_estado') && !request()->routeIs('modelos.contrataciones.index'))
                             ? $isModeloRouteActive
                             : (($link['route'] === 'empresas.index' ||
                             $link['route'] === 'empresas.create' ||
                             $link['route'] === 'empresas.edit') && (
                             !request()->routeIs('empresas.planes') && !request()->routeIs('empresas.contrataciones.index'))
                                 ? $isEmpresaRouteActive
-                                : request()->routeIs($link['route']));                               
+                                : request()->routeIs($link['route']));  */  
+                                                
+
+/* $isActive = false; // Valor inicial
+print_r(request());
+switch ($link['route']) {
+    
+
+    // Caso específico para la ruta modelos.create
+    case 'modelos.create': 
+        echo 'hola';
+        $isActive = request()->is('modelos.create'); 
+        break;
+
+    // Caso específico para la ruta modelos.cambiar_estado
+    case request()->routeIs('modelos.cambiar_estado'):
+        $isActive = ('modelos.cambiar_estado'); print_r($isActive);
+        break;
+
+    // Caso para rutas de Modelos (show, index, edit)
+    case ('modelos.show' ||
+          'modelos.index' ||
+          'modelos.edit'):
+          echo 'hola';
+        $isActive = $isModeloRouteActive;
+        break;
+    // Caso para rutas de Modelos Contrataciones (show, index)
+    case ($link['route'] === 'modelos.contrataciones.show' ||
+          $link['route'] === 'modelos.contrataciones.index'):
+        $isActive = $isContratacionesModeloRouteActive;
+        break;
+
+    // Caso para rutas de Empresas (index, create, edit)
+    case ($link['route'] === 'empresas.index' ||
+          $link['route'] === 'empresas.create' ||
+          $link['route'] === 'empresas.edit'):
+        $isActive = $isEmpresaRouteActive;
+        break;
+
+    // Caso específico para la ruta empresas.planes
+    case request()->routeIs('empresas.planes'):
+        $isActive = false; // O algún otro valor según la lógica
+        break;
+
+    // Caso para rutas de Empresas Contrataciones (show, index, edit)
+    case ($link['route'] === 'empresas.contrataciones.show' ||
+          $link['route'] === 'empresas.contrataciones.index' ||
+          $link['route'] === 'empresas.contrataciones.edit'):
+        $isActive = $isContratacionesEmpresaRouteActive;
+        break;
+
+    // Caso por defecto para cualquier otra ruta
+    default:
+        $isActive = request()->routeIs($link['route']);
+        break;
+} */
                 @endphp
-                <x-responsive-nav-link-vert wire:navigate :href="$route" :active="$isActive">
+                {{-- <x-responsive-nav-link-vert wire:navigate :href="$route" :active="$isActive">
                     {{ $link['name'] }}
-                </x-responsive-nav-link-vert>
+                </x-responsive-nav-link-vert> --}}
+
+                <x-responsive-nav-link-vert 
+                wire:navigate 
+                :href="$link['route']" 
+                :active="$link['isActive']">
+                {{ $link['name'] }}
+            </x-responsive-nav-link-vert>
+
+
             @endforeach
         </nav>
     </div>

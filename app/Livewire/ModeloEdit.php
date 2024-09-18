@@ -4,11 +4,13 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Modelo;
+use Illuminate\Support\Facades\Auth;
 
 
 class ModeloEdit extends Component
 {
     public $modelo, $modeloId, $profile_photo_url, $localidades;
+    public $user;
 
     protected $rules = [
         'modelo.fec_nac' => 'required|date',
@@ -55,6 +57,7 @@ class ModeloEdit extends Component
 
     public function mount($modeloId)
     {
+        $this->user = Auth::user();
         $modelo = Modelo::findOrFail($modeloId);
         $this->profile_photo_url = $modelo->user->profile_photo_url;
         $this->modelo = $modelo->toArray();
@@ -72,7 +75,16 @@ class ModeloEdit extends Component
         $this->validate();
 
         $modelo = Modelo::findOrFail($this->modeloId);
-        $modelo->update($this->modelo);
+        
+        // Excluir los campos no necesarios de los datos de entrada
+        if($this->user->hasRole('modelo')) 
+        {
+            $updateData = collect($this->modelo)->except(['habilita', 'user'])->toArray();
+        } elseif ($this->user->hasRole('admin'))
+        {
+            $updateData = collect($this->modelo)->except(['user'])->toArray();
+        }
+        $modelo->update($updateData);
         session()->flash('message', '¡La ficha de la modelo '.$modelo->user->name. ' ha sido actualizada con éxito!');
         return redirect()->route('modelos.show', $this->modeloId);
     }

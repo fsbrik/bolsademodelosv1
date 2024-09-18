@@ -44,8 +44,11 @@ Route::middleware([
 
     Route::resource('/users', UserController::class)->except('create', 'store')->names('users');
     
+    // ContratacionController es el mismo tanto para empresas como para modelos.
     Route::resource('empresas/contrataciones', ContratacionController::class)->names('empresas.contrataciones');
     Route::resource('/empresas', EmpresaController::class)->names('empresas');
+
+    Route::resource('modelos/contrataciones', ContratacionController::class)->names('modelos.contrataciones');
     Route::view('/modelos/cambiar_estado', 'modelos.cambiar_estado')->name('modelos.cambiar_estado');
     Route::resource('/modelos', ModeloController::class)->except('index')->names('modelos');
     

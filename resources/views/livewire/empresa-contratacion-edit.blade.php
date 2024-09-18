@@ -56,7 +56,12 @@
                                                             title="Remover">
                                                             <i class="fas fa-circle-minus"></i>
                                                         </button>
+                                                        
                                                     </div>
+                                                    {{-- Estado de la confirmación por parte de la modelo (pendiente, aceptado o rechazado) --}}
+                                                    <x-label-sm :class="$this->confirmacionEstado($modelo) == 'Pendiente' ? 'bg-slate-400 p-1 mt-2 rounded-md font-semibold text-center' : 
+                                                                        ($this->confirmacionEstado($modelo) == 'Aceptado' ? 'bg-green-500 p-1 mt-2 rounded-md font-semibold text-center' :
+                                                                         'bg-red-500 p-1 mt-2 rounded-md font-semibold text-center') ">{{ $this->confirmacionEstado($modelo) }}</x-label-sm>
                                                 </div>
                                             </div>
                                         </div>

@@ -5,15 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Contratacion;
 use App\Models\Modelo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ContratacionController extends Controller
 {
-    /**
+
+     /**
      * Display a listing of the resource.
      */
     public function index()
-    {   
-        return view ('empresas.contrataciones.index');
+    {   $userRole = Auth::user()->roles->first()->name;
+
+        if($userRole == 'empresa'){
+            return view ('empresas.contrataciones.index');
+        } elseif($userRole == 'modelo') {
+            return view ('modelos.contrataciones.index');
+        }
     }
 
     /**
@@ -21,7 +29,6 @@ class ContratacionController extends Controller
      */
     public function create()
     {
-        //$mod_id = session()->get('modelos_seleccionadas', []);
         return view ('empresas.contrataciones.create');
     }
 
@@ -39,7 +46,14 @@ class ContratacionController extends Controller
      */
     public function show($contratacionId)
     {
-        return view ('empresas.contrataciones.show', compact('contratacionId'));
+        $userRole = Auth::user()->roles->first()->name;
+
+        if($userRole == 'empresa'){
+            return view ('empresas.contrataciones.show', compact('contratacionId'));
+        } elseif($userRole == 'modelo') {
+            return view ('modelos.contrataciones.show', compact('contratacionId'));
+        }
+        
     }
 
     /**
