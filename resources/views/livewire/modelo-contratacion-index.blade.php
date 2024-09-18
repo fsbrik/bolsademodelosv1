@@ -61,7 +61,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="11" class="px-1 py-3 text-center">No hay propuestas de contratación disponibles.</td>
+                                <td colspan="11" class="px-1 py-3 text-center">No hay propuestas de contratación disponibles. </td>
                             </tr>
                         @endforelse
                     </tbody>
