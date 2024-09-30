@@ -51,12 +51,13 @@
                                                             <i class="fas fa-image text-success mr-1"></i><x-label-sm class="inline-block lowercase">galería</x-label-sm>
                                                         </div>
                                                         {{-- Botón para remover el modelo --}}
-                                                        <button wire:click.prevent="removeModelo({{ $modelo->id }})"
-                                                            class="text-red-600 hover:text-red-900"
-                                                            title="Remover">
-                                                            <i class="fas fa-circle-minus"></i>
-                                                        </button>
-                                                        
+                                                        @if ($this->confirmacionEstado($modelo) === 'Pendiente')
+                                                            <button wire:click.prevent="removeModelo({{ $modelo->id }})"
+                                                                class="text-red-600 hover:text-red-900"
+                                                                title="Remover">
+                                                                <i class="fas fa-circle-minus"></i>
+                                                            </button>
+                                                        @endif                                                        
                                                     </div>
                                                     {{-- Estado de la confirmación por parte de la modelo (pendiente, aceptado o rechazado) --}}
                                                     <x-label-sm :class="$this->confirmacionEstado($modelo) == 'Pendiente' ? 'bg-slate-400 p-1 mt-2 rounded-md font-semibold text-center' : 
@@ -82,19 +83,28 @@
                     </section>
                     <section id="propuesta" class="px-4 py-2 bg-white border-b border-gray-200">
                         <h1 class="pl-2 fa-2x rounded-md bg-slate-200">Propuesta</h1>
-                        <div class="ml-2">
-                    
-                            <!-- empresa contratista -->
-                            <div class="col-span-12 sm:col-span-2">
-                                <x-label for="empresa" value="{{ __('Empresa contratista') }}" />
-                                <select id="empresa" wire:model.live.debounce.250ms="empresa"
-                                    class="block mt-1 w-1/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                    <option>{{ __('Seleccionar empresa') }}
-                                    @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa['id'] }}">{{ __($empresa['nom_com']) }}
-                                        </option>
-                                    @endforeach
-                                </select>                                
+                        <div class="ml-2">                    
+                            <div class="flex flex-wrap mt-2">
+                                <!-- empresa contratista -->
+                                <div class="flex-1 max-w-2/3">
+                                    <x-label for="empresa" value="{{ __('Empresa contratista') }}" />
+                                    <select id="empresa" wire:model.live.debounce.250ms="empresa"
+                                        class="mt-1 w-1/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <option>{{ __('Seleccionar empresa') }}
+                                        @foreach ($empresas as $empresa)
+                                            <option value="{{ $empresa['id'] }}">{{ __($empresa['nom_com']) }}
+                                            </option>
+                                        @endforeach
+                                    </select>                                
+                                </div>
+
+                                <!-- # de contratacion -->
+                                <div class="rounded-2xl border border-slate-300 mr-4">
+                                    <x-label for="contratacion_id" class="rounded-t-2xl bg-yellow-400 p-2" value="{{ __('Contratación n° ') }}" />
+                                    <div class="text-center mt-1">
+                                        {{ $contratacion->id }}
+                                    </div>                                
+                                </div>
                             </div>
 
                             <!-- Periodo de Contratación -->

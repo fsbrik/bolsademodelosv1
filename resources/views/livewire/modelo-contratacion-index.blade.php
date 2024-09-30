@@ -52,7 +52,22 @@
                                 <td class="px-1 py-3 border-b border-gray-300">{{ $this->obtenerDescripcionCorta($contratacion) }}</td>
                                 <td class="px-1 py-3 border-b border-gray-300">
                                     <!-- Confrimacion -->
-                                <x-button wire:click="confirmar" wire:key="contratacion-{{ $contratacion->id }}" :class="$this->confirmacion_display($contratacion) == 'Pendiente' ? 'bg-slate-500' : ($this->confirmacion_display($contratacion) == 'Aceptado' ? 'bg-green-500' : 'bg-red-500')">{{ $this->confirmacion_display($contratacion) }}</x-button>
+                                    <section id="confirmacion" class="flex flex-wrap items-center gap-1">
+                                        {{-- muestra el estado de la confirmacion --}}
+                                        <div class="{{ $this->getClassForConfirmation($contratacion) }}">{{ __($this->confirmacion_display($contratacion)) }}</div>
+                                        
+                                        {{-- muestra los botones para aceptar o rechazar la contratacion --}}
+                                        <button wire:click="confirmar({{$contratacion}}, 1)" wire:key="contratacion-{{ $contratacion->id }}" class="{{ $this->confirmacion_display($contratacion)  == 'Aceptado' ? 'hidden' : ''}}">
+                                            <i class="{{ $this->confirmacion_display($contratacion) == 'Pendiente' ? 'fa-solid fa-handshake text-slate-500 p-2 rounded-lg bg-green-300' : 
+                                            ($this->confirmacion_display($contratacion) == 'Rechazado' ? 'fa-solid fa-handshake text-slate-500 p-2 rounded-lg bg-green-300' : '')}}"></i>
+                                        </button>
+                                        <button wire:click="confirmar({{$contratacion}}, 0)" wire:key="contratacion-{{ $contratacion->id }}" class="{{ $this->confirmacion_display($contratacion)  == 'Rechazado' ? 'hidden' : ''}}">
+                                            <i class="{{ $this->confirmacion_display($contratacion) == 'Pendiente' ? 'fa-solid fa-thumbs-down text-slate-500 p-2 rounded-lg bg-red-400' : 
+                                            ($this->confirmacion_display($contratacion) == 'Aceptado' ? 'fa-solid fa-thumbs-down text-slate-500 p-2 rounded-lg bg-red-400' : '')}}"></i>
+                                        </button>
+                                    </section>
+                                
+
                                 </td>
 
                                 <td class="px-1 py-3 border-b border-gray-300">

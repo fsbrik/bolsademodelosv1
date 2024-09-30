@@ -5,9 +5,12 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Modelo;
+use App\Models\Pedido;
+use Illuminate\Support\Facades\Auth;
 
 class ModeloIndex extends Component
 {
+    public $user;
     public $searchModId, $searchName, $searchTelefono, $searchEmail;
     public $searchEdadMin, $searchEdadMax, $searchSexo, $searchEstaturaMin, $searchEstaturaMax;
     public $searchZonRes, $searchDisVia, $searchTitMod, $searchIngles, $searchDisTra, $searchCabello;
@@ -17,6 +20,7 @@ class ModeloIndex extends Component
     public $sort_By = null, $sortDirection = 'asc';
     public $showTable = true;
     public $modelosSeleccionadas = [];
+    public $creditos;
     // variables para mostrar con el mensaje de las modelos seleccionadas
     public $seleccionMessage, $strModelo;
     // saber de que pagina proviene, de create o de edit
@@ -27,41 +31,76 @@ class ModeloIndex extends Component
     use WithPagination;
 
     public function mount(){
+
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
         
         // verificar las sesiones, si va a crear o editar una contratacion
         $this->checkForSessions();
 
+        // verifica si la empresa tiene contratado un plan
+        $this->checkPlan();
+
         // actualiza el estado de modelos seleccionadas (que pueden provenir de la pagina create o edit)
         $this->checkModelosSeleccionadas();        
     }
 
-public function checkForSessions()
-{
-    if (session()->get('contratacion') == 'contratCreate'){
-        $this->action = 'contratCreate';
-    } elseif (session()->get('contratacion') == 'contratEdit'){
-        $this->action = 'contratEdit';
-        // actualizo contratacionId
-        $this->contratacionId = session()->get('contratacionId');
-    } elseif (session()->get('contratacion') === null){
-        $this->action = 'contratCreate';
+    public function checkPlan()
+    {
+        $this->user = Auth::user();
+
+        $plan = Pedido::where('user_id', $this->user->id)
+                       ->whereHas('servicios', function ($query) {
+                            $query->where('sub_cat', 'planes');
+                        })->first();
+
+        $plan_seleccionado = $plan ? $plan->servicios->first()->nom_ser : null ;
+        
+        if($plan_seleccionado === null)
+        {
+            $this->creditos = 0;
+        }
+        elseif($plan_seleccionado == 'plan simple')
+        {
+            $this->creditos = 1;
+        } 
+        elseif($plan_seleccionado == 'plan mensual')
+        {
+            $this->creditos = 5;
+            //$this->fec_fin = 
+        }
+        elseif($plan_seleccionado == 'plan anual')
+        {
+            $this->creditos = 100;
+        }
+
     }
-}
+
+    public function checkForSessions()
+    {
+        if (session()->get('contratacion') == 'contratCreate'){
+            $this->action = 'contratCreate';
+        } elseif (session()->get('contratacion') == 'contratEdit'){
+            $this->action = 'contratEdit';
+            // actualizo contratacionId
+            $this->contratacionId = session()->get('contratacionId');
+        } elseif (session()->get('contratacion') === null){
+            $this->action = 'contratCreate';
+        }
+    }
     
 
 
-public function checkModelosSeleccionadas()
-{
-    // mostrar las modelos seleccionadas en el alert
-    $this->modelosSeleccionadas = session()->get('modelos_seleccionadas', []);
-    //muestra el mensaje inicial dependiendo si es una o varias modelos seleccionadas
-
-    if(count($this->modelosSeleccionadas) > 0)
+    public function checkModelosSeleccionadas()
     {
-        $this->mostrarMensajeInicialAlert();
+        // mostrar las modelos seleccionadas en el alert
+        $this->modelosSeleccionadas = session()->get('modelos_seleccionadas', []);
+        //muestra el mensaje inicial dependiendo si es una o varias modelos seleccionadas
+
+        if(count($this->modelosSeleccionadas) > 0)
+        {
+            $this->mostrarMensajeInicialAlert();
+        }
     }
-}
 
 
     /* mensaje en el alert de las modelos seleccionadas dependiendo la cantidad de modelos */

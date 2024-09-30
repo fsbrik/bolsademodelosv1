@@ -54,9 +54,10 @@ class EmpresaContratacionIndex extends Component
         return Str::limit($contratacion->des_tra, 30);
     }
 
+    // actualiza el estado de modelos que confirmaron la contratacion
     public function obtenerModelosConfirmados($contratacion)
     {
-        return $contratacion->modelos->where('confirmada', true)->count();
+        return $contratacion->confirmaciones->where('estado', 1)->count();
     }
 
     public function destroy($contratacionId)

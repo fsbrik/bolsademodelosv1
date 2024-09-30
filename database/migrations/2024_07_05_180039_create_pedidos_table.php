@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->date('fecha');
+            $table->unsignedBigInteger('empresa_id')->nullable();
+            $table->date('fec_ini');
+            $table->date('fec_fin')->nullable();
             $table->integer('total');
+            $table->boolean('habilita')->nullable();
             $table->timestamps();
         });
     }

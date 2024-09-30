@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 use Livewire\Component;
-use App\Models\Modelo;
 use App\Models\Contratacion;
+use App\Models\Confirmacion;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -12,26 +12,14 @@ class EmpresaContratacionShow extends Component
 {
     use WithPagination;
 
-    public $contratacion, $modelos, $empresa;
-
-    // variables para create
-    /* public $fec_con, $fec_ini, $fec_fin, $hor_dia, $dom_tra, $loc_tra, $pro_tra, $pai_tra, $mon_tot, $des_tra;     
-    public $dias_trabajo, $valor_hora; 
-    public $empresa, $empresas;
-    public $modelos, $pagination; */
-
-
-
-    
-    
+    public $contratacion, $contratacionId, $modelos, $empresa;
 
     public function mount($contratacionId)
     {
+        $this->contratacionId = $contratacionId;
         $this->contratacion = Contratacion::findOrFail($contratacionId);        
         $this->modelos = $this->contratacion->modelos->all();
-        $this->empresa = $this->contratacion->empresa;
-        //dd($this->empresa);
-      
+        $this->empresa = $this->contratacion->empresa;    
     }
 
     public function obtenerFechaFormateada($fecha)
@@ -56,10 +44,20 @@ class EmpresaContratacionShow extends Component
         return $horasTotales ? $contratacion->mon_tot / $horasTotales : 0;
     }
 
+    // actualiza el estado de modelos que confirmaron la contratacion
     public function obtenerModelosConfirmados($contratacion)
     {
-        return $contratacion->modelos->where('confirmada', true)->count();
+        return $contratacion->confirmaciones->where('estado', 1)->count();
     }
+    
+     // mostrar el estado de la confirmacion de la modelo
+     public function confirmacionEstado($modelo)
+     {
+         $confirmacion = Confirmacion::where('contratacion_id', $this->contratacionId)->where('modelo_id', $modelo->id);
+         $estadoDeConfirmacion = $confirmacion->pluck('estado')->get(0);
+         $estadoDeConfirmacion = $estadoDeConfirmacion === null ? 'Pendiente' : ($estadoDeConfirmacion === 1 ? 'Aceptado' : 'Rechazado');
+         return $estadoDeConfirmacion;
+     }
 
     public function destroy()
     {
@@ -68,7 +66,7 @@ class EmpresaContratacionShow extends Component
     }
 
     public function render()
-    {   //$modelos = Modelo::all();//$this->contratacion->modelos->all();
+    {   
         return view('livewire.empresa-contratacion-show');
     }
 }

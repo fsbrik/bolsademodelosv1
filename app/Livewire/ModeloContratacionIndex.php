@@ -61,15 +61,29 @@ class ModeloContratacionIndex extends Component
 
     public function confirmacion_display($contratacion)
     {   
+        // estado de la confirmacion
         $confirmacion = Confirmacion::where('contratacion_id', $contratacion->id)->where('modelo_id', $this->modelo->id)->pluck('estado')->get(0);
-        //dd($confirmacion);
-        //return $confirmacion;
         return ($confirmacion === null) ? 'Pendiente' : ($confirmacion == 1 ? 'Aceptado' : 'Rechazado');
     }
 
-    public function confirmar()
+    // le coloca la clase correspondiente al estado de la confirmacion_display
+    public function getClassForConfirmation($contratacion)
     {
-        //Confirmacion
+        $estado = $this->confirmacion_display($contratacion);
+        if ($estado === 'Pendiente') {
+            return 'text-slate-500';
+        } elseif ($estado === 'Aceptado') {
+            return 'text-green-500';
+        } else {
+            return 'text-red-500';
+        }
+    }
+
+    public function confirmar($contratacion, $respuesta)
+    {
+        // estado de la confirmacion
+        Confirmacion::where('contratacion_id', $contratacion['id'])->where('modelo_id', $this->modelo->id)->update(['estado' => $respuesta]);
+
     }
 
     public function destroy($contratacionId)

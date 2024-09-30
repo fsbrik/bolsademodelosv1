@@ -12,8 +12,8 @@ class Pedido extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['fecha', 'user_id', 'total'];
-    protected $dates = ['fecha'];
+    protected $fillable = ['fec_ini', 'fec_fin', 'user_id', 'empresa_id', 'habilita', 'total'];
+    protected $dates = ['fec_ini', 'fec_fin'];
 
     public function user(): BelongsTo
     {

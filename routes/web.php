@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ModeloController;
 use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\ContratacionController;
@@ -33,7 +34,6 @@ Route::view('/servicios-para-modelos', 'serviciosmodelos')->name('serviciosmodel
 Route::get('/terminos-y-condiciones', [TermsController::class, 'show'])->name('terminos');
 Route::get('/politicas-de-privacidad', [PolicyController::class, 'show'])->name('politicas');
 Route::get('/modelos', [ModeloController::class, 'index'])->name('modelos.index');
-Route::view('empresas/planes', 'empresas.planes')->name('empresas.planes');
 
 Route::middleware([
     'auth:sanctum',
@@ -57,6 +57,8 @@ Route::middleware([
         Route::post('/modelos', [ModeloController::class, 'store'])->name('modelos.store');
     }); 
     Route::view('solicitudes-modelos', 'solicitudes.solicitudes-modelos')->name('solicitudes_modelos');
+    // se coloca parameters para que haga el binding con el modelo Pedido, sino tira un error en el controlador
+    Route::resource('/planes', PlanController::class)->names('planes')->parameters(['planes' => 'pedido']);
     Route::resource('/pedidos', PedidoController::class)->names('pedidos');
     Route::resource('/servicios', ServicioController::class)->names('servicios');
 });

@@ -89,7 +89,7 @@ class EmpresaContratacionEdit extends Component
         $this->contratacion = Contratacion::findOrFail($contratacionId);
 
         // Recuperar las confirmaciones
-        $this->confirmaciones = Confirmacion::where('contratacion_id', $contratacionId)->get();
+        //$this->confirmaciones = Confirmacion::where('contratacion_id', $contratacionId)->get();
 
         //verifica si ya existe o no una sesion de contratacionEdit
         $this->checkForSessions();
@@ -230,8 +230,8 @@ class EmpresaContratacionEdit extends Component
     // mostrar el estado de la confirmacion de la modelo
     public function confirmacionEstado($modelo)
     {
-        $confirmacion = collect($this->confirmaciones)->where('modelo_id', $modelo->id)->first();
-        $estadoDeConfirmacion = collect($confirmacion)['estado'];
+        $confirmacion = Confirmacion::where('contratacion_id', $this->contratacionId)->where('modelo_id', $modelo->id);
+        $estadoDeConfirmacion = $confirmacion->pluck('estado')->get(0);//dd($estadoDeConfirmacion);
         $estadoDeConfirmacion = $estadoDeConfirmacion === null ? 'Pendiente' : ($estadoDeConfirmacion === 1 ? 'Aceptado' : 'Rechazado');
         return $estadoDeConfirmacion;
     }

@@ -54,11 +54,17 @@
                                             {{ __('Usuario') }}
                                         </th>
                                     @endif
+                                    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('empresa'))
+                                        <th scope="col"
+                                            class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
+                                            {{ __('Empresa') }}
+                                        </th>
+                                    @endif
                                     <th scope="col"
                                         class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                        <button wire:click="sortBy('fecha')" class="flex items-center">
+                                        <button wire:click="sortBy('fec_ini')" class="flex items-center">
                                             {{ __('Fecha') }}
-                                            @if ($sort_by === 'fecha')
+                                            @if ($sort_by === 'fec_ini')
                                                 @if ($sortDirection === 'asc')
                                                     <span class="ml-1 text-green-500">↑</span>
                                                 @else
@@ -91,8 +97,14 @@
                                                 {{ $pedido->user->name }}
                                             </td>
                                         @endif
+                                        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('empresa'))
+                                            <th scope="col"
+                                                class="px-1 py-3 text-left font-medium text-gray-500 tracking-wider">
+                                                {{ $this->empresaPedido($pedido) }}
+                                            </th>
+                                        @endif
                                         <td class="px-1 py-2 whitespace-nowrap">
-                                            {{ \Carbon\Carbon::parse($pedido->fecha)->format('d-m-Y') }}
+                                            {{ \Carbon\Carbon::parse($pedido->fec_ini)->format('d-m-Y') }}
                                         </td>
                                         <td class="px-1 py-2 whitespace-nowrap">
                                             {{ $pedido->total }}

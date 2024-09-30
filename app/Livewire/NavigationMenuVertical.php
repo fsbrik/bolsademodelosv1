@@ -81,6 +81,16 @@ class NavigationMenuVertical extends Component
                 'isActive' => request()->routeIs('pedidos.index')
             ],
             [
+                'name' => 'Planes y créditos', 
+                'route' => route('planes.index'), 
+                'isActive' => request()->routeIs('planes.index')
+            ],
+            [
+                'name' => 'Contrataciones', 
+                'route' => route('modelos.contrataciones.index'), 
+                'isActive' => request()->routeIs('modelos.contrataciones.index')
+            ],
+            [
                 'name' => 'Modelos', 
                 'route' => route('modelos.index'), 
                 'isActive' => request()->routeIs('modelos.index')
@@ -167,8 +177,8 @@ class NavigationMenuVertical extends Component
                 ],
                 [
                     'name' => 'Planes', 
-                    'route' => route('empresas.planes'), 
-                    'isActive' => request()->routeIs('empresas.planes')
+                    'route' => route('planes.create'), 
+                    'isActive' => request()->routeIs('planes.create')
                 ],
                 [
                     'name' => 'Modelos', 
