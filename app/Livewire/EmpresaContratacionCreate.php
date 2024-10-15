@@ -5,6 +5,7 @@ use Livewire\Component;
 use App\Models\Modelo;
 use App\Models\Contratacion;
 use App\Models\Confirmacion;
+use App\Models\Pedido;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,7 @@ class EmpresaContratacionCreate extends Component
     public $empresa, $empresas;
     public $parametrosContratacion;
     public $modelosSeleccionadas;
+    public $planSeleccionado;
 
 
     protected $rules = [
@@ -84,7 +86,7 @@ class EmpresaContratacionCreate extends Component
     {
         //verifica si ya existe o no una sesion de contratacionCreate
         $this->checkForSessions();        
-
+        $this->checkPlan();
         
         $this->empresas = Auth::user()->empresas->toArray();
         $this->empresa = session()->get('empresa');
@@ -112,6 +114,24 @@ class EmpresaContratacionCreate extends Component
 
             session()->put('contratacion', 'contratCreate'); 
         }
+    }
+
+    public function checkPlan()
+    {
+        $userId = Auth::user()->id;
+        $this->planSeleccionado = Pedido::where('user_id', $userId)
+                                ->whereHas('servicios', function($query){
+                                    $query->where('sub_cat', 'planes');
+                                })
+                                ->where('habilita', 1)->first();
+        
+        if(!$this->planSeleccionado)
+        {
+            session()->flash('message', 'Adquirí un plan para empezar a contratar. Comunicate por whatsapp al 11-2155-4283 para habilitarlo');
+            return redirect()->route('planes.index');
+        }
+
+        //dd($this->planSeleccionado->servicios->first()->nom_ser);
     }
 
     public function updatedEmpresa()
@@ -164,7 +184,8 @@ class EmpresaContratacionCreate extends Component
         session()->put('des_tra', $this->des_tra);
     }
 
-    public function setMismoDia(){
+    public function setMismoDia()
+    {
         $this->fec_fin = $this->fec_ini;
         $this->dias_trabajo = 1;
         session()->put('fec_fin', $this->fec_fin);
@@ -213,6 +234,16 @@ class EmpresaContratacionCreate extends Component
         session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
     }
 
+    public function incrementarCreditos()
+    {
+         
+    }
+
+    public function disminuirCreditos()
+    {
+
+    }
+
     public function store()
     {
         $this->validate();
@@ -259,7 +290,10 @@ class EmpresaContratacionCreate extends Component
 
 
     public function render()
-    {           
+    {        
+        // para poder contratar modelos, se debe chequear que tiene un plan habilitado   
+        $this->checkPlan();
+
         $this->modelosSeleccionadas = session()->get('modelos_seleccionadas',[]);
         $modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->paginate(10);
         

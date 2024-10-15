@@ -54,14 +54,24 @@
 
                                 <td class="px-1 py-3 border-b border-gray-300">
                                     <a href="{{ route('empresas.contrataciones.show', $contratacion->id) }}" class="text-blue-600 hover:text-blue-900"><i class="fas fa-eye"></i></a>
-                                    <a href="{{ route('empresas.contrataciones.edit', $contratacion->id) }}" class="text-yellow-600 hover:text-yellow-900"><i class="fas fa-edit"></i></a>
-                                    <form wire:submit="destroy({{$contratacion->id}})" class="inline">
-                                        @csrf
-                                        <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta propuesta de contratación?');">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
+                                    {{-- en el caso que la empresa no haya pagado un plan, no va a poder contratar, ni editar, ni eliminar--}}
+                                    @if($this->checkHabilitacion())
+                                        {{-- en el caso que la fec_fin de la contratacion se haya vencido, ya no se puede editar la contratacion--}}
+                                        @if($this->checkEstadoContratacion($contratacion))
+                                            <a href="{{ route('empresas.contrataciones.edit', $contratacion->id) }}" class="text-yellow-600 hover:text-yellow-900">
+                                            <i class="fas fa-edit"></i></a>
+                                        @endif
+                                        {{-- si hay alguna modelo que haya confirmado, ya no se puede eliminar la contratacion--}}
+                                        @if($this->checkConfirmacion($contratacion) || $this->checkEstadoContratacion($contratacion))
+                                            <form wire:submit="destroy({{$contratacion->id}})" class="inline">
+                                                @csrf
+                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
+                                                    onclick="return confirm('¿Estás seguro de que deseas eliminar esta propuesta de contratación?');">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -78,14 +88,6 @@
                 <div class="flex items-center justify-end mt-4">
                     {{-- determinar si proviene de crear o editar --}}
 @if ($action === 'contratEdit')
-{{-- <script type="text/javascript"> 
-    window.onload = function() {
-                    if (confirm('¿Querés continuar con la edición de la contratación?')) {
-                // Redirigir a la ruta de edición de Laravel
-                window.location.href = "{{ route('empresas.contrataciones.edit', $contratacion->id) }}";
-            }        
-    }
-</script> --}}
 <a href="{{ route('empresas.contrataciones.edit', $contratacionId) }}" 
     {{-- onclick="return confirm('Tenés una contratación pendiente, ¿Querés continuarla?')" --}}
     class="bg-gray-800 text-white px-4 py-3 rounded ml-2 mb-4 hidden sm:block">

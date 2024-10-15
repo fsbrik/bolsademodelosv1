@@ -227,13 +227,20 @@ class EmpresaContratacionEdit extends Component
         }
     }
 
-    // mostrar el estado de la confirmacion de la modelo
+    // mostrar el estado de la confirmacion de la modelo. Sirve para habilitar o deshabilitar el boton de "remover" en la vista.
     public function confirmacionEstado($modelo)
     {
-        $confirmacion = Confirmacion::where('contratacion_id', $this->contratacionId)->where('modelo_id', $modelo->id);
-        $estadoDeConfirmacion = $confirmacion->pluck('estado')->get(0);//dd($estadoDeConfirmacion);
-        $estadoDeConfirmacion = $estadoDeConfirmacion === null ? 'Pendiente' : ($estadoDeConfirmacion === 1 ? 'Aceptado' : 'Rechazado');
-        return $estadoDeConfirmacion;
+        $estado = Confirmacion::where('contratacion_id', $this->contratacionId)->where('modelo_id', $modelo->id)->value('estado');
+
+        // Mapeo de los posibles estados
+        $estadoDeConfirmacion = [
+            null => 'Pendiente',
+            1 => 'Aceptado',
+            0 => 'Rechazado'
+        ];
+
+        // Retornar el estado correspondiente
+        return $estadoDeConfirmacion[$estado] ?? 'Pendiente';
     }
 
     //eliminar una modelo de la contratacion 
@@ -275,11 +282,15 @@ class EmpresaContratacionEdit extends Component
             'des_tra' => $this->des_tra,
         ]);
 
-        /// Obtener los IDs correspondientes a los mod_id seleccionados
+        /* Se puede sincronizar directamente desde el mod_id, esto permite ahorrar una consulta de mas.
+        // Obtener los IDs correspondientes a los mod_id seleccionados
         $modelosIds = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->pluck('id')->toArray();
 
         // Asignar los modelos seleccionados a la contratación
-        $this->contratacion->modelos()->sync($modelosIds);
+        $this->contratacion->modelos()->sync($modelosIds); */
+
+        // Sincronizar las modelos seleccionados (directamente por su mod_id) con la contratación
+        $this->contratacion->modelos()->sync($this->modelosSeleccionadas);
 
         session()->forget(['empresa', 'fec_con', 'fec_ini', 'fec_fin', 'hor_dia',
                  'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'des_tra',
@@ -299,7 +310,8 @@ class EmpresaContratacionEdit extends Component
             $modelos = Modelo::whereIn('mod_id',$this->modelosSeleccionadas)
                         ->orderByRaw('CAST(SUBSTRING(mod_id, 4) AS UNSIGNED) ASC')->paginate(10);//dd($modelos);
         } else {
-            $modelos = $this->contratacion->modelos()->paginate(10);
+            $modelos = $this->contratacion->modelos()
+                        ->orderByRaw('CAST(REGEXP_REPLACE(mod_id, "[^0-9]", "") AS UNSIGNED) ASC')->paginate(10);
             $this->modelosSeleccionadas = $this->contratacion->modelos()->pluck('mod_id')->toArray();
             session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
         }

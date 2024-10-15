@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Modelo;
 use App\Models\Pedido;
+use App\Models\Confirmacion;
 use Illuminate\Support\Facades\Auth;
 
 class ModeloIndex extends Component
@@ -37,8 +38,8 @@ class ModeloIndex extends Component
         // verificar las sesiones, si va a crear o editar una contratacion
         $this->checkForSessions();
 
-        // verifica si la empresa tiene contratado un plan
-        $this->checkPlan();
+        // verifica si la empresa tiene contratado un plan (en el caso que el usuario sea registrado como empresa)
+        (Auth::user() && Auth::user()->hasRole('empresa')) ? $this->checkPlan() : '';
 
         // actualiza el estado de modelos seleccionadas (que pueden provenir de la pagina create o edit)
         $this->checkModelosSeleccionadas();        
@@ -138,6 +139,22 @@ class ModeloIndex extends Component
         $this->mostrarMensajeInicialAlert();       
 
         //return redirect()->route('empresas.contrataciones.create')->with('message', 'Seleccionaste a la modelo '.$modelo->mod_id);
+    }
+
+    // mostrar el estado de la confirmacion de la modelo. Sirve para habilitar o deshabilitar el boton de "remover" en la vista.
+    public function confirmacionEstado($modelo)
+    {
+        $estado = Confirmacion::where('contratacion_id', $this->contratacionId)->where('modelo_id', $modelo->id)->value('estado');
+
+        // Mapeo de los posibles estados
+        $estadoDeConfirmacion = [
+            null => 'Pendiente',
+            1 => 'Aceptado',
+            0 => 'Rechazado'
+        ];
+
+        // Retornar el estado correspondiente
+        return $estadoDeConfirmacion[$estado] ?? 'Pendiente';
     }
 
     public function removeModelo($modeloId)

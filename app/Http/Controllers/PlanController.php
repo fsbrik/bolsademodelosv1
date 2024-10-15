@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class PlanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:planes.index')->only('index');
+        $this->middleware('can:planes.create')->only('create');
+        $this->middleware('check.plan.ownership')->only('edit', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,10 +37,10 @@ class PlanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    /* public function store(Request $request)
     {
         //
-    }
+    } */
 
     /**
      * Display the specified resource.
@@ -57,16 +64,16 @@ class PlanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pedido $plan)
+    /* public function update(Request $request, Pedido $plan)
     {
         //
-    }
+    } */
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pedido $plan)
+    /* public function destroy(Pedido $plan)
     {
         //
-    }
+    } */
 }

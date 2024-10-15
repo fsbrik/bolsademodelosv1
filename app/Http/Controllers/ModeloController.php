@@ -16,7 +16,7 @@ class ModeloController extends Controller
         $this->middleware('can:modelos.edit')->only('edit', 'update');
         $this->middleware('can:modelos.show')->only('show');
         $this->middleware('can:modelos.destroy')->only('destroy');
-        $this->middleware('check.modelo.ownership')->only(['', 'edit', 'update', 'destroy']);
+        $this->middleware('check.modelo.ownership')->only(['show', 'edit', 'update', 'destroy']);
     }
     /**
      * Display a listing of the resource.

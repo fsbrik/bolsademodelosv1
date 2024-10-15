@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contratacion;
-use App\Models\Modelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
-class ContratacionController extends Controller
+class ContratacionEmpresaController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:empresas.contrataciones.index')->only('index');
+        $this->middleware('can:empresas.contrataciones.create')->only('create');
+        $this->middleware('can:empresas.contrataciones.edit')->only('edit');
+        $this->middleware('can:empresas.contrataciones.show')->only('show');
+        $this->middleware('check.contratacion.empresa.ownership')->only(['show', 'edit']);
+    }
 
      /**
      * Display a listing of the resource.
      */
     public function index()
-    {   $userRole = Auth::user()->roles->first()->name;
-
-        if($userRole == 'empresa'){
-            return view ('empresas.contrataciones.index');
-        } elseif($userRole == 'modelo') {
-            return view ('modelos.contrataciones.index');
-        }
+    {
+        return view('empresas.contrataciones.index');
     }
 
     /**
@@ -46,14 +48,7 @@ class ContratacionController extends Controller
      */
     public function show($contratacionId)
     {
-        $userRole = Auth::user()->roles->first()->name;
-
-        if($userRole == 'empresa'){
-            return view ('empresas.contrataciones.show', compact('contratacionId'));
-        } elseif($userRole == 'modelo') {
-            return view ('modelos.contrataciones.show', compact('contratacionId'));
-        }
-        
+        return view('empresas.contrataciones.show', compact('contratacionId'));
     }
 
     /**
@@ -66,17 +61,19 @@ class ContratacionController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * Se reemplaza el metodo por otro igual en EmpresaContratacionEdit
      */
-    public function update(Request $request, Contratacion $contratacion)
+    /* public function update(Request $request, Contratacion $contratacion)
     {
         //
-    }
+    } */
 
     /**
      * Remove the specified resource from storage.
+     * Se reemplaza el metodo por otro igual en EmpresaContratacionShow y en EmpresaContratacionIndex
      */
-    public function destroy(Contratacion $contratacion)
+    /* public function destroy(Contratacion $contratacion)
     {
         //
-    }
+    } */
 }

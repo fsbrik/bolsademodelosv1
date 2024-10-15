@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('pai_tra'); // País
             $table->decimal('mon_tot', 10, 2); // Monto total
             $table->text('des_tra'); // Descripción del trabajo
+            $table->boolean('estado')->default(1);
             $table->timestamps();
         });
     }

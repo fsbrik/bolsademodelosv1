@@ -45,13 +45,10 @@
                                             {{ __('Usuario') }}
                                         </th>
                                     @endif
-                                    {{-- Todas las empresas de un mismo usuario pueden hacer uso del plan contratado --}}
-                                    {{-- @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('empresa'))
-                                        <th scope="col"
-                                            class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Empresa') }}
-                                        </th>
-                                    @endif --}}
+                                    <th scope="col"
+                                        class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('Plan contratado') }}
+                                    </th>
                                     <th scope="col"
                                         class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                                             {{ __('Fecha de inicio') }}
@@ -62,7 +59,7 @@
                                     </th>
                                     <th scope="col"
                                         class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Plan contratado') }}
+                                        {{ __('Créditos disponibles') }}
                                     </th>
                                     <th scope="col"
                                         class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
@@ -91,21 +88,17 @@
                                                 {{ $plan->user->name }}
                                             </td>
                                         @endif
-                                        {{-- Todas las empresas de un mismo usuario pueden hacer uso del plan contratado --}}
-                                        {{-- @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('empresa'))
-                                            <th scope="col"
-                                                class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                                {{ $this->empresaPedido($pedido) }}
-                                            </th>
-                                        @endif --}}
                                         <td class="px-1 py-2 whitespace-nowrap">
-                                            {{ $plan->fec_ini ? \Carbon\Carbon::parse($plan->fec_fin)->format('d-m-Y') : '-' }}
+                                            {{ $plan->servicios->first()->nom_ser }}
+                                        </td>
+                                        <td class="px-1 py-2 whitespace-nowrap">
+                                            {{ $plan->fec_ini ? \Carbon\Carbon::parse($plan->fec_ini)->format('d-m-Y') : '-' }}
                                         </td>
                                         <td class="px-1 py-2 whitespace-nowrap">
                                             {{ $plan->fec_fin ? \Carbon\Carbon::parse($plan->fec_fin)->format('d-m-Y') : '-' }}
                                         </td>
                                         <td class="px-1 py-2 whitespace-nowrap">
-                                            {{ $plan->servicios()->where('pedido_id', $plan->id)->first()->nom_ser }}
+                                            {{ $this->mostrarCreditos($plan) }}
                                         </td>
                                         <td class="px-1 py-2 whitespace-nowrap">
                                             {{ $plan->total }}

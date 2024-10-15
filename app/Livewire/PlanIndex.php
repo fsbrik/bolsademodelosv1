@@ -30,6 +30,19 @@ class PlanIndex extends Component
         return $plan->habilita == 1 ? false : true;
     }
 
+    public function mostrarCreditos(Pedido $plan)
+    {
+        $nombrePlan = $plan->servicios->first()->nom_ser;
+        if($plan->habilita === null)
+        {
+            return '-';
+        }
+        else // habilita puede ser 0 o 1, se muestra el mismo mensaje
+        {
+            return $nombrePlan == 'plan anual' ? 'infinito' : $plan->creditos;
+        }
+    }
+
     public function destroy(Pedido $plan){
         $plan->delete();
         session()->flash('message', 'se eliminó el plan de '.$plan->user->name);
@@ -77,11 +90,15 @@ class PlanIndex extends Component
                 });
         } */
         
-        $plan = Pedido::with('user', 'servicios')->where('user_id', $user->id)
+        $plan = Pedido::where('user_id', $user->id)
             ->whereHas('servicios', function($query){
                 $query->where('cat_ser', 'empresa')
                       ->where('sub_cat', 'planes');
-                    })->first();
+                    })
+                    ->where(function($query) {
+                        $query->where('habilita', '<>', 0)
+                              ->orWhereNull('habilita');
+                    })->orderBy('created_at', 'desc')->first();
 
         /* if ($this->sort_by) {
             $pedidos->orderBy($this->sort_by, $this->sortDirection);

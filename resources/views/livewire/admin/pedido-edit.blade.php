@@ -21,8 +21,8 @@
 
                         <div class="flex justify-between items-center gap-2">
                             <div class="bg-gray-100 mb-4 p-4">
-                                <x-label for="fecha" value="{{ __('Fecha de la reserva (a confirmar)') }}" />
-                                <x-input id="fecha" type="date" class="mt-1" wire:model.live.debounce.250ms="fecha" />
+                                <x-label for="fec_ini" value="{{ __('Fecha de la reserva (a confirmar)') }}" />
+                                <x-input id="fec_ini" type="date" class="mt-1" wire:model.live.debounce.250ms="fec_ini" />
                             </div>
 
                             @if (Auth::user()->hasRole('admin') && $selectedUser)

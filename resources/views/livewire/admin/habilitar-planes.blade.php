@@ -25,6 +25,17 @@
                         </div>
                     @endif
 
+                    @if (session()->has('selectedUserError'))
+                        <div x-data="{ open: true }" x-show="open"
+                            class="relative p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg"  role="alert">
+                            <button @click="open = false"
+                                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {{ session('selectedUserError') }}
+                        </div>
+                    @endif
+
                     @if ($pedidos->count())
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -55,8 +66,8 @@
                                         {{ __('Plan seleccionado') }}
                                     </th>                                    
                                     <th scope="col"
-                                        class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                        <button wire:click="sortBy('fec_ini')" class="flex items-center">
+                                        class="px-1 py-3 text-left font-medium text-gray-500 tracking-wider">
+                                        <button wire:click="sortBy('fec_ini')" class="flex items-center uppercase">
                                             {{ __('Inicio') }}
                                             @if ($sort_by === 'fec_ini')
                                                 @if ($sortDirection === 'asc')
@@ -68,8 +79,8 @@
                                         </button>
                                     </th>
                                     <th scope="col"
-                                        class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                        <button wire:click="sortBy('fec_fin')" class="flex items-center">
+                                        class="px-1 py-3 text-left font-medium text-gray-500 tracking-wider">
+                                        <button wire:click="sortBy('fec_fin')" class="flex items-center uppercase">
                                             {{ __('Finalización') }}
                                             @if ($sort_by === 'fec_fin')
                                                 @if ($sortDirection === 'asc')
@@ -82,11 +93,15 @@
                                     </th>
                                     <th scope="col"
                                         class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                        {{ __('Total') }}
+                                        {{ __('Creditos') }}
                                     </th>
                                     <th scope="col"
                                         class="px-1 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                        <button wire:click="sortBy('habilita')" class="flex items-center">
+                                        {{ __('Total') }}
+                                    </th>
+                                    <th scope="col"
+                                        class="px-1 py-3 text-left font-medium text-gray-500 tracking-wider">
+                                        <button wire:click="sortBy('habilita')" class="flex items-center uppercase">
                                             {{ __('Habilitar') }}
                                             @if ($sort_by === 'habilita')
                                                 @if ($sortDirection === 'asc')
@@ -105,7 +120,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach ($pedidos as $pedido)
-                                    <tr wire:key="pedido-{{ $pedido->id }}">
+                                    <tr wire:key="pedido-{{ $pedido->id }}" {{ $this->tacharPlanAgotado($pedido) }} >
                                         <td class="px-1 py-2 whitespace-nowrap">
                                             {{ $pedido->id }}
                                         </td>
@@ -125,17 +140,26 @@
                                             {{ $pedido->fec_fin ?? '-' }}
                                         </td>
                                         <td class="px-1 py-2 whitespace-nowrap">
+                                            {{ $this->mostrarCreditos($pedido) }}
+                                        </td>
+                                        <td class="px-1 py-2 whitespace-nowrap">
                                             {{ $pedido->total }}
                                         </td>
                                         <td class="px-1 py-2 whitespace-wrap">
                                             <div class="col-span-6 sm:col-span-4 flex items-center">
-                                                <x-button id="habilita" class="label-small" wire:click="habilitarPlan({{ $pedido->id }})">
-                                                    @if($pedido->habilita)
+                                                @if($pedido->habilita) 
+                                                <form wire:submit="habilitarPlan({{ $pedido->id }})" class="inline">
+                                                    @csrf
+                                                    <x-button type="submit" id="habilita" class="label-small"
+                                                        onclick="return confirm('¿Estás seguro de que deseas deshabilitar el plan contratado?')">                                                    
                                                         {{ __('Deshabilitar') }}
-                                                    @else
+                                                    </x-button>
+                                                </form>
+                                                @else
+                                                    <x-button id="habilita" class="label-small" wire:click="habilitarPlan({{ $pedido->id }})">
                                                         {{ __('Habilitar') }}
-                                                    @endif
-                                                </x-button>
+                                                    </x-button>
+                                                @endif
                                             </div>
                                         </td>
                                         <td class="px-1 py-2 whitespace-nowrap text-sm font-medium">

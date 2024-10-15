@@ -72,5 +72,11 @@ class Kernel extends HttpKernel
         'check.modelo.ownership' => \App\Http\Middleware\CheckModeloOwnership::class,
         'check.empresa.ownership' => \App\Http\Middleware\CheckEmpresaOwnership::class,
         'check.pedido.ownership' => \App\Http\Middleware\CheckPedidoOwnership::class,
+        'check.plan.ownership' => \App\Http\Middleware\CheckPlanOwnership::class,
+        'check.contratacion.empresa.ownership' => \App\Http\Middleware\CheckContratacionEmpresaOwnership::class,
+        'check.contratacion.modelo.ownership' => \App\Http\Middleware\CheckContratacionModeloOwnership::class,
+        'check.modelo.estado' => \App\Http\Middleware\CheckModeloEstado::class,
+        'check.solicitudes.modelos' => \App\Http\Middleware\CheckSolicitudesModelos::class,
+
     ];
 }

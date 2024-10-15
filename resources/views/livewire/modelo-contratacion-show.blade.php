@@ -2,12 +2,12 @@
     <div class="py-2">
         <div class="max-w-full mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <section id="seleccion_de_modelos" class="px-4 py-2 bg-white border-b border-gray-200">
+                {{-- <section id="seleccion_de_modelos" class="px-4 py-2 bg-white border-b border-gray-200">
                     <h1 class="pl-2 fa-2x rounded-md bg-slate-200">Modelo/s a contratar</h1>
                     <div class="ml-2 flex flex-col">
                         <div class="flex flex-wrap">
                             @foreach ($modelos as $modelo)
-                                    {{-- enviar el id de cada modelo --}}
+                                    <!-- enviar el id de cada modelo -->
                                     
                                     <div class="flex flex-col m-2">
                                         <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -46,61 +46,100 @@
                                                         </div>
                                                     </div>
                                                     <div wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })" class="cursor-pointer">
-                                                    <i class="fas fa-image text-success mr-1"></i><x-label-sm class="inline-block lowercase">galería</x-label-sm>
+                                                        <i class="fas fa-image text-success mr-1"></i><x-label-sm class="inline-block lowercase">galería</x-label-sm>
                                                     </div>                                                    
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
+                            @endforeach
                         </div>
                     </div>
-                    {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
+                    <!-- Abre el modal con la galeria de fotos de la modelo seleccionada -->
                     @livewire('modelo-galeria')
-                </section>
-                
-                <section id="propuesta_de_contratacion" class="px-4 py-2 bg-white border-b border-gray-200">
-                    <h1 class="pl-2 fa-2x rounded-md bg-slate-200">Detalles de la Propuesta de contratación</h1>
+                </section> --}}
+                <section id="datos_del_contacto" class="px-4 pt-2 bg-white border-b border-gray-200">
+                    <h1 class="pl-2 fa-2x rounded-md bg-slate-200">Datos de contacto</h1>
 
-                    <div class="flex flex-wrap justify-start gap-6 m-6">
-                         <!-- # de contratacion -->
-                         <div class="rounded-2xl border border-slate-300 mb-4">
-                            <x-label for="contratacion_id" class="rounded-t-2xl bg-yellow-400 p-2" value="{{ __('Contratación n° ') }}" />
+                    <div class="flex flex-wrap justify-start gap-x-6 gap-y-2 m-6">
+                        <!-- empresa contratista -->
+                        <div class="rounded-2xl border border-slate-300 mb-2">
+                            <x-label for="empresa" class="rounded-t-2xl bg-slate-300 p-2"
+                                value="{{ __('Empresa contratista') }}" />
+                            <div class="mt-1 text-center px-2">
+                                {{ $contratacion->empresa->nom_com }}
+                            </div>
+                        </div>
+
+                        <!-- Nombre y apellido -->
+                        <div class="rounded-2xl border border-slate-300 mb-2">
+                            <x-label for="nombre" class="rounded-t-2xl bg-slate-300 p-2" value="{{ __('Nombre y apellido') }}" />
+                            <div class="mt-1 text-center px-2">
+                                {{ $contratacion->empresa->user->name }}
+                            </div>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="rounded-2xl border border-slate-300 mb-2">
+                            <x-label for="telefono" class="rounded-t-2xl bg-slate-300 p-2" value="{{ __('Teléfono') }}" />
+                            <div class="mt-1 text-center px-2">
+                                {{ $contratacion->empresa->user->telefono }}
+                            </div>
+                        </div>
+
+                        <!-- E-mail -->
+                        <div class="rounded-2xl border border-slate-300 mb-2">
+                            <x-label for="email" class="rounded-t-2xl bg-slate-300 p-2" value="{{ __('E-mail') }}" />
+                            <div class="mt-1 text-center px-2">
+                                {{ $contratacion->empresa->user->email }}
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section id="propuesta_de_contratacion" class="px-4 pt-2 bg-white border-b border-gray-200">
+                    <h1 class="flex justify-between items-center pl-2 fa-2x rounded-md {{ $this->cambiarBgEstado($contratacion) }}">Detalles de la Propuesta de contratación
+                        {{-- muestra el estado de la confirmacion --}}
+                        <span class="mr-2 text-lg">{{ __('Estado: '.$this->confirmacion_display($contratacion)) }}</span>
+                    </h1>
+
+                    <div class="flex flex-wrap justify-start gap-x-6 m-6">
+                        <!-- # de contratacion -->
+                        <div class="rounded-2xl border border-slate-300 mb-1">
+                            <x-label for="contratacion_id" class="rounded-t-2xl bg-yellow-400 p-2"
+                                value="{{ __('Contratación n° ') }}" />
                             <div class="text-center mt-1">
                                 {{ $contratacion->id }}
-                            </div>                                
+                            </div>
                         </div>
 
                         <!-- fecha de contratacion -->
-                        <div class="rounded-2xl border border-slate-300 mb-4">
+                        {{-- <div class="rounded-2xl border border-slate-300 mb-1">
                             <x-label for="fec_con" class="rounded-t-2xl bg-slate-300 p-2" value="{{ __('Fecha de contratación') }}" />
                             <div class="mt-1 text-center px-2">
                                 {{ $this->obtenerFechaFormateada($contratacion->fec_con) }}
                             </div>                                
-                        </div>
+                        </div> --}}
 
-                        <!-- empresa contratista -->
-                        <div class="rounded-2xl border border-slate-300 mb-4">
-                            <x-label for="empresa" class="rounded-t-2xl bg-slate-300 p-2" value="{{ __('Empresa contratista') }}" />
-                            <div class="mt-1 text-center px-2">
-                                {{ $contratacion->empresa->nom_com }}
-                            </div>                                
-                        </div>
+                        
                     </div>
 
                     <div class="flex flex-wrap justify-start gap-6 m-6">
                         <!-- Periodo de Contratación -->
-                        <div class="border rounded-lg bg-slate-300 p-2 mb-4">
+                        <div class="border rounded-lg bg-slate-300 p-2 mb-1">
                             <h2 class="text-lg font-medium text-gray-700">Período de Contratación</h2>
                             <div class="flex space-x-4">
                                 <div>
-                                    <label for="fec_ini" class="block text-sm font-medium text-gray-700">Fecha de inicio</label>
+                                    <label for="fec_ini" class="block text-sm font-medium text-gray-700">Fecha de
+                                        inicio</label>
                                     <div class="mt-1">
                                         {{ $this->obtenerFechaFormateada($contratacion->fec_ini) }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="fec_fin" class="block text-sm font-medium text-gray-700">Fecha de finalización</label>
+                                    <label for="fec_fin" class="block text-sm font-medium text-gray-700">Fecha de
+                                        finalización</label>
                                     <div class="mt-1">
                                         {{ $this->obtenerFechaFormateada($contratacion->fec_fin) }}
                                     </div>
@@ -109,81 +148,89 @@
                                 <div>
                                     <x-label for="duracion" value="{{ __('Duración (días/horas)') }}" />
                                     <div class="mt-1">
-                                        {{ $this->obtenerDiasTrabajo($contratacion) }} días / {{ $this->obtenerHorasTotales($contratacion) }} hrs
-                                    </div>                                
+                                        {{ $this->obtenerDiasTrabajo($contratacion) }} días /
+                                        {{ $this->obtenerHorasTotales($contratacion) }} hrs
+                                    </div>
                                 </div>
                             </div>
-                            
+
                         </div>
 
-                        
+
 
                         <!-- Modelos a contratar -->
-                        <div class="border rounded-lg bg-slate-200 p-2 mb-4">
+                        {{-- <div class="border rounded-lg bg-slate-200 p-2 mb-1">
                             <h2 class="text-lg font-medium text-gray-700">Modelos</h2>
                             <x-label for="costo" class="block text-sm font-medium" value="{{ __('a contratar') }}" />
                             <div class="mt-1 text-center">
                                 {{ $contratacion->modelos->count() }}
                             </div>                                
-                        </div>
+                        </div> --}}
 
                         <!-- Costo -->
-                        <div class="border rounded-lg bg-slate-300 p-2 mb-4">
-                            <h2 class="text-lg font-medium text-gray-700">Costo por modelo</h2>
-                            <x-label for="costo" class="block text-sm font-medium" value="{{ __('total / hora de trabajo') }}" />
+                        <div class="border rounded-lg bg-slate-300 p-2 mb-1">
+                            <h2 class="text-lg font-medium text-gray-700">Monto a cobrar</h2>
+                            <x-label for="costo" class="block text-sm font-medium"
+                                value="{{ __('total / hora de trabajo') }}" />
                             <div class="mt-1">
-                                u$s {{ number_format($contratacion->mon_tot, 2) }} / u$s {{ number_format($this->obtenerCostoPorHora($contratacion), 2) }}
-                            </div>                                
+                                u$s {{ number_format($contratacion->mon_tot, 2) }} / u$s
+                                {{ number_format($this->obtenerCostoPorHora($contratacion), 2) }}
+                            </div>
                         </div>
 
                         <!-- Carga Horaria por Día -->
-                        <div class="border rounded-lg bg-slate-200 p-2 mb-4">
+                        <div class="border rounded-lg bg-slate-200 p-2 mb-1">
                             <h2 class="text-lg font-medium text-gray-700">Carga horaria</h2>
-                            <label for="hor_dia" class="block text-sm font-medium text-gray-700">por día de trabajo</label>
+                            <label for="hor_dia" class="block text-sm font-medium text-gray-700">por día de
+                                trabajo</label>
                             <div class="mt-1">
                                 {{ $contratacion->hor_dia }} hrs
-                            </div>                           
+                            </div>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap gap-6 m-6">
                         <!-- Descripción del Trabajo -->
-                        <div class="flex-1 border rounded-lg bg-slate-400 p-2 mb-4">
+                        <div class="flex-1 border rounded-lg bg-slate-400 p-2 mb-1">
                             <h2 class="text-lg font-medium text-gray-700">Descripción del Trabajo</h2>
-                            <x-label for="des_tra" class="block text-sm font-medium text-gray-700">descripción completa</x-label>
+                            <x-label for="des_tra" class="block text-sm font-medium text-gray-700">descripción
+                                completa</x-label>
                             <div class="mt-1">
                                 {{ $contratacion->des_tra }}
                             </div>
-                        </div>   
+                        </div>
                         <!-- Estado de contratación -->
-                        <div class="border rounded-lg bg-slate-300 p-2 mb-4">
+                        {{-- <div class="border rounded-lg bg-slate-300 p-2 mb-1">
                             <h2 class="text-lg font-medium text-gray-700">Estado</h2>
                             <x-label for="descripcion_trabajo" class="block text-sm font-medium text-gray-700">modelos confirmadas / modelos a contratar</x-label>
                             <div class="mt-1">
                                 {{ $this->obtenerModelosConfirmados($contratacion) }} / {{ $contratacion->modelos->count() }}
                             </div>
-                        </div>                  
-                    </div>  
+                        </div> --}}
+                    </div>
 
                     <!-- Dirección del Trabajo -->
                     <div class="flex flex-col gap-6 m-6">
-                        <div class="w-fit border rounded-lg bg-slate-200 p-2 mb-4">
+                        <div class="w-fit border rounded-lg bg-slate-200 p-2 mb-1">
                             <h2 class="text-lg font-medium text-gray-700">Domicilio del trabajo</h2>
                             <div class="flex flex-wrap justify-start gap-3">
                                 <div>
-                                    <label for="dom_tra" class="block text-sm font-medium text-gray-700">Dirección</label>
+                                    <label for="dom_tra"
+                                        class="block text-sm font-medium text-gray-700">Dirección</label>
                                     <div class="mt-1">
                                         {{ $contratacion->dom_tra }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="loc_tra" class="block text-sm font-medium text-gray-700">Localidad</label>
+                                    <label for="loc_tra"
+                                        class="block text-sm font-medium text-gray-700">Localidad</label>
                                     <div class="mt-1">
                                         {{ $contratacion->loc_tra }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="pro_tra" class="block text-sm font-medium text-gray-700">Provincia</label>
+                                    <label for="pro_tra"
+                                        class="block text-sm font-medium text-gray-700">Provincia</label>
                                     <div class="mt-1">
                                         {{ $contratacion->pro_tra }}
                                     </div>
@@ -197,28 +244,27 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center justify-end my-4">
-                        <a href="{{ route('empresas.contrataciones.edit', $contratacion->id) }}" class="text-yellow-600 hover:text-yellow-900 ml-4"
-                            title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form wire:submit="destroy" class="inline ml-4">
-                            @csrf
-                            <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
-                                onclick="return confirm('¿Estás seguro de que deseas eliminar esta propuesta de contratación?');">
-                                <i class="fas fa-trash-alt"></i>
+                        <!-- Confirmación -->
+                        <section id="confirmacion" class="flex flex-wrap items-center gap-1">
+                            {{-- Muestra los botones para aceptar o rechazar la contratación --}}
+                            <button wire:click="confirmar({{ $contratacion }}, 1)" wire:key="contratacion-{{ $contratacion->id }}" class="fa-2x{{ $this->getButtonClass($contratacion, 'aceptar') }}" title="clic aquí para aceptar">
+                                <i class="{{ $this->getIconClass($contratacion, 'aceptar') }}"></i>
                             </button>
-                        </form>
-                        @can('empresas.index')
-                            <x-button class="ml-4">
-                                <a wire:navigate href="{{ route('empresas.contrataciones.index') }}">
-                                    {{ __('Volver') }}
-                                </a>
-                            </x-button>
-                        @endcan
+                            <button wire:click="confirmar({{ $contratacion }}, 0)" wire:key="contratacion-{{ $contratacion->id }}" class="fa-2x {{ $this->getButtonClass($contratacion, 'rechazar') }}" title="clic aquí para rechazar">
+                                <i class="{{ $this->getIconClass($contratacion, 'rechazar') }}"></i>
+                            </button>
+                        </section>
+
+
+                        <x-button class="ml-4">
+                            <a wire:navigate href="{{ route('modelos.contrataciones.index') }}">
+                                {{ __('Volver a contrataciones') }}
+                            </a>
+                        </x-button>
                     </div>
-                
+
                 </section>
             </div>
         </div>

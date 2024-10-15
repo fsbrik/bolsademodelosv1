@@ -28,7 +28,7 @@ class CheckEmpresaOwnership
 
         // Verifica la propiedad de la empresa
         if (Auth::user()->id !== $empresa->user_id && !Auth::user()->hasRole('admin')) {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Acción no autorizada.');
         }
 
         return $next($request);
