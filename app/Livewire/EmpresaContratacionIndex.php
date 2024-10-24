@@ -48,25 +48,36 @@ class EmpresaContratacionIndex extends Component
         return Str::limit($contratacion->des_tra, 30);
     }
 
+    // contar la cantidad de modelos que confirmaron en las contrataciones durante un plan contratado
+    public function contarConfirmaciones($contrataciones)
+    {
+        $confirmacionesTotales = 0;
+
+        // recibo las contrataciones desde el metodo render
+        $contrataciones->each(function($contratacion) use ($confirmacionesTotales){
+            $confirmacionesPorContratacion = $contratacion->confirmaciones->where('estado', 1)->count();
+
+            $confirmacionesTotales += $confirmacionesPorContratacion;                                                          
+        });
+
+        return $confirmacionesTotales;
+    }
+
     // actualiza el estado de modelos que confirmaron la contratacion
     public function obtenerModelosConfirmados($contratacion)
     {
         return $contratacion->confirmaciones->where('estado', 1)->count();
     }
 
-    // permite eliminar o no una contratacion dependiendo si tiene o no modelos que confirmaron
-    // tambien verifica que la fecha actual sea anterior a la fecha de inicio de la contratacion
+    // verifica si hay modelos que confirmaron una contratacion
     public function checkConfirmacion($contratacion)
     {
-        $esAnteriorAFecIni = Carbon::now()->lt(Carbon::parse($contratacion->fec_ini));
-        $modelosConfirmados = $this->obtenerModelosConfirmados($contratacion);
-
-        // Si la fecha actual es anterior a fec_ini y no hay modelos confirmados
-        return $esAnteriorAFecIni && $modelosConfirmados === 0;
+        $modelosConfirmados = $contratacion->confirmaciones->where('estado', 1)->count();
+        return $modelosConfirmados > 0 ? false : true;
     }
 
     // actualiza el estado del plan contratado (en caso de tener uno). Podria haberlo denominado como updateHabilitacion.
-    public function actualizarEstadoUltimoPlanContratado()
+    public function actualizarEstadoUltimoPlanContratado($contrataciones)
     {
         $user = Auth::user();
         // obtener el ultimo plan contratado
@@ -87,27 +98,33 @@ class EmpresaContratacionIndex extends Component
                 case 'plan simple':
                     // el plan simple no tiene fec_fin, por lo tanto no se comprueba, por ende siempre va a ser true
                     $comprobarFec_fin = true;
-                    //comprobamos si se quedo sin creditos
-                    $comprobarCreditos = $ultimoPlanContratado->creditos > 0 ? true : false;
+                    //comprobamos si se quedo sin créditos
+                    //$comprobarCreditos = $ultimoPlanContratado->creditos > 0 ? true : false;
+                    
+                    // comprobamos si le confirmo ya 1 modelo
+                    $comprobarConfirmaciones = $this->contarConfirmaciones($contrataciones) < 1 ? true : false;
                     break;
                 
                 case 'plan mensual':
                     // comprobamos que no se haya vencido el fec_fin
                     $comprobarFec_fin = Carbon::now()->lt(Carbon::parse($ultimoPlanContratado->fec_fin)) ? true : false;
                     //comprobamos si se quedo sin creditos
-                    $comprobarCreditos = $ultimoPlanContratado->creditos > 0 ? true : false;
+                    //$comprobarCreditos = $ultimoPlanContratado->creditos > 0 ? true : false;
+
+                    // comprobamos si le confirmaron 5 modelos
+                    $comprobarConfirmaciones = $this->contarConfirmaciones($contrataciones) < 5 ? true : false;
                     break;
                 
                 case 'plan anual':
                     // comprobamos que no se haya vencido el fec_fin
                     $comprobarFec_fin = Carbon::now()->lt(Carbon::parse($ultimoPlanContratado->fec_fin)) ? true : false;
                     // el plan anual tiene creditos infinitos, por lo tanto no se comprueba, por ende siempre va a ser true
-                    $comprobarCreditos = true;
+                    $comprobarConfirmaciones = true;
                     break;
             }
 
-            // si se le terminaron los creditos o se vencio el plan
-            if ($comprobarFec_fin === false || $comprobarCreditos === false)
+            // si le confirmaron la cantidad de modelos maxima que permite el plan o se le vencio el plan
+            if ($comprobarFec_fin === false || $comprobarConfirmaciones === false)
             {
                 $ultimoPlanContratado->update([
                     'habilita' => 0
@@ -128,22 +145,33 @@ class EmpresaContratacionIndex extends Component
     }
 
     // actualizar el estado de las contrataciones
+    // se cierra la contratacion en caso que se supere la fec_fin o en caso que coincidan la cantidad de modelos que confirmaron con la cantidad de modelos a contratar
     public function updateEstadoContratacion($contrataciones)
     {
+
         $contrataciones->each(function($contratacion){
-            if(Carbon::now()->gt(Carbon::parse($contratacion->fec_fin)))
+
+            $confirmaciones = $contratacion->confirmaciones->where('estado', 1)->count();
+
+            if(Carbon::now()->gt(Carbon::parse($contratacion->fec_fin)) || $confirmaciones == $contratacion->cant_mod)
             {
                 $contratacion->update([
                     'estado' => 0
+                ]);
+            }
+            elseif(Carbon::now()->lessThanOrEqualTo(Carbon::parse($contratacion->fec_fin)) || $confirmaciones < $contratacion->cant_mod)
+            {
+                $contratacion->update([
+                    'estado' => 1
                 ]);
             }
         });
     }
 
     // permite editar o eliminar una contratacion dependiendo si la fec_fin esta vencida.
-    public function checkEstadoContratacion(Contratacion $contratacion)
+    public function checkFecFinContratacion(Contratacion $contratacion)
     {
-        return $contratacion->estado;
+        return Carbon::now()->gt(Carbon::parse($contratacion->fec_fin)) ? false : true;
     }
 
     public function checkCreateOrEdit()
@@ -190,7 +218,7 @@ class EmpresaContratacionIndex extends Component
         $this->updateEstadoContratacion($contrataciones);
 
         // actualizar el estado del plan
-        $this->actualizarEstadoUltimoPlanContratado();      
+        $this->actualizarEstadoUltimoPlanContratado($contrataciones);      
 
         return view('livewire.empresa-contratacion-index', compact('contrataciones'));
     }

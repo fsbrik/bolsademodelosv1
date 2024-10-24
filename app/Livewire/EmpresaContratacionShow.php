@@ -12,15 +12,15 @@ class EmpresaContratacionShow extends Component
 {
     use WithPagination;
 
-    public $contratacion, $contratacionId, $modelos, $empresa;
+    public $contratacion, $contratacionId, $empresa;
 
-    public function mount($contratacionId)
+    /* public function mount($contratacionId)
     {
         $this->contratacionId = $contratacionId;
         $this->contratacion = Contratacion::findOrFail($contratacionId);        
         $this->modelos = $this->contratacion->modelos->all();
         $this->empresa = $this->contratacion->empresa;    
-    }
+    } */
 
     public function obtenerFechaFormateada($fecha)
     {
@@ -50,6 +50,19 @@ class EmpresaContratacionShow extends Component
         return $contratacion->confirmaciones->where('estado', 1)->count();
     }
     
+    // verifica si hay modelos que confirmaron una contratacion
+    public function checkConfirmacion($contratacion)
+    {
+        $modelosConfirmados = $contratacion->confirmaciones->where('estado', 1)->count();
+        return $modelosConfirmados > 0 ? false : true;
+    }
+
+    // permite editar o eliminar una contratacion dependiendo si la fec_fin esta vencida.
+    public function checkFecFinContratacion(Contratacion $contratacion)
+    {
+        return Carbon::now()->gt(Carbon::parse($contratacion->fec_fin)) ? false : true;
+    }
+    
      // mostrar el estado de la confirmacion de la modelo
      public function confirmacionEstado($modelo)
      {
@@ -66,7 +79,16 @@ class EmpresaContratacionShow extends Component
     }
 
     public function render()
-    {   
-        return view('livewire.empresa-contratacion-show');
+    {
+        $this->contratacion = Contratacion::findOrFail($this->contratacionId);
+        $modelos = $this->contratacion->modelos()->paginate(9);
+        $this->empresa = $this->contratacion->empresa;
+
+        return view('livewire.empresa-contratacion-show', [
+            'modelos' => $modelos, // Asegúrate de pasar modelos a la vista
+            'empresa' => $this->empresa, // Asegúrate de pasar empresa a la vista
+            'contratacion' => $this->contratacion, // Asegúrate de pasar contratacion a la vista
+        ]);
     }
+
 }

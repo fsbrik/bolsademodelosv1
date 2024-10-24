@@ -5,6 +5,7 @@ use Livewire\Component;
 use App\Models\Modelo;
 use App\Models\Contratacion;
 use App\Models\Confirmacion;
+use App\Models\Pedido;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -13,17 +14,19 @@ class EmpresaContratacionEdit extends Component
 {
     use WithPagination;
 
-    // variables para create
     public $fec_con, $fec_ini, $fec_fin, $hor_dia, $dom_tra, $loc_tra, $pro_tra, $pai_tra, $mon_tot, $des_tra;     
     public $dias_trabajo, $valor_hora; 
     public $empresa, $empresas;
-    public $contratacion, $contratacionId, $modelosSeleccionadas;
+    public $contratacion, $contratacionId;
+    public $cant_mod, $modelosSeleccionadas;
+    public $planSeleccionado;
     public $confirmaciones;
 
 
     protected $rules = [
         'modelosSeleccionadas' => 'required',
-        'empresa' => 'required|integer|min:1', 
+        'empresa' => 'required|integer|min:1',
+        'cant_mod' => 'required|integer|min:1', 
         'fec_ini' => 'required|date',
         'fec_fin' => 'required|date|after_or_equal:fec_ini',
         'hor_dia' => 'required|integer|min:1|max:24',
@@ -38,8 +41,12 @@ class EmpresaContratacionEdit extends Component
     protected $messages = [
         'modelosSeleccionadas.required' => 'Debe seleccionar al menos 1 modelo o lo que permita tu plan',
 
+        'cant_mod.required' => 'Debe indicar una cantidad.',
+        'cant_mod.integer' => 'La cantidad debe ser un valor numérico.',
+        'cant_mod.min' => 'La cantidad debe ser mayor a cero.',
+
         'empresa.required' => 'Debe seleccionar una empresa.',
-        'empresa.integer' => 'La empresa debe ser un valor numérico.',
+        'empresa.integer' => 'Debe seleccionar una empresa.',
         'empresa.min' => 'Debe seleccionar una empresa válida.',
     
         'fec_ini.required' => 'La fecha de inicio es obligatoria.',
@@ -107,6 +114,7 @@ class EmpresaContratacionEdit extends Component
         $this->pro_tra = session()->get('pro_tra',$this->contratacion->pro_tra);
         $this->pai_tra = session()->get('pai_tra',$this->contratacion->pai_tra);
         $this->mon_tot = session()->get('mon_tot',$this->contratacion->mon_tot);
+        $this->cant_mod = $this->contratacion->cant_mod;//session()->get('cant_mod',$this->contratacion->cant_mod); cant_mod no trabaja con sesiones porque se guarda automaticamente
         $this->des_tra = session()->get('des_tra',$this->contratacion->des_tra);
         $this->calcularDiasTrabajo();
         $this->calcularValorHora();
@@ -146,6 +154,34 @@ class EmpresaContratacionEdit extends Component
         }
         return $this->modelosSeleccionadas;
     } */
+
+    public function checkPlan()
+    {
+        $userId = Auth::user()->id;
+        $this->planSeleccionado = Pedido::where('user_id', $userId)
+                                ->whereHas('servicios', function($query){
+                                    $query->where('sub_cat', 'planes');
+                                })
+                                ->where('habilita', 1)->first();
+        
+        if(!$this->planSeleccionado)
+        {
+            session()->flash('message', 'Adquirí un plan para empezar a contratar. Comunicate por whatsapp al 11-2155-4283 para habilitarlo');
+            return redirect()->route('planes.index');
+        }
+    }
+
+    // valida la cantidad de modelos a contratar. Compone el mensaje de error.
+    public function boot()
+    {
+        $this->withValidator(function ($validator) {
+            $validator->after(function ($validator) {
+                if ($this->planSeleccionado->servicios->first()->nom_ser !== 'plan anual' && $this->checkCreditos()) {
+                    $validator->errors()->add('cant_modMaxima', 'Cantidad máxima superada');
+                }
+            });
+        });
+    }
 
     public function updatedEmpresa()
     {
@@ -203,6 +239,30 @@ class EmpresaContratacionEdit extends Component
         session()->put('fec_fin', $this->fec_fin);
     }
 
+    // al actualizar cant_mod, impedir que cant_mod sea menor a las modelos que ya confirmaron
+    public function validarMinCantMod()
+    {
+        $modelosConfirmados = $this->contratacion->confirmaciones->where('estado', 1)->count();
+        if($this->cant_mod < $modelosConfirmados)
+        {
+            $this->cant_mod = $modelosConfirmados;
+        }
+    }
+
+    // valida la cantidad de modelos a contratar cuando se modifique su valor.
+    public function updatedCantMod()
+    {
+        $this->validarMinCantMod();
+        $this->validateOnly('cant_modMaxima');
+        $this->validateOnly('cant_mod');
+        $this->contratacion->cant_mod = $this->cant_mod;
+        $modelosConfirmados = $this->contratacion->confirmaciones->where('estado', 1)->count();
+        // en el caso que las modelos que confirmaron coincida con la cantidad de modelos requeridas, la contratación se desactiva
+        $this->contratacion->estado = $this->contratacion->cant_mod === $modelosConfirmados ? 0 : 1;
+        $this->contratacion->save();
+        //session()->put('cant_mod', $this->cant_mod);
+    }
+    
     public function updatedHorDia()
     {
         $this->calcularValorHora();
@@ -262,38 +322,80 @@ class EmpresaContratacionEdit extends Component
         session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
     }
 
+    public function checkCreditos()
+    {
+        // la cantidad de modelos a contratar inicialmente
+        $contratacionInicialCreditos = $this->contratacion->cant_mod;
+
+        // la cantidad de creditos que le quedaban al plan inicialmente incluyendo esta contratacion
+        $planInicialCreditos = $this->planSeleccionado->creditos + $contratacionInicialCreditos;
+
+        return $this->cant_mod > $planInicialCreditos ? true : false;
+    }
+
+    public function actualizarCreditos()
+    {
+        // la cantidad de modelos a contratar inicialmente
+        $contratacionInicialCreditos = $this->contratacion->cant_mod;
+        
+        // creditos a agregar o quitar
+        $diferenciaCreditos = $contratacionInicialCreditos - $this->cant_mod;
+
+        $this->planSeleccionado->creditos += $diferenciaCreditos;
+        $this->planSeleccionado->save();
+    }
+
+    // actualiza el estado de modelos que confirmaron la contratacion
+    public function obtenerModelosConfirmados($contratacion)
+    {
+        return $contratacion->confirmaciones->where('estado', 1)->count();
+    }
+
+    // si hay al menos una modelo que confirmó, la empresa ya no puede modificar la propuesta de contratación,
+    // pero sí puede seguir agregando o quitando modelos en estado "pendiente"
+    public function checkConfirmacion($contratacion)
+    {
+        $modelosConfirmados = $this->obtenerModelosConfirmados($contratacion);
+ 
+        return $modelosConfirmados > 0 ? 'disabled' : '';
+    }
+
     public function update()
     {
         $this->validate();
 
-        // Crear la contratación
-        $this->contratacion->update([
-            //'user_id' => Auth::id(),
-            'empresa_id' => $this->empresa,
-            'fec_con' => $this->fec_con,
-            'fec_ini' => $this->fec_ini,
-            'fec_fin' => $this->fec_fin,
-            'hor_dia' => $this->hor_dia,
-            'dom_tra' => $this->dom_tra,
-            'loc_tra' => $this->loc_tra,
-            'pro_tra' => $this->pro_tra,
-            'pai_tra' => $this->pai_tra,
-            'mon_tot' => $this->mon_tot,
-            'des_tra' => $this->des_tra,
-        ]);
+        // si pasa la validación, le descontamos los créditos de las contratación correspondiente a cant_mod
+        $this->actualizarCreditos();
 
-        /* Se puede sincronizar directamente desde el mod_id, esto permite ahorrar una consulta de mas.
+        // Actualizar la propuesta de contratación solo en el caso que no hayan modelos que confirmaron
+        if($this->checkConfirmacion($this->contratacion) !== 'disabled')
+        {
+            $this->contratacion->update([
+                'empresa_id' => $this->empresa,
+                'fec_con' => $this->fec_con,
+                'fec_ini' => $this->fec_ini,
+                'fec_fin' => $this->fec_fin,
+                'hor_dia' => $this->hor_dia,
+                'dom_tra' => $this->dom_tra,
+                'loc_tra' => $this->loc_tra,
+                'pro_tra' => $this->pro_tra,
+                'pai_tra' => $this->pai_tra,
+                'mon_tot' => $this->mon_tot,
+                'cant_mod' => $this->cant_mod,
+                'des_tra' => $this->des_tra,
+            ]);
+        }
+        
+
+
         // Obtener los IDs correspondientes a los mod_id seleccionados
         $modelosIds = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->pluck('id')->toArray();
 
         // Asignar los modelos seleccionados a la contratación
-        $this->contratacion->modelos()->sync($modelosIds); */
-
-        // Sincronizar las modelos seleccionados (directamente por su mod_id) con la contratación
-        $this->contratacion->modelos()->sync($this->modelosSeleccionadas);
+        $this->contratacion->modelos()->sync($modelosIds); 
 
         session()->forget(['empresa', 'fec_con', 'fec_ini', 'fec_fin', 'hor_dia',
-                 'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'des_tra',
+                 'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'cant_mod', 'des_tra',
                  'modelos_seleccionadas', 'contratacion']);
 
         // Redirigir o mostrar un mensaje de éxito
@@ -304,14 +406,20 @@ class EmpresaContratacionEdit extends Component
 
     public function render()
     {
+        // para poder contratar modelos, se debe chequear que tiene un plan habilitado   
+        $this->checkPlan();
+
+        // si alguna modelo confirmó, se deshabilita la edición de la sección de la propuesta
+        // $deshabilitar = $this->checkConfirmacion($this->contratacion);
+
         //verifica si ya existe o no una sesion con modelos
         if(session()->has('modelos_seleccionadas')){
             $this->modelosSeleccionadas = session()->get('modelos_seleccionadas',[]);//dd( $this->modelosSeleccionadas);
             $modelos = Modelo::whereIn('mod_id',$this->modelosSeleccionadas)
-                        ->orderByRaw('CAST(SUBSTRING(mod_id, 4) AS UNSIGNED) ASC')->paginate(10);//dd($modelos);
+                        ->orderByRaw('CAST(SUBSTRING(mod_id, 4) AS UNSIGNED) ASC')->paginate(9);//dd($modelos);
         } else {
             $modelos = $this->contratacion->modelos()
-                        ->orderByRaw('CAST(REGEXP_REPLACE(mod_id, "[^0-9]", "") AS UNSIGNED) ASC')->paginate(10);
+                        ->orderByRaw('CAST(REGEXP_REPLACE(mod_id, "[^0-9]", "") AS UNSIGNED) ASC')->paginate(9);
             $this->modelosSeleccionadas = $this->contratacion->modelos()->pluck('mod_id')->toArray();
             session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
         }

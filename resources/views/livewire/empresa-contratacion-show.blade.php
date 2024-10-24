@@ -4,59 +4,72 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <section id="seleccion_de_modelos" class="px-4 py-2 bg-white border-b border-gray-200">
                     <h1 class="pl-2 fa-2x rounded-md bg-slate-200">Modelo/s a contratar</h1>
-                    <div class="ml-2 flex flex-col">
-                        <div class="flex flex-wrap">
-                            @foreach ($modelos as $modelo)
-                                    {{-- enviar el id de cada modelo --}}
-                                    
-                                    <div class="flex flex-col m-2">
-                                        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                                            <div class="p-2 relative">
-                                                <p class="font-semibold">## {{ $modelo->mod_id }}</p>
-                                                <img src="{{ $modelo->user->profile_photo_url }}" alt="{{ $modelo->mod_Id }}"
-                                                    class="h-24 w-14 mx-auto rounded-md object-cover">
-                                                <div x-data="{ toggle: false }" class="flex flex-col my-1">
-                                                    <x-label-sm x-show="!toggle"  @click="toggle = !toggle"><i class="fas fa-magnifying-glass cursor-pointer"></i>+ info</x-label-sm>
-                                                    <div x-show="toggle" @click="toggle = !toggle" class="cursor-pointer">
-                                                        @can('modelos.datos_de_contacto')
-                                                        <x-label-sm
-                                                            class="border-t break-all">{{ $modelo->user->name }}</x-label-sm>
-                                                        <x-label-sm>{{ $modelo->user->telefono }}</x-label-sm>
-                                                        <x-label-sm
-                                                            class="border-b break-all">{{ $modelo->user->email }}</x-label-sm>
-                                                        @endcan
-                                                        <x-label-sm>{{ __('Edad: ') . \Carbon\Carbon::parse($modelo->fec_nac)->age . __(' años') }}</x-label-sm>
-                                                        <x-label-sm>{{ __('Estatura: ') . $modelo->estatura . __(' mts.') }}</x-label-sm>
-                                                        <x-label-sm>{{ __('Calzado: ') . $modelo->calzado }}</x-label-sm>
-                                                        <x-label-sm>{{ __('Medidas: ') . $modelo->medidas }}</x-label-sm>
-                                                        <x-label-sm>{{ __('Viajar al exterior: ') . ($modelo->dis_via ? 'si' : 'no') }}</x-label-sm>
-                                                        <x-label-sm
-                                                            class="border-b">{{ __('Título de modelo: ') . ($modelo->tit_mod ? 'si' : 'no') }}</x-label-sm>
-                                                        @can('modelos.ficha_tecnica')
-                                                            <x-label-sm><i class="fas fa-money-bill-wave"></i><i
-                                                                    class="fas fa-money-bill-wave px-1"></i><i
-                                                                    class="fas fa-money-bill-wave"></i></x-label-sm>
-                                                            <x-label-sm>{{ __('1/2 jornada: u$s') . $modelo->tar_med }}</x-label-sm>
-                                                            <x-label-sm>{{ __('Jorn. comp.: u$s') . $modelo->tar_com }}</x-label-sm>
-                                                        @endcan
-                                                        <div class="border-t">
-                                                            <x-label-sm><i class="fas fa-map-marker-alt pr-1"></i>{{ __('Residencia: ') . $modelo->zon_res }}</x-label-sm>
-                                                            <x-label-sm><i class="fas fa-book"></i>{{ __('Nivel de inglés: ') . $modelo->ingles }}</x-label-sm>
-                                                            <x-label-sm><i class="fas fa-briefcase"></i>{{ __('Disponibilidad: ') . $modelo->dis_tra }}</x-label-sm>
+                    <div class="flex justify-between">    
+                        <div class="ml-2 flex flex-col">
+                            <div class="flex flex-wrap">
+                                @foreach ($modelos as $modelo)
+                                        {{-- enviar el id de cada modelo --}}
+                                        
+                                        <div class="flex flex-col m-2">
+                                            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                                                <div class="p-2 relative">
+                                                    <p class="font-semibold">## {{ $modelo->mod_id }}</p>
+                                                    <img src="{{ $modelo->user->profile_photo_url }}" alt="{{ $modelo->mod_Id }}"
+                                                        class="h-24 w-14 mx-auto rounded-md object-cover">
+                                                    <div x-data="{ toggle: false }" class="flex flex-col my-1">
+                                                        <x-label-sm x-show="!toggle"  @click="toggle = !toggle"><i class="fas fa-magnifying-glass cursor-pointer"></i>+ info</x-label-sm>
+                                                        <div x-show="toggle" @click="toggle = !toggle" class="cursor-pointer">
+                                                            @can('modelos.datos_de_contacto')
+                                                            <x-label-sm
+                                                                class="border-t break-all">{{ $modelo->user->name }}</x-label-sm>
+                                                            <x-label-sm>{{ $modelo->user->telefono }}</x-label-sm>
+                                                            <x-label-sm
+                                                                class="border-b break-all">{{ $modelo->user->email }}</x-label-sm>
+                                                            @endcan
+                                                            <x-label-sm>{{ __('Edad: ') . \Carbon\Carbon::parse($modelo->fec_nac)->age . __(' años') }}</x-label-sm>
+                                                            <x-label-sm>{{ __('Estatura: ') . $modelo->estatura . __(' mts.') }}</x-label-sm>
+                                                            <x-label-sm>{{ __('Calzado: ') . $modelo->calzado }}</x-label-sm>
+                                                            <x-label-sm>{{ __('Medidas: ') . $modelo->medidas }}</x-label-sm>
+                                                            <x-label-sm>{{ __('Viajar al exterior: ') . ($modelo->dis_via ? 'si' : 'no') }}</x-label-sm>
+                                                            <x-label-sm
+                                                                class="border-b">{{ __('Título de modelo: ') . ($modelo->tit_mod ? 'si' : 'no') }}</x-label-sm>
+                                                            @can('modelos.ficha_tecnica')
+                                                                <x-label-sm><i class="fas fa-money-bill-wave"></i><i
+                                                                        class="fas fa-money-bill-wave px-1"></i><i
+                                                                        class="fas fa-money-bill-wave"></i></x-label-sm>
+                                                                <x-label-sm>{{ __('1/2 jornada: u$s') . $modelo->tar_med }}</x-label-sm>
+                                                                <x-label-sm>{{ __('Jorn. comp.: u$s') . $modelo->tar_com }}</x-label-sm>
+                                                            @endcan
+                                                            <div class="border-t">
+                                                                <x-label-sm><i class="fas fa-map-marker-alt pr-1"></i>{{ __('Residencia: ') . $modelo->zon_res }}</x-label-sm>
+                                                                <x-label-sm><i class="fas fa-book"></i>{{ __('Nivel de inglés: ') . $modelo->ingles }}</x-label-sm>
+                                                                <x-label-sm><i class="fas fa-briefcase"></i>{{ __('Disponibilidad: ') . $modelo->dis_tra }}</x-label-sm>
+                                                            </div>
                                                         </div>
+                                                        <div wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })" class="cursor-pointer">
+                                                            <i class="fas fa-image text-success mr-1"></i><x-label-sm class="inline-block lowercase">galería</x-label-sm>
+                                                        </div>
+                                                        {{-- Estado de la confirmación por parte de la modelo (pendiente, aceptado o rechazado) --}}
+                                                        <x-label-sm :class="$this->confirmacionEstado($modelo) == 'Pendiente' ? 'bg-slate-400 p-1 mt-2 rounded-md font-semibold text-center' : 
+                                                            ($this->confirmacionEstado($modelo) == 'Aceptado' ? 'bg-green-500 p-1 mt-2 rounded-md font-semibold text-center' :
+                                                            'bg-red-500 p-1 mt-2 rounded-md font-semibold text-center') ">{{ $this->confirmacionEstado($modelo) }}</x-label-sm>                                                    
                                                     </div>
-                                                    <div wire:click="$dispatch('openGallery', { modeloId: {{ $modelo->id }} })" class="cursor-pointer">
-                                                        <i class="fas fa-image text-success mr-1"></i><x-label-sm class="inline-block lowercase">galería</x-label-sm>
-                                                    </div>
-                                                    {{-- Estado de la confirmación por parte de la modelo (pendiente, aceptado o rechazado) --}}
-                                                    <x-label-sm :class="$this->confirmacionEstado($modelo) == 'Pendiente' ? 'bg-slate-400 p-1 mt-2 rounded-md font-semibold text-center' : 
-                                                        ($this->confirmacionEstado($modelo) == 'Aceptado' ? 'bg-green-500 p-1 mt-2 rounded-md font-semibold text-center' :
-                                                         'bg-red-500 p-1 mt-2 rounded-md font-semibold text-center') ">{{ $this->confirmacionEstado($modelo) }}</x-label-sm>                                                    
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                 @endforeach
+                            </div>
+                            <div class="w-fit">
+                                {{ $modelos->links() }}
+                            </div>
+                        </div>
+                        <div class="flex items-stretch m-2">
+                            <div class="w-36 h-44 bg-green-100 shadow-md rounded-lg overflow-hidden flex flex-col justify-center px-4 gap-4">
+                                <label class="text-center leading-tight font-medium text-green-600 mb-2">Cantidad de modelos a contratar</label>
+                                <label class="mx-auto block w-20 text-center fa-lg font-bold rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    {{ $contratacion->cant_mod }}
+                                </label>
+                            </div>
                         </div>
                     </div>
                     {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
@@ -127,7 +140,7 @@
                             <h2 class="text-lg font-medium text-gray-700">Modelos</h2>
                             <x-label for="costo" class="block text-sm font-medium" value="{{ __('a contratar') }}" />
                             <div class="mt-1 text-center">
-                                {{ $contratacion->modelos->count() }}
+                                {{ $contratacion->cant_mod }}
                             </div>                                
                         </div>
 
@@ -164,7 +177,7 @@
                             <h2 class="text-lg font-medium text-gray-700">Estado</h2>
                             <x-label for="descripcion_trabajo" class="block text-sm font-medium text-gray-700">modelos confirmadas / modelos a contratar</x-label>
                             <div class="mt-1">
-                                {{ $this->obtenerModelosConfirmados($contratacion) }} / {{ $contratacion->modelos->count() }}
+                                {{ $this->obtenerModelosConfirmados($contratacion) }} / {{ $contratacion->cant_mod }}
                             </div>
                         </div>                  
                     </div>  
@@ -203,17 +216,21 @@
                     </div>
                     
                     <div class="flex items-center justify-end my-4">
-                        <a href="{{ route('empresas.contrataciones.edit', $contratacion->id) }}" class="text-yellow-600 hover:text-yellow-900 ml-4"
-                            title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form wire:submit="destroy" class="inline ml-4">
-                            @csrf
-                            <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
-                                onclick="return confirm('¿Estás seguro de que deseas eliminar esta propuesta de contratación?');">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </form>
+                        @if($this->checkConfirmacion($contratacion) || $this->checkFecFinContratacion($contratacion))
+                            <a href="{{ route('empresas.contrataciones.edit', $contratacion->id) }}" class="text-yellow-600 hover:text-yellow-900 ml-4"
+                                title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        @endif
+                        @if($this->checkConfirmacion($contratacion))
+                            <form wire:submit="destroy" class="inline ml-4">
+                                @csrf
+                                <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar esta propuesta de contratación?');">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        @endif
                         @can('empresas.index')
                             <x-button class="ml-4">
                                 <a wire:navigate href="{{ route('empresas.contrataciones.index') }}">

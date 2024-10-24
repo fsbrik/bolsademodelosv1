@@ -10,21 +10,22 @@ use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+use Faker\Factory as Faker;
+
 class EmpresaContratacionCreate extends Component
 {
     use WithPagination;
 
-    // variables para create
     public $fec_con, $fec_ini, $fec_fin, $hor_dia, $dom_tra, $loc_tra, $pro_tra, $pai_tra, $mon_tot, $des_tra;     
     public $dias_trabajo, $valor_hora; 
     public $empresa, $empresas;
-    public $parametrosContratacion;
-    public $modelosSeleccionadas;
+    public $cant_mod, $modelosSeleccionadas;
     public $planSeleccionado;
 
 
     protected $rules = [
         'modelosSeleccionadas' => 'required',
+        'cant_mod' => 'required|integer|min:1',
         'empresa' => 'required|integer|min:1', 
         'fec_ini' => 'required|date',
         'fec_fin' => 'required|date|after_or_equal:fec_ini',
@@ -38,10 +39,14 @@ class EmpresaContratacionCreate extends Component
     ];
 
     protected $messages = [
-        'modelosSeleccionadas.required' => 'Debe seleccionar al menos 1 modelo o lo que permita tu plan',
+        'modelosSeleccionadas.required' => 'Debe seleccionar al menos 1 modelo',
+
+        'cant_mod.required' => 'Debe indicar una cantidad.',
+        'cant_mod.integer' => 'La cantidad debe ser un valor numérico.',
+        'cant_mod.min' => 'La cantidad debe ser mayor a cero.',
 
         'empresa.required' => 'Debe seleccionar una empresa.',
-        'empresa.integer' => 'La empresa debe ser un valor numérico.',
+        'empresa.integer' => 'Debe seleccionar una empresa.',
         'empresa.min' => 'Debe seleccionar una empresa válida.',
     
         'fec_ini.required' => 'La fecha de inicio es obligatoria.',
@@ -80,26 +85,27 @@ class EmpresaContratacionCreate extends Component
         'des_tra.string' => 'La descripción del trabajo debe ser un texto.',
         'des_tra.max' => 'La descripción del trabajo no puede exceder los 1000 caracteres.',
     ];
-    
 
     public function mount()
     {
         //verifica si ya existe o no una sesion de contratacionCreate
         $this->checkForSessions();        
-        $this->checkPlan();
+        //$this->checkPlan(); esta repetido en el render. Ver en donde conviene ponerlo
         
+        $faker = Faker::create();
         $this->empresas = Auth::user()->empresas->toArray();
         $this->empresa = session()->get('empresa');
         $this->fec_con = session()->get('fec_con', Carbon::now()->format('Y-m-d'));  // Fecha actual;       
-        $this->fec_ini = session()->get('fec_ini', Carbon::now()->format('Y-m-d'));
+        $this->fec_ini = session()->get('fec_ini', Carbon::now()->addDays(10)->format('Y-m-d'));
         $this->fec_fin = session()->get('fec_fin', $this->fec_ini);
-        $this->hor_dia = session()->get('hor_dia', 7);
-        $this->dom_tra = session()->get('dom_tra', 'av. Cramer 2700');
-        $this->loc_tra = session()->get('loc_tra', 'Cap. Fed.');
-        $this->pro_tra = session()->get('pro_tra', 'Bs. As.');
-        $this->pai_tra = session()->get('pai_tra', 'Argentina');
-        $this->mon_tot = session()->get('mon_tot', 425);
-        $this->des_tra = session()->get('des_tra', 'aca hay que poner una descripcion de lo que es el trabajo requerido');
+        $this->hor_dia = session()->get('hor_dia', $faker->numberBetween(1, 8));
+        $this->dom_tra = session()->get('dom_tra', $faker->streetAddress);
+        $this->loc_tra = session()->get('loc_tra', $faker->city);
+        $this->pro_tra = session()->get('pro_tra', $faker->state);
+        $this->pai_tra = session()->get('pai_tra', $faker->country);
+        $this->mon_tot = session()->get('mon_tot', $faker->numberBetween(200, 500));
+        $this->cant_mod = session()->get('cant_mod');
+        $this->des_tra = session()->get('des_tra', $faker->sentence(8, true));
         $this->calcularDiasTrabajo();
         $this->calcularValorHora();
     }
@@ -130,8 +136,18 @@ class EmpresaContratacionCreate extends Component
             session()->flash('message', 'Adquirí un plan para empezar a contratar. Comunicate por whatsapp al 11-2155-4283 para habilitarlo');
             return redirect()->route('planes.index');
         }
+    }
 
-        //dd($this->planSeleccionado->servicios->first()->nom_ser);
+    // valida la cantidad de modelos a contratar. Compone el mensaje de error.
+    public function boot()
+    {
+        $this->withValidator(function ($validator) {
+            $validator->after(function ($validator) {
+                if ($this->planSeleccionado->servicios->first()->nom_ser !== 'plan anual' && $this->cant_mod > $this->planSeleccionado->creditos) {
+                    $validator->errors()->add('cant_modMaxima', 'Cantidad máxima superada');
+                }
+            });
+        });
     }
 
     public function updatedEmpresa()
@@ -197,6 +213,14 @@ class EmpresaContratacionCreate extends Component
         session()->put('hor_dia', $this->hor_dia);
     }
 
+    // valida la cantidad de modelos a contratar cuando se modifique su valor.
+    public function updatedCantMod()
+    {
+        $this->validateOnly('cant_modMaxima');
+        $this->validateOnly('cant_mod');
+        session()->put('cant_mod', $this->cant_mod);
+    }
+
     public function calcularDiasTrabajo()
     {
         if ($this->fec_ini && $this->fec_fin) {
@@ -234,19 +258,23 @@ class EmpresaContratacionCreate extends Component
         session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
     }
 
-    public function incrementarCreditos()
+    /* public function incrementarCreditos()
     {
          
-    }
+    } */
 
     public function disminuirCreditos()
     {
-
+        $this->planSeleccionado->creditos -= $this->cant_mod;
+        $this->planSeleccionado->save();
     }
 
     public function store()
     {
         $this->validate();
+
+        // si pasa la validación, le descontamos los créditos de las contratación correspondiente a cant_mod
+        $this->disminuirCreditos();
 
         // Crear la contratación
         $contratacion = Contratacion::create([
@@ -261,6 +289,7 @@ class EmpresaContratacionCreate extends Component
             'pro_tra' => $this->pro_tra,
             'pai_tra' => $this->pai_tra,
             'mon_tot' => $this->mon_tot,
+            'cant_mod' => $this->cant_mod,
             'des_tra' => $this->des_tra,
         ]);
 
@@ -276,11 +305,11 @@ class EmpresaContratacionCreate extends Component
             ]);
         });
 
-        // Asignar los modelos seleccionados a la contratación
+        // Asignar las modelos seleccionados a la contratación
         $contratacion->modelos()->sync($modelos);
 
         session()->forget(['empresa', 'fec_con', 'fec_ini', 'fec_fin', 'hor_dia',
-                 'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'des_tra',
+                 'dom_tra', 'loc_tra', 'pro_tra', 'pai_tra', 'mon_tot', 'cant_mod', 'des_tra',
                  'modelos_seleccionadas', 'contratacion']);
 
         // Redirigir o mostrar un mensaje de éxito
@@ -295,7 +324,7 @@ class EmpresaContratacionCreate extends Component
         $this->checkPlan();
 
         $this->modelosSeleccionadas = session()->get('modelos_seleccionadas',[]);
-        $modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->paginate(10);
+        $modelos = Modelo::whereIn('mod_id', $this->modelosSeleccionadas)->paginate(9);
         
         return view('livewire.empresa-contratacion-create', compact('modelos'));
     }

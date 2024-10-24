@@ -24,7 +24,7 @@
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Inicio</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Finalización</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Duración (días/horas)</th>
-                            <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Modelos</th>
+                            <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Modelos seleccionadas</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Costo (total/hora)</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Descripción</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Estado</th>
@@ -49,20 +49,20 @@
                                 </td>
                                 <td class="px-1 py-3 border-b border-gray-300">{{ $this->obtenerDescripcionCorta($contratacion) }}</td>
                                 <td class="px-1 py-3 border-b border-gray-300">
-                                    {{ $this->obtenerModelosConfirmados($contratacion) }} / {{ $contratacion->modelos->count() }}
+                                    {{ $this->obtenerModelosConfirmados($contratacion) }} / {{ $contratacion->cant_mod }}
                                 </td>
 
                                 <td class="px-1 py-3 border-b border-gray-300">
                                     <a href="{{ route('empresas.contrataciones.show', $contratacion->id) }}" class="text-blue-600 hover:text-blue-900"><i class="fas fa-eye"></i></a>
                                     {{-- en el caso que la empresa no haya pagado un plan, no va a poder contratar, ni editar, ni eliminar--}}
                                     @if($this->checkHabilitacion())
-                                        {{-- en el caso que la fec_fin de la contratacion se haya vencido, ya no se puede editar la contratacion--}}
-                                        @if($this->checkEstadoContratacion($contratacion))
+                                        {{-- en el caso que la fec_fin de la contratacion se haya vencido (false) y que alguna modelo haya confirmado (false)--}}
+                                        @if($this->checkConfirmacion($contratacion) || $this->checkFecFinContratacion($contratacion))
                                             <a href="{{ route('empresas.contrataciones.edit', $contratacion->id) }}" class="text-yellow-600 hover:text-yellow-900">
                                             <i class="fas fa-edit"></i></a>
                                         @endif
-                                        {{-- si hay alguna modelo que haya confirmado, ya no se puede eliminar la contratacion--}}
-                                        @if($this->checkConfirmacion($contratacion) || $this->checkEstadoContratacion($contratacion))
+                                        {{-- solo se puede eliminar la contratacion cuando no haya ninguna confirmación y mientras no se haya vencido la contratacion --}}
+                                        @if($this->checkConfirmacion($contratacion)/*  && $this->checkFecFinContratacion($contratacion) */)
                                             <form wire:submit="destroy({{$contratacion->id}})" class="inline">
                                                 @csrf
                                                 <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"

@@ -111,6 +111,7 @@ class ModeloContratacionIndex extends Component
             ->whereHas('modelos', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
+            ->where('estado', 1)
             ->orderBy('fec_con', 'desc') // Opcional: ordenar por fecha de contratación
             ->paginate(10);
             

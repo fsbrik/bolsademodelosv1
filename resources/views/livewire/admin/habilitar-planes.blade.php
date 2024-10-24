@@ -120,7 +120,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach ($pedidos as $pedido)
-                                    <tr wire:key="pedido-{{ $pedido->id }}" {{ $this->tacharPlanAgotado($pedido) }} >
+                                    <tr wire:key="pedido-{{ $pedido->id }}" class="{{ $pedido->habilita === 0 ? 'bg-red-500' : '' }}" >
                                         <td class="px-1 py-2 whitespace-nowrap">
                                             {{ $pedido->id }}
                                         </td>
@@ -156,8 +156,8 @@
                                                     </x-button>
                                                 </form>
                                                 @else
-                                                    <x-button id="habilita" class="label-small" wire:click="habilitarPlan({{ $pedido->id }})">
-                                                        {{ __('Habilitar') }}
+                                                    <x-button id="habilita" class="label-small {{ $pedido->habilita === null ? '' : 'bg-sky-900' }}" wire:click="habilitarPlan({{ $pedido->id }})">
+                                                        {{ $pedido->habilita === null ? 'Habilitar' : 'Rehabilitar' }}
                                                     </x-button>
                                                 @endif
                                             </div>

@@ -16,52 +16,47 @@ class PlanEdit extends Component
 
     public function mount($planId)
     {
-        $this->plan = Pedido::findOrFail($planId);
-        
-        $this->user = Auth::user();
-         
-        if($this->user->hasRole('admin'))
-        {
-            $this->user = $this->plan->user;
-        }
-
-        /* $this->pedido = Pedido::where('user_id', $this->user->id)
-            ->whereHas('servicios', function ($query) {
-                $query->where('sub_cat', 'planes');
-            })->first(); */
-        //$this->pedido = Pedido::where('id', $planId)->first();
-        //dd($planId);
-
-            $this->selectedPlan = $this->plan->servicios()->first()->nom_ser;
+        $this->plan = Pedido::with('servicios')->findOrFail($planId);
+        $this->user = $this->userIsAdmin() ? $this->plan->user : Auth::user();
+        $this->selectedPlan = $this->plan->servicios->first()->nom_ser ?? 'N/A';
     }
 
+    private function userIsAdmin()
+    {
+        return Auth::user()->hasRole('admin');
+    }
+
+    private function getServicioByName($plan)
+    {
+        return Servicio::where('nom_ser', $plan)->first();
+    }
 
     public function selectPlan($plan)
     {
-        if(!$this->user)
-        {
+        if (!$this->user) {
             return redirect()->route('register');
         }
-        else
-        {
-        
-        $servicio = Servicio::where('nom_ser', $plan)->first();
 
+        $servicio = $this->getServicioByName($plan);
 
-            $this->plan->update([
-                'user_id' => $this->user->id,
-                'fec_ini' => null,
-                'fec_fin' => null,
-                'habilita' => null,
-                'total' => $servicio->precio,
-            ]);
+        if (!$servicio) {
+            session()->flash('error', 'El plan seleccionado no existe.');
+            return back();
+        }
 
+        $this->plan->update([
+            'user_id' => $this->user->id,
+            'fec_ini' => null,
+            'fec_fin' => null,
+            'creditos' => null,
+            'habilita' => null,
+            'total' => $servicio->precio,
+        ]);
 
         $this->plan->servicios()->sync([$servicio->id => ['cantidad' => 1]]);
 
-        session()->flash('message', 'seleccionaste el ' . $servicio->nom_ser . '. Solo te falta abonarlo para poder activarlo. Comunicate por teléfono o whatsapp al 11-2155-4283');
+        session()->flash('message', 'Seleccionaste el ' . $servicio->nom_ser . '. Solo te falta abonarlo para poder activarlo. Comunicate por teléfono o WhatsApp al 11-2155-4283');
         return redirect()->route('planes.index');
-        }
     }
 
     public function render()

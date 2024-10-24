@@ -20,26 +20,32 @@ class CheckPlanOwnership
         $user = Auth::user();
         $planId = $request->route('pedido');
 
-        // verificar el plan
-        $plan = Pedido::where('id', $planId->id)
-            ->where('user_id', $user->id)
-            ->whereHas('servicios', function($query) {
-                $query->where('cat_ser', 'empresa')->where('sub_cat', 'planes');
-            })
-            ->where(function($query) {
-                $query->where('habilita', 1)->orWhereNull('habilita');
-            })
-            ->first();
+        // Verificar si el usuario es una empresa o un admin
+        if ($user->hasRole(['empresa', 'admin'])) {
+            // Buscar el plan con los criterios especificados
+            $plan = Pedido::where('id', $planId->id)
+                ->whereHas('servicios', function ($query) {
+                    $query->where('cat_ser', 'empresa')->where('sub_cat', 'planes');
+                })
+                ->when($user->hasRole('empresa'), function ($query) use ($user) {
+                    // Filtrar por user_id solo si es una empresa
+                    $query->where('user_id', $user->id);
+                })
+                ->where(function ($query) {
+                    $query->where('habilita', 1)->orWhereNull('habilita');
+                })
+                ->first();
 
-        // Verificar si el plan no existe y si el usuario es admin o empresa con plan válido
-        if (!$plan) {
-            return abort(404, 'Plan no encontrado.');
-        }
+            // Verificar si el plan no existe
+            if (!$plan) {
+                return abort(404, 'Plan no encontrado.');
+            }
 
-        if ($user->hasRole('empresa') || $user->hasRole('admin')) {
+            // Si el plan es válido, continuar con la solicitud
             return $next($request);
         }
 
+        // Si el usuario no tiene los roles necesarios, denegar acceso
         return abort(403, 'No tienes permiso para acceder a esta página.');
     }
 }

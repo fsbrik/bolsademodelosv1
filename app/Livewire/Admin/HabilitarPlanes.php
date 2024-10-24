@@ -32,14 +32,16 @@ class HabilitarPlanes extends Component
         }
     }
 
-    public function tacharPlanAgotado(Pedido $pedido)
+    // no entiendo por que no pude hacer funcionar este metodo
+    /* public function tacharPlanAgotado(Pedido $pedido)
     {
-        // si alguno de los parametros no es null
-        if (!$pedido->habilita && ($pedido->fec_fin !== null || $pedido->creditos !== null))
+        if($pedido->habilita === 0)
         {
-            echo 'class="decoration-red-700 decoration-2 line-through"';
+            return 'decoration-red-700 decoration-2 line-through';
         }
-    }
+
+        return '';
+    } */
 
     public function actualizarEstadoUltimoPlanContratado(Pedido $pedido)
     {
@@ -148,6 +150,8 @@ class HabilitarPlanes extends Component
                 'fec_ini' => Carbon::now()->format('Y-m-d'),
                 'fec_fin' => $fec_fin,
                 'creditos' => $creditos]);
+            
+            session()->flash('message', 'El plan del usuario '.$pedido->user->name.' ha sido habilitado exitosamente');
         } 
         else
         {
@@ -156,6 +160,8 @@ class HabilitarPlanes extends Component
                 'fec_ini' => null,
                 'fec_fin' => null,
                 'creditos' => null]);
+
+            session()->flash('message', 'Se deshabilitó el plan del usuario '.$pedido->user->name);
         }
     }
 
@@ -215,9 +221,14 @@ class HabilitarPlanes extends Component
             $pedidos->orderBy($this->sort_by, $this->sortDirection);
         }
 
-        // actualiza el estado del pedido
-        $pedidos->where('habilita',1)->each(function($pedido){
-                $this->actualizarEstadoUltimoPlanContratado($pedido);
+       // Obtener todos los pedidos primero
+        $pedidosCollection = $pedidos->get();
+
+        // Ejecuta la acción solo en los pedidos que tienen habilita en 1
+        $pedidosCollection->filter(function($pedido) {
+            return $pedido->habilita == 1;
+        })->each(function($pedido) {
+            $this->actualizarEstadoUltimoPlanContratado($pedido);
         });
 
 
