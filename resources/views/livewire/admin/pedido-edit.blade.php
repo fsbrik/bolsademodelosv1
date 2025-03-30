@@ -5,9 +5,9 @@
         </h2>
     </x-slot>
 
-    @if (Auth::user()->hasRole('admin'))
+    {{-- @if (Auth::user()->hasRole('admin'))
         @livewire('admin.pedido-user-search')
-    @endif
+    @endif --}}
 
     <div class="pt-6">
         <div class="max-w-7xl mx-auto sm:lg:px-8">
@@ -19,16 +19,16 @@
                             {{ __('Reserva #: ') . $pedido['id'] }}
                         </h3>
 
-                        <div class="flex justify-between">
-                            <div class="flex-start w-40 bg-gray-100 grid mb-4 p-4">
-                                <x-label for="fecha" value="{{ __('Fecha de la reserva (a confirmar)') }}" />
-                                <x-input id="fecha" type="date" class="mt-1 block w-full"
-                                    wire:model.live.debounce.250ms="fecha" />
+                        <div class="flex justify-between items-center gap-2">
+                            <div class="bg-gray-100 mb-4 p-4">
+                                <x-label for="fec_ini" value="{{ __('Fecha de la reserva (a confirmar)') }}" />
+                                <x-input id="fec_ini" type="date" class="mt-1" wire:model.live.debounce.250ms="fec_ini" />
                             </div>
 
                             @if (Auth::user()->hasRole('admin') && $selectedUser)
                                 <div class="px-4 py-5 sm:p-6 mb-4 w-full sm:w-1/3 bg-green-400 shadow sm:rounded-lg">
-                                    {{ __('Usuario seleccionado: ') . $selectedUser['name'] }}
+                                    {{ __('Usuario: ') . $selectedUser['name'] }} <br />
+                                    {{ __('Rol: ') . $selectedUser->roles->first()->name }}
                                 </div>
                             @endif
                         </div>

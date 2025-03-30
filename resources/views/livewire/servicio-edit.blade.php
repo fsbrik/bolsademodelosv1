@@ -13,13 +13,13 @@
                         @csrf
                         <div class="px-4 py-5 bg-white sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
                             <div class="grid grid-cols-1 md:grid md:grid-cols-12 md:gap-3">
+                                
                                 <!-- Denominación del servicio -->
                                 <div class="col-span-12 sm:col-span-4">
                                     <x-label for="nom_ser" value="{{ __('Denominación del servicio') }}" />
                                     <x-input id="nom_ser"
                                         class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                         type="text" wire:model="nom_ser" autofocus />
-                                    {{-- <x-input-error for="nom_ser" class="mt-2" /> --}}
                                 </div>
 
                                 <!-- Descripción -->
@@ -27,7 +27,6 @@
                                     <x-label for="des_ser" value="{{ __('Descripción') }}" />
                                     <textarea id="des_ser" wire:model="des_ser"
                                         class="block mt-1 w-full pl-2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
-                                    {{-- <x-input-error for="des_ser" class="mt-2" /> --}}
                                 </div>
 
                                 <!-- Categoría -->
@@ -38,7 +37,6 @@
                                         <option value="modelo">{{ __('Modelo') }}</option>
                                         <option value="empresa">{{ __('Empresa') }}</option>
                                     </select>
-                                    {{-- <x-input-error for="cat_ser" class="mt-2" /> --}}
                                 </div>
 
                                 <!-- Subcategoría -->
@@ -48,9 +46,8 @@
                                         class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                         <option value="" >{{ __('-') }}</option>
                                         <option value="reservas">{{ __('Reservas') }}</option>
-                                        <option value="contrataciones">{{ __('Contrataciones') }}</option>
+                                        <option value="planes">{{ __('Planes') }}</option>
                                     </select>
-                                    {{-- <x-input-error for="sub_cat" class="mt-2" /> --}}
                                 </div>
 
                                 <!-- Precio -->
@@ -59,7 +56,6 @@
                                     <x-input id="precio"
                                         class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                         type="number" wire:model="precio" step="500" />
-                                    {{-- <x-input-error for="precio" class="mt-2" /> --}}
                                 </div>
 
                                 <!-- Habilitar -->
@@ -70,7 +66,6 @@
                                         <option value="0">{{ __('Inhabilitado') }}</option>
                                         <option value="1">{{ __('Habilitado') }}</option>
                                     </select>
-                                    {{-- <x-input-error for="hab_ser" class="mt-2" /> --}}
                                 </div>
                             </div>
                         </div>

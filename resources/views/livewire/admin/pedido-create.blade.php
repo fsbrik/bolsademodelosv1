@@ -12,16 +12,31 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="flex justify-between">
-                        <div class="flex-start w-40 bg-gray-100 grid mb-4 p-4">
-                            <x-label for="fecha" value="{{ __('Fecha de la reserva (a confirmar)') }}" />
-                            <x-input id="fecha" type="date" class="mt-1 block w-full"
-                                wire:model.live.debounce.250ms="fecha" />
+                    <div class="flex justify-between items-center gap-2">
+                        <div class="flex flex-wrap flex-col sm:flex-row">
+                            {{-- Fecha de la reserva a confirmar --}}
+                            <div class="bg-gray-100 mb-4 p-4">
+                                <x-label for="fec_ini" value="{{ __('Fecha de la reserva (a confirmar)') }}" />
+                                <x-input id="fec_ini" type="date" class="mt-1 block w-full"
+                                    wire:model.live.debounce.250ms="fec_ini" />
+                            </div>
+                            {{-- En el caso que user tenga el rol de empresa --}}
+                            @if($selectedUser && $selectedUser->hasRole('empresa'))
+                                <div class="bg-gray-100 mb-4 p-4">
+                                    <x-label for="empresa" value="{{ __('Empresa') }}" />
+                                    <select id="empresa" class="mt-1 min-w-44 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm indent-1" wire:model.live.debounce.250ms="empresa">
+                                            <option value="">{{ __('Seleccionar empresa') }}</option>
+                                        @foreach($empresas as $empresa)
+                                            <option value="{{ $empresa->id }}">{{ $empresa->nom_com }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                         </div>
-
                         @if (Auth::user()->hasRole('admin') && $selectedUser)
                             <div class="px-4 py-5 sm:p-6 mb-4 w-full sm:w-1/3 bg-green-400 shadow sm:rounded-lg">
-                                {{ __('Usuario seleccionado: ') . $selectedUser['name'] }}
+                                {{ __('Usuario: ') . $selectedUser['name'] }} <br />
+                                {{ __('Rol: ') . $selectedUser->roles->first()->name }}
                             </div>
                         @endif
                     </div>

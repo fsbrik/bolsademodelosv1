@@ -5,9 +5,13 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Modelo;
+use App\Models\Pedido;
+use App\Models\Confirmacion;
+use Illuminate\Support\Facades\Auth;
 
 class ModeloIndex extends Component
 {
+    public $user;
     public $searchModId, $searchName, $searchTelefono, $searchEmail;
     public $searchEdadMin, $searchEdadMax, $searchSexo, $searchEstaturaMin, $searchEstaturaMax;
     public $searchZonRes, $searchDisVia, $searchTitMod, $searchIngles, $searchDisTra, $searchCabello;
@@ -17,6 +21,7 @@ class ModeloIndex extends Component
     public $sort_By = null, $sortDirection = 'asc';
     public $showTable = true;
     public $modelosSeleccionadas = [];
+    public $creditos;
     // variables para mostrar con el mensaje de las modelos seleccionadas
     public $seleccionMessage, $strModelo;
     // saber de que pagina proviene, de create o de edit
@@ -27,41 +32,76 @@ class ModeloIndex extends Component
     use WithPagination;
 
     public function mount(){
+
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
         
         // verificar las sesiones, si va a crear o editar una contratacion
         $this->checkForSessions();
 
+        // verifica si la empresa tiene contratado un plan (en el caso que el usuario sea registrado como empresa)
+        //(Auth::user() && Auth::user()->hasRole('empresa')) ? $this->checkPlan() : '';
+
         // actualiza el estado de modelos seleccionadas (que pueden provenir de la pagina create o edit)
         $this->checkModelosSeleccionadas();        
     }
 
-public function checkForSessions()
-{
-    if (session()->get('contratacion') == 'contratCreate'){
-        $this->action = 'contratCreate';
-    } elseif (session()->get('contratacion') == 'contratEdit'){
-        $this->action = 'contratEdit';
-        // actualizo contratacionId
-        $this->contratacionId = session()->get('contratacionId');
-    } elseif (session()->get('contratacion') === null){
-        $this->action = 'contratCreate';
+    /* public function checkPlan()
+    {
+        $this->user = Auth::user();
+
+        $plan = Pedido::where('user_id', $this->user->id)
+                       ->whereHas('servicios', function ($query) {
+                            $query->where('sub_cat', 'planes');
+                        })->first();
+
+        $plan_seleccionado = $plan ? $plan->servicios->first()->nom_ser : null ;
+        
+        if($plan_seleccionado === null)
+        {
+            $this->creditos = 0;
+        }
+        elseif($plan_seleccionado == 'plan simple')
+        {
+            $this->creditos = 1;
+        } 
+        elseif($plan_seleccionado == 'plan mensual')
+        {
+            $this->creditos = 5;
+            //$this->fec_fin = 
+        }
+        elseif($plan_seleccionado == 'plan anual')
+        {
+            $this->creditos = 100;
+        }
+
+    } */
+
+    public function checkForSessions()
+    {
+        if (session()->get('contratacion') == 'contratCreate'){
+            $this->action = 'contratCreate';
+        } elseif (session()->get('contratacion') == 'contratEdit'){
+            $this->action = 'contratEdit';
+            // actualizo contratacionId
+            $this->contratacionId = session()->get('contratacionId');
+        } elseif (session()->get('contratacion') === null){
+            $this->action = 'contratCreate';
+        }
     }
-}
     
 
 
-public function checkModelosSeleccionadas()
-{
-    // mostrar las modelos seleccionadas en el alert
-    $this->modelosSeleccionadas = session()->get('modelos_seleccionadas', []);
-    //muestra el mensaje inicial dependiendo si es una o varias modelos seleccionadas
-
-    if(count($this->modelosSeleccionadas) > 0)
+    public function checkModelosSeleccionadas()
     {
-        $this->mostrarMensajeInicialAlert();
+        // mostrar las modelos seleccionadas en el alert
+        $this->modelosSeleccionadas = session()->get('modelos_seleccionadas', []);
+        //muestra el mensaje inicial dependiendo si es una o varias modelos seleccionadas
+
+        if(count($this->modelosSeleccionadas) > 0)
+        {
+            $this->mostrarMensajeInicialAlert();
+        }
     }
-}
 
 
     /* mensaje en el alert de las modelos seleccionadas dependiendo la cantidad de modelos */
@@ -99,6 +139,22 @@ public function checkModelosSeleccionadas()
         $this->mostrarMensajeInicialAlert();       
 
         //return redirect()->route('empresas.contrataciones.create')->with('message', 'Seleccionaste a la modelo '.$modelo->mod_id);
+    }
+
+    // mostrar el estado de la confirmacion de la modelo. Sirve para habilitar o deshabilitar el boton de "remover" en la vista.
+    public function confirmacionEstado($modelo)
+    {
+        $estado = Confirmacion::where('contratacion_id', $this->contratacionId)->where('modelo_id', $modelo->id)->value('estado');
+
+        // Mapeo de los posibles estados
+        $estadoDeConfirmacion = [
+            null => 'Pendiente',
+            1 => 'Aceptado',
+            0 => 'Rechazado'
+        ];
+
+        // Retornar el estado correspondiente
+        return $estadoDeConfirmacion[$estado] ?? 'Pendiente';
     }
 
     public function removeModelo($modeloId)
@@ -170,7 +226,14 @@ public function checkModelosSeleccionadas()
 
     public function render()
     {
-        $modelos = Modelo::query();
+        if(Auth::user() && Auth::user()->hasRole('admin'))
+        {
+            $modelos = Modelo::query(); 
+        }
+        else
+        {
+            $modelos = Modelo::where('habilita', 1)->where('estado', 1);
+        }        
 
         if ($this->searchModId) {
             $modelos->where('mod_id', 'like', '%' . $this->searchModId . '%');
@@ -190,20 +253,36 @@ public function checkModelosSeleccionadas()
             });
         }
 
-        if ($this->searchEdadMin || $this->searchEdadMax) {
+        /* if ($this->searchEdadMin || $this->searchEdadMax) {
             $minAge = $this->searchEdadMin ?? 0;
             $maxAge = $this->searchEdadMax ?? 150; // Un valor alto por defecto para el límite máximo de edad
             $modelos->whereRaw('TIMESTAMPDIFF(YEAR, fec_nac, CURDATE()) BETWEEN ? AND ?', [$minAge, $maxAge]);
+        } */
+        $minAge = $this->searchEdadMin ?? 18; // Edad mínima predeterminada de 18
+        $maxAge = $this->searchEdadMax ?? 150; // Un valor alto por defecto para el límite máximo de edad
+
+        if ($this->searchEdadMin && $this->searchEdadMax) {
+            $modelos->whereRaw('TIMESTAMPDIFF(YEAR, fec_nac, CURDATE()) BETWEEN ? AND ?', [$minAge, $maxAge]);
+        } elseif ($this->searchEdadMin) {
+            $modelos->whereRaw('TIMESTAMPDIFF(YEAR, fec_nac, CURDATE()) >= ?', [$minAge]);
+        } elseif ($this->searchEdadMax) {
+            $modelos->whereRaw('TIMESTAMPDIFF(YEAR, fec_nac, CURDATE()) <= ?', [$maxAge]);
         }
+
         
 
         if ($this->searchSexo) {
             $modelos->where('sexo', 'like', '%' . $this->searchSexo . '%');
         }
 
-        if ($this->searchEstaturaMin || $this->searchEstaturaMax) {
+        if ($this->searchEstaturaMin && $this->searchEstaturaMax) {
             $modelos->whereBetween('estatura', [$this->searchEstaturaMin, $this->searchEstaturaMax]);
+        } elseif ($this->searchEstaturaMin) {
+            $modelos->where('estatura', '>=', $this->searchEstaturaMin);
+        } elseif ($this->searchEstaturaMax) {
+            $modelos->where('estatura', '<=', $this->searchEstaturaMax);
         }
+        
 
         if ($this->searchCabello) {
             $modelos->where('col_cab', 'like', '%' . $this->searchCabello . '%');
@@ -229,13 +308,22 @@ public function checkModelosSeleccionadas()
             $modelos->where('dis_tra', 'like', '%' . $this->searchDisTra . '%');
         }
 
-        if ($this->searchTarMedMin || $this->searchTarMedMax) {
+        if ($this->searchTarMedMin && $this->searchTarMedMax) {
             $modelos->whereBetween('tar_med', [$this->searchTarMedMin, $this->searchTarMedMax]);
+        } elseif ($this->searchTarMedMin) {
+            $modelos->where('tar_med', '>=', $this->searchTarMedMin);
+        } elseif ($this->searchTarMedMax) {
+            $modelos->where('tar_med', '<=', $this->searchTarMedMax);
         }
 
-        if ($this->searchTarComMin || $this->searchTarComMax) {
+        if ($this->searchTarComMin && $this->searchTarComMax) {
             $modelos->whereBetween('tar_com', [$this->searchTarComMin, $this->searchTarComMax]);
+        } elseif ($this->searchTarComMin) {
+            $modelos->where('tar_com', '>=', $this->searchTarComMin);
+        } elseif ($this->searchTarComMax) {
+            $modelos->where('tar_com', '<=', $this->searchTarComMax);
         }
+        
 
         if ($this->sort_By) {
             $modelos->orderBy($this->sort_By, $this->sortDirection);

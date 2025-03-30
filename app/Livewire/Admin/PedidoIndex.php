@@ -25,6 +25,21 @@ class PedidoIndex extends Component
         }
     }
 
+    // en el caso que la reserva la haya hecho una empresa
+    public function empresaPedido($pedido)
+    {
+        $roleUser = $pedido->user->roles()->first()->name;
+        if($roleUser == 'empresa')
+        {//dd($pedido->user->empresas->first());
+            $empresa = $pedido->user->empresas->where('id', $pedido->empresa_id)->first()->nom_com;
+            return $empresa;
+        }
+        else
+        {
+
+        }
+    }
+
     public function destroy(Pedido $pedido){
         $pedido->delete();
         session()->flash('message', 'se eliminó la reserva de '.$pedido->user->name);
@@ -50,14 +65,22 @@ class PedidoIndex extends Component
 
         if ($user->hasRole('admin')) {
             $pedidos = Pedido::with(['user', 'servicios'])
-            ->where('id', 'like', '%' . $this->searchTerm . '%')
-            ->orWhereHas('user', function ($query) {
-                $query->where('name', 'like', '%' . $this->searchTerm . '%');
+            ->where(function ($query) {
+                // Agrupar las condiciones de búsqueda con 'orWhere'
+                $query->where('id', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhereHas('user', function ($query) {
+                        $query->where('name', 'like', '%' . $this->searchTerm . '%');
+                    })
+                    ->orWhereHas('servicios', function ($query) {
+                        $query->where('cat_ser', 'like', '%' . $this->searchTerm . '%');
+                    });
             })
-            ->orWhereHas('servicios', function ($query) {
-                $query->where('cat_ser', 'like', '%' . $this->searchTerm . '%');
+            // Siempre aplicar esta condición
+            ->whereHas('servicios', function($query){
+                $query->where('sub_cat', '<>', 'planes');
             });
         }
+        
         elseif ($user->hasRole('empresa')) {
             $pedidos = Pedido::with('user', 'servicios')->where('user_id', $user->id)
             ->whereHas('servicios', function($query){
@@ -77,7 +100,7 @@ class PedidoIndex extends Component
             $pedidos->orderBy($this->sort_by, $this->sortDirection);
         }
         else {
-            $pedidos->orderBy('fecha', 'desc');
+            $pedidos->orderBy('fec_ini', 'desc');
         }
 
         $pedidos = $pedidos->paginate($this->perPage);

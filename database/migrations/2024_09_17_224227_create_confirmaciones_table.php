@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('contratacion_id')->constrained('contrataciones')->onDelete('cascade');
             $table->foreignId('modelo_id')->constrained('modelos')->onDelete('cascade');
             $table->boolean('estado')->nullable(); // 0 = rechazado, 1 = aceptado, null = pendiente
+            $table->boolean('visto')->default(0);
             $table->timestamps();
         });
     }

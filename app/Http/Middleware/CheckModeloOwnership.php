@@ -22,12 +22,12 @@ class CheckModeloOwnership
 
          // Asegúrate de que es una instancia de Modelo
          if (!$model instanceof Modelo) {
-            abort(404, 'Modelo no encontrado.');
+            abort(404, 'Modelo no encontrada.');
         }
 
         // Verifica la propiedad del modelo
         if (Auth::user()->id !== $model->user_id && !Auth::user()->hasRole('admin')) {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Acción no autorizada.');
         }
 
         return $next($request);

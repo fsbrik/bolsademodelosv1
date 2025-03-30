@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom_ser', 100);
             $table->enum('cat_ser', ['modelo', 'empresa']);
+            $table->enum('sub_cat', ['reservas', 'planes'])->nullable();
             $table->text('des_ser');
             $table->integer('precio');
             $table->boolean('hab_ser');

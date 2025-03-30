@@ -9,7 +9,7 @@
             <h4 class="fa-1x text-gray-600">Cuadro tarifario</h4>
         </div> --}}
         @if (session()->has('message'))
-            <div x-data="{ open: $wire.open }" x-show="open"
+            <div x-data="{ open: true }" x-show="open"
                 class="relative p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                 role="alert">
                 <button @click="open = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
@@ -21,20 +21,21 @@
 
             <div class="flex flex-col lg:flex-row px-2 lg:px-0">
                 <!-- Plan Simple -->
-                <div class="w-full sm:w-auto md:w-2/3 lg:w-1/3 {{ $selectedPlan === 'plan simple' ? 'bg-purple-500' : 'bg-purple-300' }}
+                <div class="flex flex-col w-full sm:w-auto md:w-2/3 lg:w-1/3 {{ $selectedPlan === 'plan simple' ? 'bg-purple-500' : 'bg-purple-300' }}
                  rounded-lg shadow hover:shadow-xl transition duration-100 ease-in-out p-6 md:mx-auto lg:mr-4 mb-5">
-                    <div class="h-auto xl:h-80 mx-auto">
+                    <div class="flex flex-col flex-grow mx-auto">
                         <h3 class="text-gray-600 text-lg">Plan Simple</h3>
                         <p class="text-gray-600 mt-1"><span class="font-bold text-black text-4xl">$50.000</span> /u.</p>
                         <p class="text-sm text-gray-600 mt-2">Ideal para contrataciones eventuales</p>
-                        <div class="text-sm text-gray-600 mt-4">
+                        <div class="flex-grow text-sm text-gray-600 mt-4">
                             <p class="my-2"><span class="fa fa-check-circle mr-2 ml-1"></span> Incluye 1 contacto
                                 efectivo*</p>
                             <p class="my-2 text-xs">*contacto que haya confirmado el trabajo</p>
                         </div>
+                        
                     </div>
                     <button wire:click="selectPlan('plan simple')"
-                    class="w-full text-purple-700 bg-white rounded {{ $selectedPlan === 'plan simple' ? '' : 'hover:bg-purple-500 hover:text-white hover:shadow-xl' }} transition duration-150 ease-in-out py-4 mt-4"
+                    class="self-end w-full text-purple-700 bg-white rounded {{ $selectedPlan === 'plan simple' ? '' : 'hover:bg-purple-500 hover:text-white hover:shadow-xl' }} transition duration-150 ease-in-out py-4 mt-4"
                     {{ $selectedPlan === 'plan simple' ? 'disabled' : '' }}>{{ $selectedPlan === 'plan simple' ? 'Plan seleccionado' : 'Seleccionar plan'}}</button>
                 </div>
 
@@ -55,9 +56,9 @@
                 <button class="w-full text-purple-700 bg-white rounded opacity-75 hover:opacity-100 hover:shadow-xl transition duration-150 ease-in-out py-4 mt-4">Seleccionar plan</button>
             </div> --}}
                 <div
-                    class="w-full md:w-auto lg:w-1/3 {{ $selectedPlan === 'plan mensual' ? 'bg-purple-500' : 'bg-purple-300' }}
+                    class="flex flex-col w-full md:w-auto lg:w-1/3 {{ $selectedPlan === 'plan mensual' ? 'bg-purple-500' : 'bg-purple-300' }}
                     rounded-lg shadow hover:shadow-xl transition duration-100 ease-in-out p-6 md:mx-auto lg:mr-4 mb-5">
-                    <div class="h-auto xl:h-80 mx-auto">
+                    <div class="flex flex-col flex-grow mx-auto">
                         <h3 class="text-gray-600 text-lg">Plan mensual</h3>
                         <p class="text-gray-600 mt-1"><span class="font-bold text-black text-4xl">$175.000</span> /30
                             días</p>
@@ -72,7 +73,7 @@
                             <p class="my-2"><span class="fa fa-check-circle mr-2 ml-1"></span> Duración: 365 días</p>
                             <p class="my-2"><span class="fa fa-check-circle mr-2 ml-1"></span> Ahorro: 30%*</p>
                             <p class="my-2 fa-xs">*comparado con 5 planes simples</p>
-                        </div>
+                        </div>                        
                     </div>
                     <button wire:click="selectPlan('plan mensual')"
                     class="w-full text-purple-700 bg-white rounded {{ $selectedPlan === 'plan mensual' ? '' : 'hover:bg-purple-500 hover:text-white hover:shadow-xl' }} transition duration-150 ease-in-out py-4 mt-4"
@@ -81,9 +82,9 @@
 
                 <!-- Plan Anual (Full) -->
                 <div
-                    class="w-full md:w-auto lg:w-1/3 {{ $selectedPlan === 'plan anual' ? 'bg-purple-500' : 'bg-purple-300' }}
+                    class="flex flex-col w-full md:w-auto lg:w-1/3 {{ $selectedPlan === 'plan anual' ? 'bg-purple-500' : 'bg-purple-300' }}
                     rounded-lg shadow hover:shadow-xl transition duration-100 ease-in-out p-6 md:mx-auto lg:mr-4 mb-5">
-                    <div class="h-auto xl:h-80 mx-auto">
+                    <div class="flex flex-col flex-grow mx-auto">
                         <h3 class="text-gray-600 text-lg">Plan anual (full)</h3>
                         <p class="text-gray-600 mt-1"><span class="font-bold text-black text-4xl">$1.470.000</span> /365
                             días</p>
@@ -99,11 +100,11 @@
                             <p class="my-2"><span class="fa fa-check-circle mr-2 ml-1"></span> Duración: 365 días</p>
                             <p class="my-2"><span class="fa fa-check-circle mr-2 ml-1"></span> Ahorro: 30%*</p>
                             <p class="my-2 fa-xs">*comparado con 12 planes mensuales</p>
-                        </div>
-                    </div>
+                        </div>                        
+                    </div> 
                     <button wire:click="selectPlan('plan anual')"
                     class="w-full text-purple-700 bg-white rounded {{ $selectedPlan === 'plan anual' ? '' : 'hover:bg-purple-500 hover:text-white hover:shadow-xl' }} transition duration-150 ease-in-out py-4 mt-4"
-                    {{ $selectedPlan === 'plan anual' ? 'disabled' : '' }}>{{ $selectedPlan === 'plan anual' ? 'Plan seleccionado' : 'Seleccionar plan'}}</button>
+                    {{ $selectedPlan === 'plan anual' ? 'disabled' : '' }}>{{ $selectedPlan === 'plan anual' ? 'Plan seleccionado' : 'Seleccionar plan'}}</button>                   
                 </div>
             </div>
     </div>

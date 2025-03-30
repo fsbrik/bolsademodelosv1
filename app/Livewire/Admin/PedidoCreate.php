@@ -17,7 +17,9 @@ class PedidoCreate extends Component
     public $total;
     public $servicios;
     public $selectedUser = null;
-    public $fecha;
+    public $empresas, $empresa;
+    public $pedido;
+    public $fec_ini;
 
     protected $listeners = ['userSelected' => 'updateUser'];
     protected $rules = [
@@ -31,11 +33,11 @@ class PedidoCreate extends Component
     ];
 
     public function mount(){
-        $servicios = Servicio::where('hab_ser',1)->where('sub_cat', '<>', 'contrataciones')->get();
+        $servicios = Servicio::where('hab_ser',1)->where('sub_cat', '<>', 'planes')->get();
         $this->servicios = $servicios;
         $this->cantidad = array_fill(0, $this->servicios->count(), 0);
         $this->calculateSubtotals();
-        $this->fecha = Carbon::now()->format('Y-m-d');
+        $this->fec_ini = Carbon::now()->format('Y-m-d');
         if(!Auth::user()->hasRole('admin')){
             $user = Auth::user();
             $this->updateUser($user);
@@ -47,10 +49,11 @@ class PedidoCreate extends Component
         // obtener el rol del usuario
         $userRole = $user->roles->first()->name;
 
-        // obtener la subcategoria 'reservas' evitando las 'contrataciones' para el caso de las empresas
+        // obtener la subcategoria 'reservas' evitando los 'planes' para el caso de las empresas
         if($userRole == 'empresa'){
             $this->servicios = Servicio::where('hab_ser',1)->where('cat_ser', $userRole)
                                ->where('sub_cat', 'reservas')->get();
+            $this->empresas = $user->empresas()->get();
         } 
         elseif($userRole == 'modelo'){
             $this->servicios = Servicio::where('hab_ser',1)->where('cat_ser', $userRole)->get();
@@ -78,9 +81,6 @@ class PedidoCreate extends Component
     public function calculateSubtotals()
     {
         foreach ($this->servicios as $index => $servicio) {
-            /* if($servicio->precio == null){
-                $servicio->precio = 0;
-            } */
             $this->subtotals[$servicio->id] = $servicio->precio * $this->cantidad[$index];
         }
     }
@@ -100,22 +100,37 @@ class PedidoCreate extends Component
             return;
         }
 
-        DB::transaction(function () {
-            $pedido = Pedido::create([
-                'user_id' => $this->selectedUser['id'],
-                'fecha' => $this->fecha,
-                'total' => array_sum($this->subtotals),
-            ]);
+        if ($this->selectedUser->hasRole('empresa') && $this->empresa === null) {
+            session()->flash('error', 'Debe seleccionar al menos una empresa.');
+            return;
+        }
 
-            foreach ($this->cantidad as $index => $cantidad) {
-               // if ($cantidad > 0) {
-                    $servicio = $this->servicios[$index];
-                    $pedido->servicios()->attach($servicio->id, [
-                        'cantidad' => $cantidad,
-                    ]);
-               // }
-            }
-        });
+        if($this->selectedUser->hasRole('empresa'))
+        {//dd($this->fec_ini.' -- '.$this->empresa);
+            DB::transaction(function () {
+                $this->pedido = Pedido::create([
+                    'user_id' => $this->selectedUser['id'],
+                    'empresa_id' => $this->empresa,
+                    'fec_ini' => $this->fec_ini,
+                    'total' => array_sum($this->subtotals),
+                ]);
+            });
+        }
+        elseif($this->selectedUser->hasRole('modelo'))
+        {
+            DB::transaction(function () {
+                $this->pedido = Pedido::create([
+                    'user_id' => $this->selectedUser['id'],
+                    'fec_ini' => $this->fec_ini,
+                    'total' => array_sum($this->subtotals),
+                ]);
+            });
+        }
+
+        foreach ($this->cantidad as $index => $cantidad) {
+            $servicio = $this->servicios[$index];
+            $this->pedido->servicios()->attach($servicio->id, ['cantidad' => $cantidad]);     
+        }
 
         session()->flash('message', 'Reserva de '.$this->selectedUser->name.' creada con éxito.');
 
@@ -124,6 +139,19 @@ class PedidoCreate extends Component
 
     public function render()
     {
-        return view('livewire.admin.pedido-create', ['user' => $this->selectedUser]);
+        if($this->selectedUser === null)
+        {
+            return view('livewire.admin.pedido-create');
+        }
+        elseif($this->selectedUser->hasRole('modelo'))
+        {
+            return view('livewire.admin.pedido-create', ['user' => $this->selectedUser]);
+        }
+        elseif($this->selectedUser->hasRole('empresa'))
+        {
+            return view('livewire.admin.pedido-create', ['user' => $this->selectedUser, 'empresas' => $this->empresas]);
+        }
+        
+        
     }
 }

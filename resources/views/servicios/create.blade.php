@@ -47,7 +47,7 @@
                                     class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     <option value="" {{ old('sub_cat') == '' ? 'selected' : '' }}>{{ __('-') }}</option>
                                     <option value="reservas" {{ old('sub_cat') == 'reservas' ? 'selected' : '' }}>{{ __('Reservas') }}</option>
-                                    <option value="contrataciones" {{ old('sub_cat') == 'contrataciones' ? 'selected' : '' }}>{{ __('Contrataciones') }}</option>
+                                    <option value="planes" {{ old('sub_cat') == 'planes' ? 'selected' : '' }}>{{ __('Planes') }}</option>
                                 </select>
                                 {{-- <x-input-error for="sub_cat" class="mt-2" /> --}}
                             </div>

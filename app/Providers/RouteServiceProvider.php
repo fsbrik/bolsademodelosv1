@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use App\Models\Modelo;
 use App\Models\Empresa;
+use App\Models\Contratacion;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -41,5 +42,6 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::model('modelo', Modelo::class);
         Route::model('empresa', Empresa::class);
+
     }
 }

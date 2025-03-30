@@ -10,13 +10,12 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form wire:submit="store">
-                    @csrf
                         <div class="grid grid-cols-1 md:grid md:grid-cols-12 md:gap-3">
                             <!-- Fecha de Nacimiento -->
                             <div class="col-span-12 sm:col-span-2">
                                 <x-label for="fec_nac" value="{{ __('Fecha de Nacimiento') }}" />
                                 <x-input id="fec_nac" wire:model.live="fec_nac"
-                                    class="block mt-1 w-2/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                     type="date" autofocus />
                             </div>
 
@@ -25,47 +24,23 @@
                                 <x-label for="sexo" value="{{ __('Sexo') }}" />
                                 <select id="sexo" wire:model="sexo"
                                     class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                    <option value="-">{{ __('-') }}</option>
                                     <option value="F">{{ __('Femenino') }}</option>
                                     <option value="M">{{ __('Masculino') }}</option>
                                 </select>
                             </div>
 
-                            <!-- Zona de Residencia -->
-                            <div class="col-span-12 sm:col-span-2">
-                                <x-label for="zon_res" value="{{ __('Zona de Residencia') }}" />
-                                <select id="zon_res" wire:model="zon_res"
-                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                    @foreach ($localidades as $localidad)
-                                        <option value="{{ $localidad }}">{{ __($localidad) }}
-                                        </option>
-                                    @endforeach
-                                </select>                                
-                            </div>
-
-                            <!-- Disponibilidad para viajar -->
-                            <div class="col-span-12 sm:col-span-2">
-                                <x-label for="dis_via" value="{{ __('Disponibilidad para Viajar') }}" />
-                                <select id="dis_via" wire:model="dis_via"
-                                    class="block mt-1 w-2/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                    {{-- <option value="-">{{ __('-') }}</option> --}}
-                                    <option value="0">{{ __('No') }}</option>
-                                    <option value="1">{{ __('Sí') }}</option>                                   
-                                </select>                                
-                            </div>
-
                             <!-- Estatura -->
                             <div class="col-span-12 sm:col-span-2">
                                 <x-label for="estatura" value="{{ __('Estatura (mts)') }}" />
-                                <x-input id="estatura" wire:model="estatura" type="text" placeholder="1.75"
-                                class="inline mt-1 w-1/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
+                                <x-input id="estatura" wire:model="estatura" type="number" step="0.01" placeholder="1.75"
+                                class="inline mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
                             </div>
 
                             <!-- Color del cabello -->
                             <div class="col-span-12 sm:col-span-2">
                                 <x-label for="col_cab" value="{{ __('Color del cabello') }}" />
                                 <select id="col_cab" wire:model="col_cab"
-                                    class="block mt-1 w-2/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     <option >{{ __('-') }}</option>
                                     <option value="rubio">{{ __('Rubio') }}</option>
                                     <option value="castaño">{{ __('Castaño') }}</option>
@@ -89,12 +64,33 @@
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>                                                                     
                             </div>
 
+                            <!-- Zona de Residencia -->
+                            <div class="col-span-12 sm:col-span-3">
+                                <x-label for="zon_res" value="{{ __('Zona de Residencia') }}" />
+                                <select id="zon_res" wire:model="zon_res"
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    @foreach ($localidades as $localidad)
+                                        <option value="{{ $localidad }}">{{ __($localidad) }}
+                                        </option>
+                                    @endforeach
+                                </select>                                
+                            </div>
+
+                            <!-- Disponibilidad para viajar -->
+                            <div class="col-span-12 sm:col-span-2">
+                                <x-label for="dis_via" value="{{ __('Disponibilidad para Viajar') }}" />
+                                <select id="dis_via" wire:model="dis_via"
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    <option value="0">{{ __('No') }}</option>
+                                    <option value="1">{{ __('Sí') }}</option>                                   
+                                </select>                                
+                            </div>                        
+
                             <!-- Título de Modelo -->
                             <div class="col-span-12 sm:col-span-2">
                                 <x-label for="tit_mod" value="{{ __('Título de Modelo') }}" />
                                 <select id="tit_mod" wire:model="tit_mod"
-                                    class="block mt-1 w-2/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                    {{-- <option value="-">{{ __('-') }}</option> --}}                                    
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">                                  
                                     <option value="0">{{ __('No') }}</option>
                                     <option value="1">{{ __('Sí') }}</option>  
                                 </select>
@@ -104,7 +100,7 @@
                             <div class="col-span-12 sm:col-span-2">
                                 <x-label for="ingles" value="{{ __('Nivel de Inglés') }}" />
                                 <select id="ingles" wire:model="ingles"
-                                    class="block mt-1 w-2/3 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     <option value="basico">{{ __('Básico') }}</option>
                                     <option value="intermedio">{{ __('Intermedio') }}</option>
                                     <option value="avanzado">{{ __('Avanzado') }}</option>
@@ -135,16 +131,14 @@
                             <!-- Tarifa por media jornada -->
                             <div class="col-span-12 sm:col-span-3">
                                 <x-label for="tar_med" value="{{ __('Tarifa por media jornada (U$S)') }}" />
-                                <x-input id="tar_med" type="number" class="mt-1 block w-1/2" wire:model="tar_med"
-                                    step="0.01" />
+                                <x-input id="tar_med" type="number" class="mt-1 block w-1/2" wire:model="tar_med" step="0.01" />
                                 {{-- <x-input-error for="tar_med" class="mt-2" /> --}}
                             </div>
 
                             <!-- Tarifa por jornada completa -->
                             <div class="col-span-12 sm:col-span-9">
                                 <x-label for="tar_com" value="{{ __('Tarifa por jornada completa (U$S)') }}" />
-                                <x-input id="tar_com" type="number" class="mt-1 block w-1/6" wire:model="tar_com"
-                                    step="0.01" />
+                                <x-input id="tar_com" type="number" class="mt-1 block w-1/6" wire:model="tar_com" step="0.01" />
                                 {{-- <x-input-error for="tar_com" class="mt-2" /> --}}
                             </div>
 
@@ -164,7 +158,7 @@
                                 <div class="col-span-12 sm:col-span-10">
                                     <x-label class="mr-2" for="habilita" value="{{ __('Habilitar') }}" />
                                     <select id="habilita" wire:model="habilita"
-                                        class="block mt-1 w-1/6 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        class="block mt-1 w-full sm:w-1/6 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                         <option value="0">{{ __('Inhabilitado') }}</option>
                                         <option value="1">{{ __('Habilitado') }}</option>
                                     </select>

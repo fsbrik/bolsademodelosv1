@@ -27,7 +27,7 @@ class CheckPedidoOwnership
 
         // Verifica la propiedad del pedido
         if (Auth::user()->id !== $pedido->user_id && !Auth::user()->hasRole('admin')) {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Acción no autorizada.');
         }
 
         return $next($request);

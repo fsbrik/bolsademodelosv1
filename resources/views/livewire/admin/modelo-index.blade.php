@@ -442,13 +442,15 @@
                                                             {{-- Seleccionar o remover modelo --}}
                                                             @can('empresas.contratar_modelos')                                                                
                                                                 <section class="inline">
-                                                                    @if(in_array($modelo->mod_id, $modelosSeleccionadas))
-                                                                        {{-- Botón para remover el modelo --}}
-                                                                        <button wire:click="removeModelo({{ $modelo->id }})"
-                                                                            class="text-red-600 hover:text-red-900"
-                                                                            title="Remover">
-                                                                            <i class="fas fa-circle-minus"></i>
-                                                                        </button>
+                                                                   {{-- Botón para remover el modelo --}}
+                                                                   @if(in_array($modelo->mod_id, $modelosSeleccionadas))
+                                                                        @if ($this->confirmacionEstado($modelo) === 'Pendiente')
+                                                                            <button wire:click="removeModelo({{ $modelo->id }})"
+                                                                                class="text-red-600 hover:text-red-900"
+                                                                                title="Remover">
+                                                                                <i class="fas fa-circle-minus"></i>
+                                                                            </button>
+                                                                        @endif
                                                                     @else
                                                                         {{-- Botón para seleccionar el modelo --}}
                                                                         <button wire:click="selectModelo({{ $modelo->id }})"
@@ -551,21 +553,23 @@
                                                                 {{-- Seleccionar o remover modelo --}}
                                                                 @can('empresas.contratar_modelos')                                                            
                                                                     <section class="inline ml-2">
-                                                                        @if(in_array($modelo->mod_id, $modelosSeleccionadas))
-                                                                            {{-- Botón para remover el modelo --}}
+                                                                        {{-- Botón para remover el modelo --}}
+                                                                    @if(in_array($modelo->mod_id, $modelosSeleccionadas))
+                                                                        @if ($this->confirmacionEstado($modelo) === 'Pendiente')
                                                                             <button wire:click="removeModelo({{ $modelo->id }})"
                                                                                 class="text-red-600 hover:text-red-900"
                                                                                 title="Remover">
                                                                                 <i class="fas fa-circle-minus"></i>
                                                                             </button>
-                                                                        @else
-                                                                            {{-- Botón para seleccionar el modelo --}}
-                                                                            <button wire:click="selectModelo({{ $modelo->id }})"
-                                                                                class="text-green-600 hover:text-green-900"
-                                                                                title="Seleccionar">
-                                                                                <i class="fas fa-add"></i>
-                                                                            </button>
                                                                         @endif
+                                                                    @else
+                                                                        {{-- Botón para seleccionar el modelo --}}
+                                                                        <button wire:click="selectModelo({{ $modelo->id }})"
+                                                                            class="text-green-600 hover:text-green-900"
+                                                                            title="Seleccionar">
+                                                                            <i class="fas fa-add"></i>
+                                                                        </button>
+                                                                    @endif
                                                                     </section>
                                                                 @endcan
                                                             </div>

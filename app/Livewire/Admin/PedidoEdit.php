@@ -17,7 +17,7 @@ class PedidoEdit extends Component
     public $total;
     public $servicios;
     public $selectedUser = null;
-    public $fecha;
+    public $fec_ini;
 
     protected $listeners = ['userSelected' => 'updateUser'];
 
@@ -34,7 +34,7 @@ class PedidoEdit extends Component
         $this->pedidoId = $pedidoId;
         $pedido = Pedido::with('servicios')->findOrFail($pedidoId);
         $this->pedido = $pedido;
-        $this->fecha = $pedido->fecha;
+        $this->fec_ini = $pedido->fec_ini;
 
         if (!Auth::user()->hasRole('admin')) {
             $user = Auth::user();
@@ -107,7 +107,7 @@ class PedidoEdit extends Component
         $this->validate();
 
         $pedido = Pedido::findOrFail($this->pedidoId);
-        $pedido->fecha = $this->fecha;
+        $pedido->fec_ini = $this->fec_ini;
         $pedido->total = $this->total;
         $pedido->save();
 

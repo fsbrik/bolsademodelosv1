@@ -29,6 +29,7 @@
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Monto (total/hora)</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Descripción</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Estado</th>
+                            <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Acciones</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Más info</th>
                         </tr>
                     </thead>
@@ -51,10 +52,29 @@
                                 </td>
                                 <td class="px-1 py-3 border-b border-gray-300">{{ $this->obtenerDescripcionCorta($contratacion) }}</td>
                                 <td class="px-1 py-3 border-b border-gray-300">
-                                    <!-- Confrimacion -->
-                                <x-button wire:click="confirmar" wire:key="contratacion-{{ $contratacion->id }}" :class="$this->confirmacion_display($contratacion) == 'Pendiente' ? 'bg-slate-500' : ($this->confirmacion_display($contratacion) == 'Aceptado' ? 'bg-green-500' : 'bg-red-500')">{{ $this->confirmacion_display($contratacion) }}</x-button>
+                                    {{-- muestra el estado de la confirmacion --}}
+                                    <div class="{{ $this->getClassForConfirmation($contratacion) }}">{{ __($this->confirmacion_display($contratacion)) }}</div>
                                 </td>
-
+                                <td class="px-1 py-3 border-b border-gray-300">  
+                                    <!-- Confirmacion -->
+                                    <section id="confirmacion" class="flex flex-wrap items-center gap-1">    
+                                        {{-- muestra los botones para aceptar o rechazar la contratacion --}}
+                                        {{-- botón de aceptación --}}
+                                        <button wire:click="confirmar({{$contratacion->id}}, 1)" wire:key="contratacion-{{ $contratacion->id }}" class="{{ $this->getButtonClass($contratacion, 'aceptar') }}" title="aceptar propuesta">
+                                            <i class="{{ $this->getIconClass($contratacion, 'aceptar') }}"></i>
+                                            {{-- <i class="{{ $this->confirmacion_display($contratacion) == 'Pendiente' ? 'fa-solid fa-handshake text-slate-500 p-2 rounded-lg bg-green-300' : 
+                                            ($this->confirmacion_display($contratacion) == 'Rechazado' ? 'fa-solid fa-handshake text-slate-500 p-2 rounded-lg bg-green-300' : '')}}"></i> --}}
+                                        </button>
+                                        {{-- botón de rechazo, si hay un visto, ya no podrá rechazar--}}
+                                        @if(!$this->visto($contratacion))
+                                            <button wire:click="confirmar({{$contratacion->id}}, 0)" wire:key="contratacion-{{ $contratacion->id }}" class="{{ $this->getButtonClass($contratacion, 'rechazar') }}" title="rechazar propuesta">
+                                                <i class="{{ $this->getIconClass($contratacion, 'rechazar') }}"></i>
+                                                {{-- <i class="{{ $this->confirmacion_display($contratacion) == 'Pendiente' ? 'fa-solid fa-thumbs-down text-slate-500 p-2 rounded-lg bg-red-400' : 
+                                                ($this->confirmacion_display($contratacion) == 'Aceptado' ? 'fa-solid fa-thumbs-down text-slate-500 p-2 rounded-lg bg-red-400' : '')}}"></i> --}}
+                                            </button>
+                                        @endif
+                                    </section>
+                                </td>
                                 <td class="px-1 py-3 border-b border-gray-300">
                                     <a href="{{ route('modelos.contrataciones.show', $contratacion->id) }}" class="text-blue-600 hover:text-blue-900"><i class="fas fa-eye"></i></a>
                                 </td>
