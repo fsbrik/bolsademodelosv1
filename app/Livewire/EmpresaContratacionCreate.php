@@ -143,7 +143,7 @@ class EmpresaContratacionCreate extends Component
     {
         $this->withValidator(function ($validator) {
             $validator->after(function ($validator) {
-                if ($this->planSeleccionado->servicios->first()->nom_ser !== 'plan anual' && $this->cant_mod > $this->planSeleccionado->creditos) {
+                if ($this->planSeleccionado->servicios->first()->nom_ser !== 'plan anual' && $this->validarMaxCantMod()) {
                     $validator->errors()->add('cant_modMaxima', 'Cantidad máxima superada');
                 }
             });
@@ -205,12 +205,25 @@ class EmpresaContratacionCreate extends Component
         $this->fec_fin = $this->fec_ini;
         $this->dias_trabajo = 1;
         session()->put('fec_fin', $this->fec_fin);
+        $this->calcularValorHora();
     }
 
     public function updatedHorDia()
     {
         $this->calcularValorHora();
         session()->put('hor_dia', $this->hor_dia);
+    }
+
+    // al actualizar cant_mod, impedir que cant_mod sea mayor que los créditos restantes
+    public function validarMaxCantMod()
+    {
+        if($this->cant_mod > $this->planSeleccionado->creditos)
+        {
+            $this->cant_mod = $this->planSeleccionado->creditos;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // valida la cantidad de modelos a contratar cuando se modifique su valor.
@@ -257,11 +270,6 @@ class EmpresaContratacionCreate extends Component
         // Actualiza la sesión con el nuevo array
         session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);
     }
-
-    /* public function incrementarCreditos()
-    {
-         
-    } */
 
     public function disminuirCreditos()
     {
@@ -313,8 +321,7 @@ class EmpresaContratacionCreate extends Component
                  'modelos_seleccionadas', 'contratacion']);
 
         // Redirigir o mostrar un mensaje de éxito
-        session()->flash('message', 'Propuesta enviada con éxito.');
-        return redirect()->route('empresas.contrataciones.index');
+        return to_route('empresas.contrataciones.index')->with('message', 'Propuesta n° '.$contratacion->id.' enviada con éxito.');
     }
 
 

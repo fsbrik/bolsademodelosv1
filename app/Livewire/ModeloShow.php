@@ -82,28 +82,57 @@ class ModeloShow extends Component
         session()->put('modelos_seleccionadas', $this->modelosSeleccionadas);//dd(session()->get('contratacion'));
 
         // redirige dependiendo la session de contratacion
-        $this->checkForSessions();
-        
+        $this->checkForSessions();        
+    }
+
+    public function getSexoDisplayProperty()
+    {
+        return $this->modelo['sexo'] == 'F' ? 'Femenino' : 'Masculino';
+    }
+
+    public function getColcabDisplayProperty()
+    {
+        return ucfirst($this->modelo['col_cab']);
     }
 
     public function getDisviaDisplayProperty()
     {
-        return $this->modelo['dis_via'] == 1 ? 'sí' : 'no';
+        return $this->modelo['dis_via'] ?? '-' ? 'Sí' : 'No';
     }
 
     public function getTitmodDisplayProperty()
     {
-        return $this->modelo['tit_mod'] == 1 ? 'sí' : 'no';
+        return $this->modelo['tit_mod'] ?? '-' ? 'Sí' : 'No';
+    }
+
+    public function getInglesDisplayProperty()
+    {
+        switch ($this->modelo['ingles'])
+        {
+            case 'basico':
+                return 'Básico';
+            
+            case 'intermedio':
+                return 'Intermedio';
+            
+            case 'avanzado':
+                return 'Avanzado';
+        }
+    }
+
+    public function getDistraDisplayProperty()
+    {
+        return ucfirst($this->modelo['dis_tra']);
     }
 
     public function getEstadoDisplayProperty()
     {
-        return $this->modelo['estado'] == 1 ? 'activo' : 'inactivo';
+        return $this->modelo['estado'] == 1 ? 'Activo' : 'Inactivo';
     }
 
     public function getHabilitaDisplayProperty()
     {
-        return $this->modelo['habilita'] == 1 ? 'sí' : 'no';
+        return $this->modelo['habilita'] == 1 ? 'Sí' : 'No';
     }
 
     public function render()

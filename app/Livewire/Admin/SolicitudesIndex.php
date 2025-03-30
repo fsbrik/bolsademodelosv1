@@ -37,7 +37,7 @@ class SolicitudesIndex extends Component
     
     public function render()
     {
-        $modelos = Modelo::where('habilita', 0)->orderBy('created_at');
+        $modelos = Modelo::where('habilita', 0)->orderBy('created_at', 'desc');
 
          //$modelos = Modelo::query();
 

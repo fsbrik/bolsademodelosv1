@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ModeloCreate extends Component
 {
-    public $fec_nac, $sexo, $estatura, $col_cab, $medidas, $calzado, $zon_res = '-', $dis_via;
-    public $tit_mod, $ingles = 'basico', $dis_tra = 'modelo', $descripcion, $tar_med, $tar_com, $estado = 1, $habilita = 0;
+    public $fec_nac, $sexo = "F", $estatura, $col_cab, $medidas, $calzado, $zon_res, $dis_via = 0;
+    public $tit_mod = 0, $ingles = "basico", $dis_tra = "modelo", $descripcion, $tar_med, $tar_com, $estado = 1;
     public $localidades;
     public $mod_id;
 
@@ -57,31 +57,47 @@ class ModeloCreate extends Component
     ];
 
     public function mount(){
-        $this->fec_nac = date('2000-01-01');
+        $this->fec_nac = date('2003-04-15');
+        $this->estatura = '1.72';
+
         $this->localidades = include(public_path('storage/localidades/localidades.php'));
     }
 
-    public function store(){
-        /* $this->modelo->col_cab = $this->modelo->col_cab === '' ? null : $this->modelo->col_cab;
-        $this->modelo->medidas = $this->modelo->medidas === '' ? null : $this->modelo->medidas;
-        $this->modelo->calzado = $this->modelo->calzado === '' ? null : $this->modelo->calzado;
-        $this->modelo->zon_res = $this->modelo->zon_res === '' ? null : $this->modelo->zon_res;
-        $this->modelo->dis_via= $this->modelo->dis_via=== '' ? null : $this->modelo->dis_via;
-        $this->modelo->tit_mod= $this->modelo->tit_mod=== '' ? null : $this->modelo->tit_mod;
-        $this->modelo->ingles= $this->modelo->ingles=== '' ? null : $this->modelo->ingles;
-        $this->modelo->dis_tra= $this->modelo->dis_tra=== '' ? null : $this->modelo->dis_tra; */
-        /* foreach($this->modelo as $index => $value){
-            $this->modelo[$index] = null;//$value === '' ? null : $this->modelo[$index];
-        }      */   
+    public function store(){   
         
         $ultimoModId = Modelo::max('id'); // Obtener el valor más alto de id
         $nuevoModId = ++$ultimoModId; // Incrementar el valor en uno para obtener el siguiente
 
         $this->mod_id = 'mod' . $nuevoModId;
+        
+        // Convertir cadenas vacías a null para campos numéricos antes de crear
+        $data = collect($this->only([
+            'fec_nac', 'sexo', 'estatura', 'col_cab', 'medidas', 'calzado',
+            'zon_res', 'dis_via', 'tit_mod', 'ingles', 'dis_tra', 'descripcion',
+            'tar_med', 'tar_com', 'estado'
+        ]))->map(fn($value) => $value === '' ? null : $value)->toArray();
 
-        $this->validate();
+        // Agregar campos adicionales que no vienen del formulario
+        $data['mod_id'] = $this->mod_id;
+        $data['user_id'] = Auth::user()->id;
+        $data['habilita'] = 0;
 
-        $modelo = Modelo::create([
+        // Crear el modelo con la información optimizada
+        $modelo = Modelo::create($data);
+        
+        //$this->validate();
+
+        // Convertir cadenas vacías a null para evitar errores de inserción
+        /* $this->col_cab = $this->col_cab === '' ? null : $this->col_cab;
+        $this->calzado = $this->calzado === '' ? null : $this->calzado;
+        $this->dis_via = $this->dis_via === '' ? null : $this->dis_via;
+        $this->tit_mod = $this->tit_mod === '' ? null : $this->tit_mod;
+        $this->ingles = $this->ingles === '' ? null : $this->ingles;
+        $this->tar_med = $this->tar_med === '' ? null : $this->tar_med;
+        $this->tar_com = $this->tar_com === '' ? null : $this->tar_com;
+        $this->calzado = $this->calzado === '' ? null : $this->calzado; */
+
+        /* $modelo = Modelo::create([
             'mod_id' => $this->mod_id,
             'fec_nac' => $this->fec_nac,
             'sexo' => $this->sexo,
@@ -98,9 +114,9 @@ class ModeloCreate extends Component
             'tar_med' => $this->tar_med,
             'tar_com' => $this->tar_com,
             'estado' => $this->estado,
+            'habilita' => 0,
             'user_id' => Auth::user()->id 
-        ]);
-
+        ]); */
 
         session()->flash('message', '¡Creaste tu ficha exitosamente!');
         return redirect()->route('modelos.show', $modelo->id);

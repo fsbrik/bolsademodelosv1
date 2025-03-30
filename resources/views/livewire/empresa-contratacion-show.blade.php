@@ -19,13 +19,6 @@
                                                     <div x-data="{ toggle: false }" class="flex flex-col my-1">
                                                         <x-label-sm x-show="!toggle"  @click="toggle = !toggle"><i class="fas fa-magnifying-glass cursor-pointer"></i>+ info</x-label-sm>
                                                         <div x-show="toggle" @click="toggle = !toggle" class="cursor-pointer">
-                                                            @can('modelos.datos_de_contacto')
-                                                            <x-label-sm
-                                                                class="border-t break-all">{{ $modelo->user->name }}</x-label-sm>
-                                                            <x-label-sm>{{ $modelo->user->telefono }}</x-label-sm>
-                                                            <x-label-sm
-                                                                class="border-b break-all">{{ $modelo->user->email }}</x-label-sm>
-                                                            @endcan
                                                             <x-label-sm>{{ __('Edad: ') . \Carbon\Carbon::parse($modelo->fec_nac)->age . __(' años') }}</x-label-sm>
                                                             <x-label-sm>{{ __('Estatura: ') . $modelo->estatura . __(' mts.') }}</x-label-sm>
                                                             <x-label-sm>{{ __('Calzado: ') . $modelo->calzado }}</x-label-sm>
@@ -50,9 +43,18 @@
                                                             <i class="fas fa-image text-success mr-1"></i><x-label-sm class="inline-block lowercase">galería</x-label-sm>
                                                         </div>
                                                         {{-- Estado de la confirmación por parte de la modelo (pendiente, aceptado o rechazado) --}}
-                                                        <x-label-sm :class="$this->confirmacionEstado($modelo) == 'Pendiente' ? 'bg-slate-400 p-1 mt-2 rounded-md font-semibold text-center' : 
-                                                            ($this->confirmacionEstado($modelo) == 'Aceptado' ? 'bg-green-500 p-1 mt-2 rounded-md font-semibold text-center' :
-                                                            'bg-red-500 p-1 mt-2 rounded-md font-semibold text-center') ">{{ $this->confirmacionEstado($modelo) }}</x-label-sm>                                                    
+                                                        <x-label-sm :class="$this->getEstadoClass($modelo)">{{ $this->confirmacionEstado($modelo) }}
+                                                        </x-label-sm>                                          
+                                                        @if($this->confirmacionEstado($modelo) == 'Aceptado')
+                                                            <div x-data="{ contacto: false }" class="flex flex-col my-1">
+                                                                <button x-show="!contacto"  @click="contacto = !contacto" wire:click.prevent="establecerVisto({{$modelo->id}})" wire:key="contacto-{{$modelo->id}}"><i class="fas fa-magnifying-glass cursor-pointer"></i>Contacto</button>
+                                                                <div x-show="contacto" @click="contacto = !contacto" class="cursor-pointer">
+                                                                    <x-label-sm class="border-t break-all">{{ $modelo->user->name }}</x-label-sm>
+                                                                    <x-label-sm>{{ $modelo->user->telefono }}</x-label-sm>
+                                                                    <x-label-sm class="border-b break-all">{{ $modelo->user->email }}</x-label-sm>
+                                                                </div>
+                                                            </div>
+                                                        @endif          
                                                     </div>
                                                 </div>
                                             </div>
@@ -216,20 +218,21 @@
                     </div>
                     
                     <div class="flex items-center justify-end my-4">
-                        @if($this->checkConfirmacion($contratacion) || $this->checkFecFinContratacion($contratacion))
-                            <a href="{{ route('empresas.contrataciones.edit', $contratacion->id) }}" class="text-yellow-600 hover:text-yellow-900 ml-4"
-                                title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        @endif
-                        @if($this->checkConfirmacion($contratacion))
-                            <form wire:submit="destroy" class="inline ml-4">
-                                @csrf
-                                <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
-                                    onclick="return confirm('¿Estás seguro de que deseas eliminar esta propuesta de contratación?');">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </form>
+                        @if($this->planContratado)
+                            @if($this->checkConfirmacion($contratacion) || !$this->checkFecFinContratacion($contratacion))
+                                <a href="{{ route('empresas.contrataciones.edit', $contratacion->id) }}" class="text-yellow-600 hover:text-yellow-900 ml-4"
+                                    title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            @endif
+                            @if($this->checkConfirmacion($contratacion))
+                                <form wire:submit="destroy" class="inline ml-4">
+                                    <button type="submit" class="text-red-600 hover:text-red-900" title="Borrar"
+                                        onclick="return confirm('¿Estás seguro de que deseas eliminar esta propuesta de contratación?');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            @endif
                         @endif
                         @can('empresas.index')
                             <x-button class="ml-4">

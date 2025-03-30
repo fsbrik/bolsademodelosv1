@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('empresa_id')->nullable();
             $table->date('fec_ini');
             $table->date('fec_fin')->nullable();
+            $table->unsignedBigInteger('conf_ini')->default(0); // recupera la suma de las confirmaciones provenientes de los planes anteriores
             $table->unsignedBigInteger('creditos')->nullable();
             $table->integer('total');
             $table->boolean('habilita')->nullable();

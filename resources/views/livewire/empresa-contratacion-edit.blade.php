@@ -63,7 +63,18 @@
                                                         {{-- Estado de la confirmación por parte de la modelo (pendiente, aceptado o rechazado) --}}
                                                         <x-label-sm :class="$this->confirmacionEstado($modelo) == 'Pendiente' ? 'bg-slate-400 p-1 mt-2 rounded-md font-semibold text-center' : 
                                                                             ($this->confirmacionEstado($modelo) == 'Aceptado' ? 'bg-green-500 p-1 mt-2 rounded-md font-semibold text-center' :
-                                                                            'bg-red-500 p-1 mt-2 rounded-md font-semibold text-center') ">{{ $this->confirmacionEstado($modelo) }}</x-label-sm>
+                                                                            'bg-red-500 p-1 mt-2 rounded-md font-semibold text-center') ">{{ $this->confirmacionEstado($modelo) }}
+                                                        </x-label-sm>
+                                                        @if($this->confirmacionEstado($modelo) == 'Aceptado')
+                                                            <div x-data="{ contacto: false }" class="flex flex-col my-1">
+                                                                <button x-show="!contacto"  @click="contacto = !contacto" wire:click.prevent="establecerVisto({{$modelo->id}})" wire:key="contacto-{{$modelo->id}}"><i class="fas fa-magnifying-glass cursor-pointer"></i>Contacto</button>
+                                                                <div x-show="contacto" @click="contacto = !contacto" class="cursor-pointer">
+                                                                    <x-label-sm class="border-t break-all">{{ $modelo->user->name }}</x-label-sm>
+                                                                    <x-label-sm>{{ $modelo->user->telefono }}</x-label-sm>
+                                                                    <x-label-sm class="border-b break-all">{{ $modelo->user->email }}</x-label-sm>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -79,14 +90,21 @@
                                     {{ $modelos->links() }}
                                 </div>
                             </div>
-                            <div class="flex items-stretch m-2">
+                            <div class="flex flex-col items-stretch m-2">
                                 <div class="w-36 h-44 bg-green-100 shadow-md rounded-lg overflow-hidden flex flex-col justify-center px-4 gap-4">
                                     <label for="cant_mod" class="text-center leading-tight font-medium text-green-600">Cantidad de modelos a contratar</label>
                                     <input type="number" wire:model.live="cant_mod"
                                     class="mx-auto block w-20 text-center rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
                                     <x-input-error for="cant_modMaxima"></x-input-error>
+                                    <x-input-error for="cant_modMinima"></x-input-error>
                                     <x-input-error for="cant_mod"></x-input-error>
                                 </div>
+                                @if($this->obtenerModelosConfirmados($contratacion))
+                                    <div class="mt-2 text-sm font-bold">
+                                        <!-- Botón para reenviar la propuesta -->
+                                        <button wire:click.prevent="updatePropuestaModelos" class="bg-green-500 text-white w-36 py-2 rounded">Reenviar propuesta</button>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         {{-- Abre el modal con la galeria de fotos de la modelo seleccionada --}}
@@ -213,8 +231,10 @@
                                     <x-validation-errors></x-validation-errors>
                                 </div>
 
-                                <!-- Botón para enviar la propuesta -->
-                                <button class="bg-green-500 text-white px-4 py-2 rounded" {{ $this->checkConfirmacion($contratacion) }}>Reenviar Propuesta</button>
+                                <!-- Botón para reenviar la propuesta -->
+                                @if($this->checkConfirmacion($contratacion) != 'disabled')
+                                    <button class="bg-green-500 text-white px-4 py-2 rounded">Reenviar Propuesta</button>
+                                @endif
                             </div>
                             @can('empresas.index')
                                 <section class="absolute z-20 bottom-2 right-8">

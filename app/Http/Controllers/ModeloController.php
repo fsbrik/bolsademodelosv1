@@ -16,15 +16,14 @@ class ModeloController extends Controller
         $this->middleware('can:modelos.edit')->only('edit', 'update');
         $this->middleware('can:modelos.show')->only('show');
         $this->middleware('can:modelos.destroy')->only('destroy');
-        $this->middleware('check.modelo.ownership')->only(['show', 'edit', 'update', 'destroy']);
+        $this->middleware('check.modelo.ownership.show')->only('show');
+        $this->middleware('check.modelo.ownership')->only(['edit', 'update', 'destroy']);
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        /* $modelos = Modelo::paginate();
-        return view('modelos.index', compact('modelos')); */
         return view('modelos.index');
     }
 
@@ -40,7 +39,7 @@ class ModeloController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ModeloRequest $request)
+    /* public function store(ModeloRequest $request)
     {
         try {
             $modelo = new Modelo();
@@ -62,7 +61,7 @@ class ModeloController extends Controller
             $errorMessage = $e->getMessage();
             return redirect()->route('users.show', $request->user_id)->with('error', $errorMessage);
         }
-    }
+    } */
 
     /**
      * Display the specified resource.

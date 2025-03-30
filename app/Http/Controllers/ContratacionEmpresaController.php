@@ -16,6 +16,8 @@ class ContratacionEmpresaController extends Controller
         $this->middleware('can:empresas.contrataciones.edit')->only('edit');
         $this->middleware('can:empresas.contrataciones.show')->only('show');
         $this->middleware('check.contratacion.empresa.ownership')->only(['show', 'edit']);
+        $this->middleware('check.plan.creditos')->only('create');
+        $this->middleware('check.contratacion.edit')->only('edit');
     }
 
      /**

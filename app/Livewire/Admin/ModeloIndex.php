@@ -39,13 +39,13 @@ class ModeloIndex extends Component
         $this->checkForSessions();
 
         // verifica si la empresa tiene contratado un plan (en el caso que el usuario sea registrado como empresa)
-        (Auth::user() && Auth::user()->hasRole('empresa')) ? $this->checkPlan() : '';
+        //(Auth::user() && Auth::user()->hasRole('empresa')) ? $this->checkPlan() : '';
 
         // actualiza el estado de modelos seleccionadas (que pueden provenir de la pagina create o edit)
         $this->checkModelosSeleccionadas();        
     }
 
-    public function checkPlan()
+    /* public function checkPlan()
     {
         $this->user = Auth::user();
 
@@ -74,7 +74,7 @@ class ModeloIndex extends Component
             $this->creditos = 100;
         }
 
-    }
+    } */
 
     public function checkForSessions()
     {
@@ -226,7 +226,14 @@ class ModeloIndex extends Component
 
     public function render()
     {
-        $modelos = Modelo::query();
+        if(Auth::user() && Auth::user()->hasRole('admin'))
+        {
+            $modelos = Modelo::query(); 
+        }
+        else
+        {
+            $modelos = Modelo::where('habilita', 1)->where('estado', 1);
+        }        
 
         if ($this->searchModId) {
             $modelos->where('mod_id', 'like', '%' . $this->searchModId . '%');
@@ -246,20 +253,36 @@ class ModeloIndex extends Component
             });
         }
 
-        if ($this->searchEdadMin || $this->searchEdadMax) {
+        /* if ($this->searchEdadMin || $this->searchEdadMax) {
             $minAge = $this->searchEdadMin ?? 0;
             $maxAge = $this->searchEdadMax ?? 150; // Un valor alto por defecto para el límite máximo de edad
             $modelos->whereRaw('TIMESTAMPDIFF(YEAR, fec_nac, CURDATE()) BETWEEN ? AND ?', [$minAge, $maxAge]);
+        } */
+        $minAge = $this->searchEdadMin ?? 18; // Edad mínima predeterminada de 18
+        $maxAge = $this->searchEdadMax ?? 150; // Un valor alto por defecto para el límite máximo de edad
+
+        if ($this->searchEdadMin && $this->searchEdadMax) {
+            $modelos->whereRaw('TIMESTAMPDIFF(YEAR, fec_nac, CURDATE()) BETWEEN ? AND ?', [$minAge, $maxAge]);
+        } elseif ($this->searchEdadMin) {
+            $modelos->whereRaw('TIMESTAMPDIFF(YEAR, fec_nac, CURDATE()) >= ?', [$minAge]);
+        } elseif ($this->searchEdadMax) {
+            $modelos->whereRaw('TIMESTAMPDIFF(YEAR, fec_nac, CURDATE()) <= ?', [$maxAge]);
         }
+
         
 
         if ($this->searchSexo) {
             $modelos->where('sexo', 'like', '%' . $this->searchSexo . '%');
         }
 
-        if ($this->searchEstaturaMin || $this->searchEstaturaMax) {
+        if ($this->searchEstaturaMin && $this->searchEstaturaMax) {
             $modelos->whereBetween('estatura', [$this->searchEstaturaMin, $this->searchEstaturaMax]);
+        } elseif ($this->searchEstaturaMin) {
+            $modelos->where('estatura', '>=', $this->searchEstaturaMin);
+        } elseif ($this->searchEstaturaMax) {
+            $modelos->where('estatura', '<=', $this->searchEstaturaMax);
         }
+        
 
         if ($this->searchCabello) {
             $modelos->where('col_cab', 'like', '%' . $this->searchCabello . '%');
@@ -285,13 +308,22 @@ class ModeloIndex extends Component
             $modelos->where('dis_tra', 'like', '%' . $this->searchDisTra . '%');
         }
 
-        if ($this->searchTarMedMin || $this->searchTarMedMax) {
+        if ($this->searchTarMedMin && $this->searchTarMedMax) {
             $modelos->whereBetween('tar_med', [$this->searchTarMedMin, $this->searchTarMedMax]);
+        } elseif ($this->searchTarMedMin) {
+            $modelos->where('tar_med', '>=', $this->searchTarMedMin);
+        } elseif ($this->searchTarMedMax) {
+            $modelos->where('tar_med', '<=', $this->searchTarMedMax);
         }
 
-        if ($this->searchTarComMin || $this->searchTarComMax) {
+        if ($this->searchTarComMin && $this->searchTarComMax) {
             $modelos->whereBetween('tar_com', [$this->searchTarComMin, $this->searchTarComMax]);
+        } elseif ($this->searchTarComMin) {
+            $modelos->where('tar_com', '>=', $this->searchTarComMin);
+        } elseif ($this->searchTarComMax) {
+            $modelos->where('tar_com', '<=', $this->searchTarComMax);
         }
+        
 
         if ($this->sort_By) {
             $modelos->orderBy($this->sort_By, $this->sortDirection);

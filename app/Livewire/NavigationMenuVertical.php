@@ -91,6 +91,11 @@ class NavigationMenuVertical extends Component
                 'isActive' => request()->routeIs('modelos.contrataciones.index')
             ],
             [
+                'name' => 'Usuarios', 
+                'route' => route('users.index'), 
+                'isActive' => request()->routeIs('users.index')
+            ],
+            [
                 'name' => 'Modelos', 
                 'route' => route('modelos.index'), 
                 'isActive' => request()->routeIs('modelos.index')

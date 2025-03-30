@@ -126,7 +126,7 @@
                                                     @csrf
                                                     <button type="submit" class="text-red-600 hover:text-red-900"
                                                         title="Desuscribirse"
-                                                        onclick="return confirm('¿Estás seguro de que deseas eliminar el plan contratado?');">
+                                                        onclick="return confirm('¿Estás seguro de que deseas eliminar el plan a contratar?');">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </form>

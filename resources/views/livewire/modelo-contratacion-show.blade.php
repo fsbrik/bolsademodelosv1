@@ -249,12 +249,16 @@
                         <!-- Confirmación -->
                         <section id="confirmacion" class="flex flex-wrap items-center gap-1">
                             {{-- Muestra los botones para aceptar o rechazar la contratación --}}
-                            <button wire:click="confirmar({{ $contratacion }}, 1)" wire:key="contratacion-{{ $contratacion->id }}" class="fa-2x{{ $this->getButtonClass($contratacion, 'aceptar') }}" title="clic aquí para aceptar">
+                            {{-- botón de aceptación --}}
+                            <button wire:click="confirmar({{ $contratacion->id }}, 1)" wire:key="contratacion-{{ $contratacion->id }}" class="fa-2x{{ $this->getButtonClass($contratacion, 'aceptar') }}" title="clic aquí para aceptar">
                                 <i class="{{ $this->getIconClass($contratacion, 'aceptar') }}"></i>
                             </button>
-                            <button wire:click="confirmar({{ $contratacion }}, 0)" wire:key="contratacion-{{ $contratacion->id }}" class="fa-2x {{ $this->getButtonClass($contratacion, 'rechazar') }}" title="clic aquí para rechazar">
-                                <i class="{{ $this->getIconClass($contratacion, 'rechazar') }}"></i>
-                            </button>
+                            {{-- botón de rechazo, si hay un visto, ya no podrá rechazar--}}
+                            @if(!$this->visto($contratacion))
+                                <button wire:click="confirmar({{ $contratacion->id }}, 0)" wire:key="contratacion-{{ $contratacion->id }}" class="fa-2x {{ $this->getButtonClass($contratacion, 'rechazar') }}" title="clic aquí para rechazar">
+                                    <i class="{{ $this->getIconClass($contratacion, 'rechazar') }}"></i>
+                                </button>
+                            @endif
                         </section>
 
 

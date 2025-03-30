@@ -68,9 +68,9 @@ class ModeloEdit extends Component
     public function updateModelo()
     {
 
-        $this->modelo['calzado'] = $this->modelo['calzado'] === '' ? null : $this->modelo['calzado'];
+        /* $this->modelo['calzado'] = $this->modelo['calzado'] === '' ? null : $this->modelo['calzado'];
         $this->modelo['tar_med'] = $this->modelo['tar_med'] === '' ? null : $this->modelo['tar_med'];
-        $this->modelo['tar_com'] = $this->modelo['tar_com'] === '' ? null : $this->modelo['tar_com'];
+        $this->modelo['tar_com'] = $this->modelo['tar_com'] === '' ? null : $this->modelo['tar_com']; 
 
         $this->validate();
 
@@ -84,7 +84,29 @@ class ModeloEdit extends Component
         {
             $updateData = collect($this->modelo)->except(['user'])->toArray();
         }
+        $modelo->update($updateData);*/
+
+        // Convertir campos vacíos a null
+        $this->modelo = collect($this->modelo)->map(function ($value) {
+            return $value === '' ? null : $value;
+        })->toArray();
+
+        $this->validate();
+
+        // Verificar si el usuario tiene el rol adecuado
+        if (!$this->user->hasRole(['modelo', 'admin'])) {
+            abort(403, 'No tienes permiso para realizar esta acción.');
+        }
+
+        $modelo = Modelo::findOrFail($this->modeloId);
+
+        // Excluir los campos no necesarios de los datos de entrada
+        $updateData = collect($this->modelo)
+            ->except($this->user->hasRole('modelo') ? ['habilita', 'user'] : ['user'])
+            ->toArray();
+
         $modelo->update($updateData);
+
         session()->flash('message', '¡La ficha de la modelo '.$modelo->user->name. ' ha sido actualizada con éxito!');
         return redirect()->route('modelos.show', $this->modeloId);
     }

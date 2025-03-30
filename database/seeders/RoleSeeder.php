@@ -34,24 +34,13 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'empresas.show'])->syncRoles($roleAdmin, $roleEmpresa);
         Permission::create(['name' => 'empresas.destroy'])->syncRoles($roleAdmin, $roleEmpresa);
 
-        //Permission::create(['name' => 'modelos.index'])->syncRoles($roleAdmin, $roleModelo);
+        Permission::create(['name' => 'modelos.index'])->syncRoles($roleAdmin, $roleModelo, $roleEmpresa);
         Permission::create(['name' => 'modelos.create'])->syncRoles($roleAdmin, $roleModelo);
         Permission::create(['name' => 'modelos.edit'])->syncRoles($roleAdmin, $roleModelo);
         Permission::create(['name' => 'modelos.show'])->syncRoles($roleAdmin, $roleModelo, $roleEmpresa);
         Permission::create(['name' => 'modelos.destroy'])->syncRoles($roleAdmin, $roleModelo); 
 
-        $roleEmpresa = Role::findByName('empresa');
-        
-        // Recuperar el permiso existente
-        $permisoModeloIndex = Permission::findByName('modelos.index');
-        
-        // Asignar el rol adicionales al permiso
-        $permisoModeloIndex->assignRole($roleEmpresa);
-
-        $roleAdmin = Role::findByName('admin');
-        Permission::create(['name' => 'modelos.datos_de_contacto'])->syncRoles($roleAdmin);
-
-        $roleEmpresa = Role::findByName('empresa');        
+        Permission::create(['name' => 'modelos.datos_de_contacto'])->syncRoles($roleAdmin);     
         Permission::create(['name' => 'modelos.ficha_tecnica'])->syncRoles($roleEmpresa);*/
 
         $roleEmpresa = Role::findByName('empresa'); 
@@ -63,7 +52,6 @@ class RoleSeeder extends Seeder
         //Permission::create(['name' => 'modelos.ver_habilitar'])->syncRoles($roleAdmin);
         //Permission::create(['name' => 'modelos.solicitudes_modelos'])->syncRoles($roleAdmin);
         //Permission::create(['name' => 'modelos.permite_editar'])->syncRoles($roleAdmin);
-        //$roleEmpresa = Role::findByName('empresa');
 
         //Permission::create(['name' => 'modelos.filtros_administrador'])->assignRole('admin');
         //Permission::create(['name' => 'modelos.subir_fotos'])->assignRole('admin');

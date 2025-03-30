@@ -16,6 +16,7 @@ class Confirmacion extends Model
         'contratacion_id',
         'modelo_id',
         'estado',
+        'visto'
     ];
 
     // Relación con el modelo Contratacion

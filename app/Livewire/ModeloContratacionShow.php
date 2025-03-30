@@ -13,12 +13,12 @@ class ModeloContratacionShow extends Component
 {
     //use WithPagination;
 
-    public $contratacion, $modeloId, $empresa;
+    public $contratacion, $modelo, $empresa;
 
     public function mount($contratacionId)
     {
         $this->contratacion = Contratacion::findOrFail($contratacionId);        
-        $this->modeloId = Auth::user()->modelo->id;
+        $this->modelo = Auth::user()->modelo;
         $this->empresa = $this->contratacion->empresa;
         //dd($this->empresa);
       
@@ -67,7 +67,7 @@ class ModeloContratacionShow extends Component
     public function getConfirmacion($contratacion)
     {
         return Confirmacion::where('contratacion_id', $contratacion->id)
-            ->where('modelo_id', $this->modeloId)
+            ->where('modelo_id', $this->modelo->id)
             ->first();
     }
     
@@ -97,21 +97,33 @@ class ModeloContratacionShow extends Component
         return '';
     }
 
-    public function confirmar($contratacion, $respuesta)
+    
+    public function confirmar($contratacionId, $respuesta)
     {
         // estado de la confirmacion
-        Confirmacion::where('contratacion_id', $contratacion['id'])->where('modelo_id', $this->modeloId)->update(['estado' => $respuesta]);
+        Confirmacion::where('contratacion_id', $contratacionId)->where('modelo_id', $this->modelo->id)->update(['estado' => $respuesta]);
+        if(!$respuesta)
+        {
+            $contratacion = Contratacion::findOrFail($contratacionId);
+            $contratacion->update(['estado' => 1]);
+        }
 
     }
 
-    public function destroy()
+    public function visto($contratacion)
+    {
+        // devuelve el valor de visto que por defecto es 0 y si la empresa vió los datos de la modelo es 1
+        return $contratacion->confirmaciones->where('modelo_id', $this->modelo->id)->value('visto');
+    }
+
+    /* public function destroy()
     {
         $this->contratacion->delete();
         return redirect()->route('empresas.contrataciones.index')->with('message', 'contratación n° '.$this->contratacion->id.' eliminada');
-    }
+    } */
 
     public function render()
-    {   //$modelos = Modelo::all();//$this->contratacion->modelos->all();
+    {   
         return view('livewire.modelo-contratacion-show');
     }
 }

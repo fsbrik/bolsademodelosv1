@@ -4,9 +4,10 @@
     </div>
     <div class="grid grid-cols-1 md:grid md:grid-cols-12 md:gap-3">
         <!-- Mod Id -->
-        <div class="col-span-12 sm:col-span-12">
-            <x-label for="mod_id" value="{{ __('ID del Modelo') }}" />
-            <x-input id="mod_id" type="text" class="mt-1 block w-1/12" wire:model="modelo.mod_id" disabled />
+        <div class="col-span-12 sm:col-span-12 mb-2">
+            <x-label for="mod_id" value="{{ __('ID de la modelo: ') }}" class="inline-block"/>
+            <span class="indent-1 rounded-xl bg-yellow-300 p-2">{{ __( '##'.$modelo['mod_id']) }}</span>
+            {{-- <x-input id="mod_id" type="text" class="mt-1 block w-1/12" wire:model="modelo.mod_id" disabled /> --}}
             {{-- <x-input-error for="modelo.mod_id" class="mt-2" /> --}}
         </div>
 
@@ -42,6 +43,7 @@
             <x-label for="col_cab" value="{{ __('Color del cabello') }}" />
             <select id="col_cab" wire:model="modelo.col_cab"
                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <option >{{ __('-') }}</option>
                 <option value="rubio">{{ __('Rubio') }}</option>
                 <option value="castaño">{{ __('Castaño') }}</option>
                 <option value="pelirrojo">{{ __('Pelirrojo') }}</option>
