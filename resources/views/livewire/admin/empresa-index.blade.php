@@ -1,56 +1,18 @@
 <div>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <x-slot name="header">        
+        <x-header bold='true'>
             {{ __('Lista de Empresas') }}
-        </h2>
+        </x-header>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-1 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
+        <x-container>
                     @if (Auth::user()->hasRole('admin'))
-                        <div class="w-2/3 mx-auto bg-gray-100 grid grid-cols-9 gap-2 pt-4 px-4">
-                            <div class="col-span-6 sm:col-span-3">
-                                <x-label for="searchName" value="{{ __('Nombre / apellido') }}" />
-                                <x-input id="searchName" type="text" class="mt-1 block w-full"
-                                    wire:model.live.debounce.250ms="searchName" />
-                            </div>
-                            <div class="col-span-6 sm:col-span-3">
-                                <x-label for="searchTelefono" value="{{ __('Teléfono') }}" />
-                                <x-input id="searchTelefono" type="text" class="mt-1 block w-full"
-                                    wire:model.live.debounce.250ms="searchTelefono" />
-                            </div>
-                            <div class="col-span-6 sm:col-span-3">
-                                <x-label for="searchEmail" value="{{ __('Email') }}" />
-                                <x-input id="searchEmail" type="text" class="mt-1 block w-full"
-                                    wire:model.live.debounce.250ms="searchEmail" />
-                            </div>
-                        </div>
-                        <div class="w-2/3 mx-auto bg-gray-100 grid grid-cols-6 gap-2 mb-4 p-4">
-                            <div class="col-span-6 sm:col-span-3">
-                                <x-label for="searchComercial" value="{{ __('Nombre comercial') }}" />
-                                <x-input id="searchComercial" type="text" class="mt-1 block w-full"
-                                    wire:model.live.debounce.250ms="searchComercial" />
-                            </div>
-                            <div class="col-span-6 sm:col-span-3">
-                                <x-label for="searchCuit" value="{{ __('Cuit') }}" />
-                                <x-input id="searchCuit" type="text" class="mt-1 block w-full"
-                                    wire:model.live.debounce.250ms="searchCuit" />
-                            </div>
-                        </div>
+                        <x-search-user></x-search-user>
+                        <x-search-empresa></x-search-empresa>
                     @endif
 
                     @if (session()->has('message'))
-                        <div x-data="{ open: true }" x-show="open"
-                            class="relative p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                            role="alert">
-                            <button @click="open = false"
-                                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            {{ session('message') }}
-                        </div>
+                        <x-alert-success> {{ session('message') }} </x-alert-success>
                     @endif
 
                     @if ($empresas->count())
@@ -172,8 +134,6 @@
                     @endif
 
 
-                </div>
-            </div>
-        </div>
-    </div>
+
+        </x-container>
 </div>
