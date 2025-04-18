@@ -22,34 +22,34 @@ class EmpresaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nom_com' => 'required|string|max:100',
-            'domicilio' => 'required|string|max:255',
-            'rubro' => 'required|string|max:100',
-            'tipo' => 'required|in:A,C',
-            'cuit' => ['required', 'regex:/^\d{2}-\d{8}-\d{1}$/'],
+            'empresa.nom_com' => ['required', 'string', 'max:255'],
+            'empresa.domicilio' => ['required', 'string', 'max:100'],
+            'empresa.rubro' => ['required', 'string', 'max:255'],
+            'empresa.tipo' => ['required', 'in:A,C'], // Asumiendo que solo se permiten 'A' y 'C'
+            'empresa.cuit' => ['required', 'regex:/^\d{2}-\d{8}-\d{1}$/'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'nom_com.required' => 'El nombre comercial es obligatorio.',
-            'nom_com.string' => 'El nombre comercial debe ser una texto.',
-            'nom_com.max' => 'El nombre comercial no debe exceder los 100 caracteres.',
+            'empresa.nom_com.required' => 'El nombre comercial es obligatorio.',
+            'empresa.nom_com.string' => 'El nombre comercial debe ser una cadena de texto.',
+            'empresa.nom_com.max' => 'El nombre comercial no puede exceder los 100 caracteres.',
 
-            'domicilio.required' => 'El domicilio es obligatorio.',
-            'domicilio.string' => 'El domicilio debe ser una texto.',
-            'domicilio.max' => 'El domicilio no debe exceder los 255 caracteres.',
+            'empresa.domicilio.required' => 'El domicilio es obligatorio.',
+            'empresa.domicilio.string' => 'El domicilio debe ser una cadena de texto.',
+            'empresa.domicilio.max' => 'El domicilio no puede exceder los 255 caracteres.',
 
-            'rubro.required' => 'El rubro es obligatorio.',
-            'rubro.string' => 'El rubro debe ser una texto.',
-            'rubro.max' => 'El rubro no debe exceder los 100 caracteres.',
+            'empresa.rubro.required' => 'El rubro es obligatorio.',
+            'empresa.rubro.string' => 'El rubro debe ser una cadena de texto.',
+            'empresa.rubro.max' => 'El rubro no puede exceder los 100 caracteres.',
 
-            'tipo.required' => 'El tipo de factura es obligatorio.',
-            'tipo.in' => 'El tipo de factura debe ser "A" o "C".',
+            'empresa.tipo.required' => 'El tipo es obligatorio.',
+            'empresa.tipo.in' => 'El tipo debe ser A o C.',
 
-            'cuit.required' => 'El CUIT es obligatorio.',
-            'cuit.regex' => 'El CUIT debe tener el formato XX-XXXXXXXX-X donde X son números.',
+            'empresa.cuit.required' => 'El CUIT es obligatorio.',
+            'empresa.cuit.regex' => 'El CUIT debe tener el formato XX-XXXXXXXX-X.',
         ];
     }
 }

@@ -19,7 +19,7 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased bg-gray-100 h-full">
+<body>
     <x-banner />
 
     <div class="min-h-screen flex flex-row">

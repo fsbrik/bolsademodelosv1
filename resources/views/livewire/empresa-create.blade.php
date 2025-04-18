@@ -6,19 +6,21 @@
     <x-container>
         <form wire:submit="store">
             @csrf
-            
+
             <x-campos-empresa />
 
-
             @can('empresas.create')
-                <div class="flex items-center justify-end mt-4">
-                    <x-button class="ml-4">
+                <div class="buttons-container">
+                    <x-cards.card-button route="empresas.index">
+                        {{ __('Volver') }}
+                    </x-cards.card-button>
+                    <x-cards.card-button>
                         {{ __('Inscribir Empresa') }}
-                    </x-button>
+                    </x-cards.card-button>
                 </div>
             @endcan
         </form>
 
     </x-container>
 </div>
-</div>
+

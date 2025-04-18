@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Forms\EmpresaForm;
 use Livewire\Component;
 use App\Models\Empresa;
 use Illuminate\Support\Facades\Auth;
@@ -9,20 +10,31 @@ use Livewire\WithPagination;
 class EmpresaShow extends Component
 {
  
-    public $empresa;
+    /* public $empresa;
+    public Empresa $empresaOriginal; */
 
     use WithPagination;
 
+    /* public function mount($empresaId)
+    {
+        $this->empresaOriginal = Empresa::findOrFail($empresaId); 
+        $this->empresa = $this->empresaOriginal->toArray(); // Cargar los valores del modelo en el Form Object 
+    }  */
+
+    public EmpresaForm $empresa;
+    public Empresa $empresaOriginal;
+
+    
+
     public function mount($empresaId)
     {
-        $empresa = Empresa::findOrFail($empresaId);
-        $this->empresa = $empresa->toArray();    
-    } 
+        $this->empresaOriginal = Empresa::findOrFail($empresaId);       
+        $this->empresa->fill($this->empresaOriginal->toArray()); // Cargar los valores del modelo en el Form Object
+        
+    }
 
     public function destroy(){
-        $empresa = Empresa::findOrFail($this->empresa['id']);
-        //dd($empresa);
-        $empresa->delete();
+        $this->empresaOriginal->delete();
 
         $user = Auth::user();
 
@@ -34,7 +46,7 @@ class EmpresaShow extends Component
 
         $empresas = $empresas->paginate(10);
 
-        session()->flash('message', 'se eliminó la empresa de '.$empresa->user->name);
+        session()->flash('message', 'se eliminó la empresa de '.$this->empresaOriginal->user->name);
        return redirect()->route('empresas.index', compact('empresas'));
     }
 

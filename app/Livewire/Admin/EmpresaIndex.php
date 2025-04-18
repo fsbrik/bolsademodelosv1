@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Empresa;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On; 
 
 class EmpresaIndex extends Component
 {
@@ -32,9 +33,9 @@ class EmpresaIndex extends Component
         }
     }
 
+    #[On('eliminar-empresa')] 
     public function destroy(Empresa $empresa){
         $empresa->delete();
-        return redirect()->route('empresas.index');
         session()->flash('message', 'Empresa eliminada con éxito.');
     }
 

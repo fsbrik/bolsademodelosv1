@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-header bold="true">{{ __('Información comercial') }}</x-header>
+        <x-header bold="true">{{ __('Editar empresa') }}</x-header>
     </x-slot>
 
     <x-container>

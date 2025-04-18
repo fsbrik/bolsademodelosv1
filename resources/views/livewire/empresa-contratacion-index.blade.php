@@ -27,7 +27,7 @@
                     <thead>
                         <tr>
                             <!-- Columnas... -->
-                            <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">#</th>
+                            <x-table-th>#</x-table-th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Fecha</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Empresa</th>
                             <th class="px-1 py-3 border-b-2 border-gray-300 text-left text-blue-500">Inicio</th>
