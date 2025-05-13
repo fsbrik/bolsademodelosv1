@@ -11,7 +11,8 @@ class PlanController extends Controller
     public function __construct()
     {
         $this->middleware('can:planes.index')->only('index');
-        $this->middleware('can:planes.create')->only('create');
+        $this->middleware('can:planes.create')->only('create', 'edit', 'show'); // planes.create da permiso a los roles empresa y admin
+        $this->middleware('check.if.empresa.has.plan')->only('create');
         $this->middleware('check.plan.ownership')->only('edit', 'show');
     }
 
@@ -46,18 +47,18 @@ class PlanController extends Controller
      * Display the specified resource.
      */
     // Se usa el modelo Pedido ya que el plan seleccionado es un pedido con sub_cat = planes
-    public function show(Pedido $pedido)
+    public function show(Pedido $plan)
     {
-        return view('planes.show', compact('pedido'));
+        return view('planes.show', compact('plan'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     // Se usa el modelo Pedido ya que el plan seleccionado es un pedido con sub_cat = planes
-    public function edit(Pedido $pedido)
+    public function edit(Pedido $plan)
     {
-        return view('planes.edit', compact('pedido'));
+        return view('planes.edit', compact('plan'));
     }
 
 

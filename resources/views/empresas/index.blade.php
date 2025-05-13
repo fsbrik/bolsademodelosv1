@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('admin.empresa-index')
+    @livewire('empresas.empresa-index')
 </x-app-layout>

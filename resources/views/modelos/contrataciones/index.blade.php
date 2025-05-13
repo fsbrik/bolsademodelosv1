@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('modelo-contratacion-index')
+    @livewire('modelos.contrataciones.modelo-contratacion-index')
 </x-app-layout>

@@ -1,3 +1,3 @@
 <x-app-layout>
-   @livewire('modelo-estado')
+   @livewire('modelos.modelo-estado')
 </x-app-layout>

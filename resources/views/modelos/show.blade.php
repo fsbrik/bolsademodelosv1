@@ -33,7 +33,7 @@
                         </div>
                     @endif
 
-                    @livewire('modelo-show', ['modeloId' => $modelo->id])
+                    @livewire('modelos.modelo-show', ['modeloId' => $modelo->id])
 
                 </div>
             </div>

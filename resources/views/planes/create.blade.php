@@ -1,3 +1,3 @@
 <x-app-layout>
-        @livewire('plan-create')
+        @livewire('planes.plan-create')
 </x-app-layout>

@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('plan-edit', ['planId' => $pedido->id])
+    @livewire('planes.plan-edit', ['planId' => $plan->id])
 </x-app-layout>

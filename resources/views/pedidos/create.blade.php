@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('admin.pedido-create')
+    @livewire('pedidos.pedido-create')
 </x-app-layout>

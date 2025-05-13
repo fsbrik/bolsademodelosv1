@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('empresa-contratacion-edit', ['contratacionId' => $contratacionId])
+    @livewire('empresas.contrataciones.empresa-contratacion-edit', ['contratacionId' => $contratacionId])
 </x-app-layout>

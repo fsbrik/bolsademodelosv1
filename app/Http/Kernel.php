@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'modelo' => \App\Http\Middleware\CheckModeloRole::class,
         'check.if.user.has.modelo' => \App\Http\Middleware\CheckIfUserHasModelo::class,
         'check.if.user.has.empresa' => \App\Http\Middleware\CheckIfUserHasModelo::class,
+        'check.if.empresa.has.plan' => \App\Http\Middleware\CheckIfEmpresaHasPlan::class,
         'check.modelo.ownership' => \App\Http\Middleware\CheckModeloOwnership::class,
         'check.modelo.ownership.show' => \App\Http\Middleware\CheckModeloOwnershipShow::class,
         'check.empresa.ownership' => \App\Http\Middleware\CheckEmpresaOwnership::class,

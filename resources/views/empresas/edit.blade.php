@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-header bold="true">{{ __('Editar empresa') }}</x-header>
+        <x-header bold="true">{{ "Editando ".$empresa->nom_com }}</x-header>
     </x-slot>
 
     <x-container>
         @if (Auth::user()->hasRole('admin'))
-            @livewire('Admin.empresa-user', ['empresaId' => $empresa->id])
+            @livewire('users.user-edit', ['userId' => $empresa->user->id])
             <x-section-border />
         @endif
 
-        @livewire('empresa-edit', ['empresaId' => $empresa->id])
-            <x-section-border />
+        @livewire('empresas.empresa-edit', ['empresaId' => $empresa->id])
+
     </x-container>
 </x-app-layout>

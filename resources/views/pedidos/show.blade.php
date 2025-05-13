@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('admin.pedido-show', ['pedidoId' => $pedido->id])
+    @livewire('pedidos.pedido-show', ['pedidoId' => $pedido->id])
 </x-app-layout>

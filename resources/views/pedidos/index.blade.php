@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('admin.pedido-index')
+    @livewire('pedidos.pedido-index')
 </x-app-layout>

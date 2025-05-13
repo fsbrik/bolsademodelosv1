@@ -58,8 +58,8 @@ Route::middleware([
         Route::post('/modelos', [ModeloController::class, 'store'])->name('modelos.store');
     }); 
     Route::view('/solicitudes-modelos', 'solicitudes.solicitudes-modelos')->middleware('check.solicitudes.modelos')->name('solicitudes_modelos');
-    // se coloca parameters para que haga el binding con el modelo Pedido, sino tira un error en el controlador
-    Route::resource('/planes', PlanController::class)->parameters(['planes' => 'pedido'])->except('store', 'update', 'destroy')->names('planes');
+    // se coloca parameters para modificar el parametro del route:list que aparecía como {plane}
+    Route::resource('/planes', PlanController::class)->parameters(['planes' => 'plan'])->except('store', 'update', 'destroy')->names('planes'); //->parameters(['planes' => 'pedido'])
     Route::resource('/pedidos', PedidoController::class)->names('pedidos');
     Route::resource('/servicios', ServicioController::class)->names('servicios');
 });

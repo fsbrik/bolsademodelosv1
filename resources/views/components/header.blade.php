@@ -1,11 +1,11 @@
 @props(['bold' => false])
 
 <header class="bg-white shadow">
-    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto pt-2 pb-1 px-4 sm:px-6 lg:px-8">
         @if($bold)
-            <h2>
+            <h4>
                 {{ $slot }} 
-            </h2>
+            </h4>
         @else
             <p>
                 {{ $slot }}

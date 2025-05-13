@@ -1,5 +1,9 @@
+@props(['param' => false, 'tipo', 'hidden' => false])
 
-    <button type="button" class="text-red-600 hover:text-red-900 ml-4" title="Borrar"
-            wire:click="destroy" wire:confirm="¿Estás seguro de que deseas eliminar la empresa?">
-        <i class="fas fa-trash-alt"></i>
+@if (!$hidden)
+    <button type="button" {{ $attributes->merge(['class' => 'a-btn-delete']) }} title="Borrar"
+        wire:click="destroy({{ $param ?? '' }})"
+        wire:confirm="¿Estás seguro de que deseas eliminar {{ $tipo }}?">
+        {{ __('Eliminar' )}}
     </button>
+@endif

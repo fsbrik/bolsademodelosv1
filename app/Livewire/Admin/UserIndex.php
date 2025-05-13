@@ -4,26 +4,47 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\User;
+use Livewire\Attributes\On;
 
 class UserIndex extends Component
 {
-    public $searchName, $searchTelefono, $searchEmail;
+    #[On('success')]
+    public function success($successMessage)
+    {
+        session()->flash('successMessage', $successMessage);
+    }
+
+    #[On('error')]
+    public function error($errorMessage)
+    {
+        session()->flash('errorMessage', $errorMessage);
+    }    
+
+    /* public $searchName, $searchTelefono, $searchEmail;
 
     use WithPagination;
 
-    public function updating($field)
+    /* public function updating($field)
     {
         if(in_array($field, [
             'searchName', 'searchTelefono', 'searchEmail'
         ])) {
            $this->resetPage(); 
         }        
-    }
+    } */
+   /*protected $listeners = ['actualizarBusqueda' => 'ActualizarBusqueda'];
+
+   public function actualizarBusqueda($searchName, $searchTelefono, $searchEmail)
+   {
+        $this->searchName = $searchName;
+        $this->searchTelefono = $searchTelefono;
+        $this->searchEmail = $searchEmail;
+        $this->resetPage();
+   } */
     
     public function render()
     {        
-        $users = User::query();
+        /* $users = User::query();
 
         if ($this->searchName) {
             $users->where('name', 'like', '%' . $this->searchName . '%');
@@ -37,8 +58,8 @@ class UserIndex extends Component
             $users->where('email', 'like', '%' . $this->searchEmail . '%');
         }
 
-        $users = $users->paginate(10);
+        $users = $users->paginate(10); */
 
-        return view('livewire.admin.user-index', compact('users'));
+        return view('livewire.admin.user-index');//, compact('users'));
     }
 }

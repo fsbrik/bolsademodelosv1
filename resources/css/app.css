@@ -21,7 +21,7 @@ label {
 }
 
 table{
-    @apply w-full border rounded-md mb-2;
+    @apply min-w-full table-auto border rounded-md mb-2;
 }
 
 .table-container {
@@ -47,7 +47,7 @@ th {
 td {
     
     /*font-size: 2rem; /* Más pequeño que text-xs */
-    @apply px-2 py-2 text-xs text-left  text-pretty text-black;
+    @apply px-2 py-2 text-xs text-left text-pretty text-black;
 }
 
 .input-small {
@@ -70,7 +70,7 @@ td {
 body {
     @apply font-sans antialiased bg-gray-100 h-full;
   }
-  h1, h2, h3 {
+  h1, h2, h3, h4 {
     @apply font-medium;
   }
   h1 {
@@ -81,6 +81,9 @@ body {
   }
   h3 {
     @apply text-lg;
+  }
+  h4 {
+    @apply text-sm 
   }
   ul {
     @apply my-10;
@@ -112,13 +115,50 @@ body {
     @apply bg-white rounded border border-gray-200 px-3 py-3 my-2 flex justify-between items-center; 
   }
   
+  .form-container {
+    @apply flex items-end justify-start;
+  }
+
   .buttons-container {
-    @apply flex mt-2 items-center justify-end;
+    @apply flex my-4 items-center justify-end space-x-2;
+  }
+
+  .campos-container {
+    @apply grid grid-cols-1 sm:grid-cols-12 sm:gap-x-3 p-2 shadow-md rounded-md mt-2 bg-slate-50;
+  }
+
+  .foto-perfil-container {
+    @apply p-2 shadow-md rounded-md mt-2 bg-yellow-50;
   }
 
   .highlight {
     @apply border-l-4 border-l-red-500;
   }
+
   .btn {
     @apply rounded px-3 py-2 bg-gray-200 hover:bg-red-500 hover:text-white;
+  }
+
+  .a-btn {
+    @apply inline-flex items-center px-4 py-2 ml-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150;
+  }
+
+  .a-btn-show {
+    @apply inline-flex items-center px-4 py-2 ml-2 bg-indigo-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-400 focus:bg-indigo-400 active:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150;
+  }
+
+  .a-btn-edit {
+    @apply inline-flex items-center px-4 py-2 ml-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-400 focus:bg-yellow-400 active:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150;
+  }
+
+  .a-btn-update, .a-btn-create {
+    @apply inline-flex items-center px-4 py-2 ml-2 bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-400 focus:bg-green-400 active:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150;
+  }
+
+  .a-btn-delete {
+    @apply inline-flex items-center px-4 py-2 ml-2 bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-400 focus:bg-red-400 active:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150;
+  }
+
+  .disabled {
+    @apply bg-gray-200;
   }

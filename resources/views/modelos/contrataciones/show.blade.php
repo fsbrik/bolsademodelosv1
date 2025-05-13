@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('modelo-contratacion-show', ['contratacionId' => $contratacionId])
+    @livewire('modelos.contrataciones.modelo-contratacion-show', ['contratacionId' => $contratacionId])
 </x-app-layout>

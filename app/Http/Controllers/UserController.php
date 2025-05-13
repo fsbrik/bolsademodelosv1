@@ -19,8 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate();
-        return view('users.index', compact('users'));
+        return view('users.index');
     }
 
     /**
@@ -53,8 +52,6 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //$user = User::findOrFail($id);
-        //$this->authorize('view', $user);
         return view('users.show', compact('user'));
     }
 
@@ -63,14 +60,13 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //$user = User::findOrFail($id);
         return view('users.edit', compact('user'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Se actualiza en el componenete UserEdit
      */
-    public function update(Request $request, User $user)
+    /* public function update(Request $request, User $user)
     {
         //$user = User::findOrFail($id);
 
@@ -81,15 +77,15 @@ class UserController extends Controller
 
         // Redirigir al usuario a la vista de detalles de la user actualizada
         return redirect()->route('users.show', $user->id)->with('success', 'Los detalles de la user han sido actualizados correctamente.');
-    }
+    } */
 
     /**
-     * Remove the specified resource from storage.
+     * Se ejecuta en los componentes index y show
      */
-    public function destroy(User $user)
+    /* public function destroy(User $user)
     {
         //$user = User::findOrFail($id);
         $user->delete();
         return redirect()->route('users.index')->with('success', 'usuario eliminado correctamente.');
-    }
+    } */
 }

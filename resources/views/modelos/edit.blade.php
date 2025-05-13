@@ -26,7 +26,7 @@
                         </div>
                     @endif
                     
-                    @livewire('modelo-edit', ['modeloId' => $modelo->id])
+                    @livewire('modelos.modelo-edit', ['modeloId' => $modelo->id])
                     <x-section-border />
                 </div>
             </div>
